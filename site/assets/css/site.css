@@ -2001,3 +2001,220 @@ main { position: relative; z-index: 1; }
     a:hover .frame img, .shot:hover .frame img, .moment:hover .frame img { transform: scale(1.04); }
   }
 }
+
+/* ==========================================================================
+   REFINAMENTO MOBILE QUIET LUXURY (<= 900px / 56.24em)
+   Foco em respiro editorial, hierarquia limpa e zero poluição visual
+   ========================================================================== */
+@media (max-width: 56.24em) {
+  :root {
+    --margin: 1.2rem;
+    --gap-s: 2.85rem;
+    --gap-m: 3.5rem;
+    --gap-l: 4rem;
+    --step-display: clamp(2.1rem, 7.8vw, 2.7rem);
+    --step-head: clamp(1.75rem, 6.4vw, 2.25rem);
+    --step-h3: 1.32rem;
+  }
+
+  /* 1. Topo enxuto: remove faixa superior no mobile para liberar tela */
+  .notice { display: none; }
+  .nav { min-height: 3.85rem; gap: 0.75rem; }
+  .crest { width: 1.95rem; height: 1.95rem; }
+  .wordmark { gap: 0.6rem; }
+  .wordmark__name { font-size: 1.32rem; letter-spacing: 0.06em; }
+  .wordmark__sub { font-size: 0.52rem; letter-spacing: 0.16em; margin-top: 0.12rem; }
+  .menu-toggle {
+    min-height: 2.35rem;
+    padding-inline: 0.95rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* 2. Kickers e legendas mais discretos */
+  .kicker {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+    gap: 0.4rem;
+  }
+  .kicker__dot { width: 5px; height: 5px; box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2); }
+  figcaption { font-size: 0.75rem; margin-top: 0.45rem; }
+  .frame::after { inset: 6px; }
+
+  /* 3. Botões e ações adaptados ao polegar */
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  .actions .button { width: 100%; min-height: 3.2rem; font-size: 0.78rem; }
+  .actions .link { justify-content: center; padding-block: 0.2rem; }
+
+  /* 4. Hero Principal: visual de capa de revista (sem excesso de blocos) */
+  .hero { padding-top: 1.25rem; padding-bottom: 0.75rem; }
+  .hero__grid { row-gap: 1.75rem; }
+  .hero__copy h1 { font-size: clamp(2.2rem, 8.5vw, 2.8rem); line-height: 1; }
+  .hero__lead { font-size: 1.12rem; line-height: 1.42; margin-top: 0.9rem; }
+  .hero__sub { display: none; }
+  .hero__metrics {
+    margin-top: 1.5rem;
+    padding-top: 1.1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+  .hero__metrics > div + div {
+    border-left: 1px solid var(--border);
+    padding-left: 0.6rem;
+  }
+  .hero__metrics dt { font-size: 0.54rem; letter-spacing: 0.1em; }
+  .hero__metrics dd { font-size: 0.88rem; line-height: 1.2; margin-top: 0.18rem; }
+
+  /* No mobile, mantém apenas o retrato principal em arco com selo sobreposto */
+  .hero__stage {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .hero__tall { position: relative; }
+  .hero__tall .frame {
+    aspect-ratio: 4 / 4.6;
+    border-radius: 140px 140px 10px 10px;
+  }
+  .hero__tall .frame::after { border-radius: 134px 134px 6px 6px; }
+  .hero__tall figcaption { display: none; }
+  .hero__square {
+    position: absolute;
+    bottom: 0.85rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    top: auto;
+    width: auto;
+    padding: 0.55rem 0.7rem;
+    background: rgba(17, 14, 12, 0.86);
+    border-color: rgba(197, 160, 89, 0.45);
+  }
+  .hero__square .frame { width: 2.85rem; height: 2.85rem; }
+  .hero__float-tag { color: var(--gold-light); font-size: 0.54rem; }
+  .hero__float-caption p { color: var(--on-dark); font-size: 0.74rem; }
+  .hero__wide { display: none; }
+
+  /* 5. Page Hero das páginas internas: sem foto sobreposta colidindo */
+  .phero { padding-top: 1.35rem; row-gap: 1.65rem; }
+  .phero__text { margin-top: 1rem; }
+  .phero__text p + p { display: none; }
+  .phero__visuals { grid-template-columns: 1fr; }
+  .phero__tall { grid-column: 1 / -1; }
+  .phero__tall .frame {
+    aspect-ratio: 4 / 4.4;
+    border-radius: 130px 130px 10px 10px;
+  }
+  .phero__small { display: none; }
+
+  /* 6. Seção Pano (Vista do Zênite): enxuta e cinematográfica */
+  .pano__header { row-gap: 0.85rem; }
+  .pano__captions p + p { display: none; }
+  .pano__image { margin-top: 1.5rem; aspect-ratio: 16 / 10; border-radius: var(--radius-md); }
+  .pano__hud {
+    top: 0.65rem;
+    left: 0.65rem;
+    right: auto;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* 7. Atlas Interativo & Lista de Sinais: linhas limpas e fáceis de tocar */
+  .signs__body { margin-top: 1.75rem; row-gap: 1.5rem; }
+  .signs__map { padding: 1.15rem; }
+  .zmap__topbar { font-size: 0.58rem; padding-bottom: 0.65rem; margin-bottom: 0.65rem; }
+  .zmap svg { max-width: 13.5rem; }
+  .zmap__caption { margin-top: 0.85rem; padding-top: 0.75rem; min-height: 0; font-size: 0.8rem; }
+  .signs__label { font-size: 0.62rem; margin-bottom: 0.6rem; }
+  .signs__table { gap: 0.5rem; }
+  .row {
+    grid-template-columns: 1.75rem 1fr auto;
+    gap: 0.65rem;
+    padding: 0.9rem 1rem;
+  }
+  .row__idx { font-size: 1.1rem; }
+  .row__name { font-size: 1.2rem; }
+  .row__kind { font-size: 0.75rem; }
+  .row__go { font-size: 0; }
+  .row__go .arrow { font-size: 1rem; color: var(--gold-deep); }
+  .row[data-active], .row:focus-visible { transform: none; }
+  .row[data-active] .row__go .arrow { color: var(--gold-light); }
+
+  /* 8. Mosaico (História & Unidades): proporções equilibradas */
+  .mosaic__lead { font-size: 1.15rem; margin-top: 0.85rem; }
+  .mosaic__photo { margin-top: 1.5rem; }
+  .mosaic__photo .frame { min-height: 0; aspect-ratio: 4 / 3.6; }
+  .mosaic__photo > figcaption { display: none; }
+  .mosaic__paper { padding: 1.1rem 1.2rem; margin-top: 0.75rem; }
+  .mosaic__paper .kicker { display: none; }
+  .mosaic__side { margin-top: 1.25rem; gap: 0.85rem; }
+  .mosaic__tile-bar { padding: 0.55rem 0.85rem; font-size: 0.56rem; }
+  .mosaic__facts { gap: 0.6rem; }
+  .mosaic__fact-card { padding: 0.85rem 0.95rem; }
+  .mosaic__facts dt { font-size: 0.58rem; }
+  .mosaic__facts dd { font-size: 1.05rem; margin-top: 0.15rem; }
+
+  /* 9. Carrosséis (Momentos da Consulta & Resultados): foco no swipe */
+  .moments__buttons { display: none; }
+  .progress { margin-top: 1.15rem; }
+  .moments__row { padding: 1.5rem var(--margin) 0.5rem; gap: 0.9rem; }
+  .moment { flex: 0 0 78vw; padding: 1rem; }
+  .moment .frame { aspect-ratio: 4 / 4.2; margin-bottom: 0.9rem; }
+  .moment h3 { font-size: 1.3rem; }
+
+  .run__aside { margin-bottom: 1.5rem; }
+  .run__lead { margin-top: 0.85rem; margin-bottom: 1.25rem; }
+  .run__note { padding-top: 1.15rem; margin-top: 1.15rem; font-size: 0.76rem; }
+  .run__track { gap: 0.9rem; }
+  .shot, .shot--lifted { flex: 0 0 80vw; padding: 0.85rem; }
+  .shot__header { font-size: 0.58rem; margin-bottom: 0.6rem; }
+  .shot figcaption { margin-top: 0.65rem; padding-top: 0.55rem; font-size: 0.8rem; }
+  .shot__zoom { font-size: 0.64rem; }
+
+  /* 10. Ciência & Galeria 2027 */
+  .names__cols { margin-top: 1.35rem; gap: 0.75rem; grid-template-columns: 1fr; }
+  .names__card { padding: 1.15rem 1.25rem; gap: 0.45rem; }
+  .gather__card { padding: 1.75rem 1.15rem; }
+  .gather__pics { margin-top: 1.75rem; gap: 0.65rem; grid-template-columns: repeat(2, 1fr); }
+  .gather__pics li:nth-child(n+5) { display: none; }
+
+  /* 11. Cartão de Fechamento & Rodapé */
+  .close__card { padding: 1.75rem 1.25rem; row-gap: 1.25rem; }
+  .close__copy .kicker { display: none; }
+  .close__sentence { font-size: 1.55rem; max-width: none; }
+  .close__portrait { display: none; }
+  .close__links h2 { font-size: 1.3rem; }
+  .close__list { flex-direction: column; align-items: stretch; gap: 0.75rem; margin-top: 1rem; }
+  .close__list .button { width: 100%; }
+  .close__list .link { justify-content: center; }
+
+  .foot { padding-top: 2.75rem; padding-bottom: 5.25rem; }
+  .foot__ribbon { padding-bottom: 1.75rem; margin-bottom: 1.75rem; gap: 1.15rem; }
+  .foot__ribbon .button { width: 100%; }
+  .foot__cols { row-gap: 1.75rem; }
+  .foot__word { display: none; }
+
+  /* 12. Páginas internas (Consulta, Equipe, Tratamentos) */
+  .way { padding: 1.25rem; }
+  .way .frame { aspect-ratio: 4 / 4.2; }
+  .composer__form { padding: 1.25rem; gap: 1.25rem; margin-top: 1.25rem; }
+  .choices span { min-height: 2.45rem; padding: 0 0.9rem; font-size: 0.8rem; }
+  .faq summary { padding: 1.05rem 1.15rem; font-size: 1.22rem; gap: 0.85rem; }
+  .faq__ans { padding: 0 1.15rem 1.15rem; padding-top: 0.85rem; }
+  .defs__card, .treat-step, .trow, .place, .member { padding: 1.15rem 1.25rem; }
+  .defs__pic { display: none; }
+
+  /* 13. Pílula Flutuante de Concierge discreta */
+  .concierge-float {
+    right: 0.85rem;
+    bottom: 0.85rem;
+    padding: 0.6rem 0.95rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+  }
+}
