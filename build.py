@@ -1782,11 +1782,18 @@ def apoio():
     (SAIDA / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     # Netlify / Cloudflare Pages
     (SAIDA / "_redirects").write_text("".join(f"{a} {b} 301\n{a}/ {b} 301\n" for a, b in REDIRECIONAMENTOS))
-    # Vercel
-    (SAIDA / "vercel.json").write_text(json.dumps({
+    # Vercel (dentro de site/ e na raiz do repositório)
+    vercel_cfg = {
+        "buildCommand": "npm run build",
+        "outputDirectory": "site",
         "trailingSlash": True,
         "redirects": [{"source": a, "destination": b, "permanent": True} for a, b in REDIRECIONAMENTOS],
-    }, indent=1))
+    }
+    (SAIDA / "vercel.json").write_text(json.dumps({
+        "trailingSlash": True,
+        "redirects": vercel_cfg["redirects"],
+    }, indent=2))
+    (RAIZ / "vercel.json").write_text(json.dumps(vercel_cfg, indent=2))
 
 
 def main():

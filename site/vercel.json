@@ -1,35 +1,35 @@
 {
- "trailingSlash": true,
- "redirects": [
-  {
-   "source": "/clinica-de-tricologia-no-rio-de-janeiro",
-   "destination": "/sobre/",
-   "permanent": true
-  },
-  {
-   "source": "/tratamento-para-queda-de-cabelo-no-rio-de-janeiro",
-   "destination": "/queda-de-cabelo/",
-   "permanent": true
-  },
-  {
-   "source": "/tratamento-para-calvice-no-rio-de-janeiro",
-   "destination": "/tratamentos/",
-   "permanent": true
-  },
-  {
-   "source": "/especialista-em-tricologia-no-rio-de-janeiro-quando-a-queda-de-cabelo-nao-e-normal",
-   "destination": "/conteudo/quando-a-queda-de-cabelo-nao-e-normal/",
-   "permanent": true
-  },
-  {
-   "source": "/blog-de-saude-capilar",
-   "destination": "/conteudo/",
-   "permanent": true
-  },
-  {
-   "source": "/publicacoes",
-   "destination": "/equipe/larissa-pessoa/",
-   "permanent": true
-  }
- ]
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/clinica-de-tricologia-no-rio-de-janeiro",
+      "destination": "/sobre/",
+      "permanent": true
+    },
+    {
+      "source": "/tratamento-para-queda-de-cabelo-no-rio-de-janeiro",
+      "destination": "/queda-de-cabelo/",
+      "permanent": true
+    },
+    {
+      "source": "/tratamento-para-calvice-no-rio-de-janeiro",
+      "destination": "/tratamentos/",
+      "permanent": true
+    },
+    {
+      "source": "/especialista-em-tricologia-no-rio-de-janeiro-quando-a-queda-de-cabelo-nao-e-normal",
+      "destination": "/conteudo/quando-a-queda-de-cabelo-nao-e-normal/",
+      "permanent": true
+    },
+    {
+      "source": "/blog-de-saude-capilar",
+      "destination": "/conteudo/",
+      "permanent": true
+    },
+    {
+      "source": "/publicacoes",
+      "destination": "/equipe/larissa-pessoa/",
+      "permanent": true
+    }
+  ]
 }
