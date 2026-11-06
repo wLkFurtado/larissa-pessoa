@@ -1,0 +1,9 @@
+---
+// O rótulo pequeno em caixa-alta com o ponto dourado.
+interface Props {
+  ouro?: boolean;
+  [atributo: string]: unknown;
+}
+const { ouro = false, ...resto } = Astro.props;
+---
+<span class={ouro ? 'kicker kicker--gold' : 'kicker'} {...resto}><span class="kicker__dot"></span> <slot /></span>

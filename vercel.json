@@ -1,6 +1,7 @@
 {
+  "framework": "astro",
   "buildCommand": "npm run build",
-  "outputDirectory": "site",
+  "outputDirectory": "dist",
   "trailingSlash": true,
   "redirects": [
     {

@@ -1,0 +1,28 @@
+---
+// Colunas de nomes (equipe, publicações, tecnologias). Os itens podem conter links.
+import Kicker from './Kicker.astro';
+import { ROMANOS } from '../lib/site';
+
+interface Props {
+  titulo: string;
+  grupos: string[][];
+  id?: string;
+}
+const { titulo, grupos, id = 'h-nomes' } = Astro.props;
+---
+<section class="names" aria-labelledby={id}>
+  <div class="wrap grid">
+    <div class="names__head">
+      <Kicker data-reveal>CREDENCIAIS &amp; RIGOR CIENTÍFICO</Kicker>
+      <h2 id={id} data-reveal>{titulo}</h2>
+    </div>
+    <div class="names__cols">
+      {grupos.map((g, i) => (
+        <div class="names__card" data-spotlight data-reveal style={`--i:${i}`}>
+          <span class="names__index">{ROMANOS[i]}</span>
+          <ul class="names__group">{g.map((x) => <li set:html={x} />)}</ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

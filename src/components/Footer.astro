@@ -1,0 +1,56 @@
+---
+import Emblema from './Emblema.astro';
+import Botao from './Botao.astro';
+import { site, wa } from '../lib/site';
+---
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__ribbon">
+      <div class="foot__brand">
+        <Emblema />
+        <div>
+          <p class="foot__ribbon-kicker">ALTA TRICOLOGIA INTEGRATIVA</p>
+          <p class="foot__ribbon-title">O ponto mais alto do cuidado capilar.</p>
+        </div>
+      </div>
+      <Botao href={wa()} variante="gold">Agendar Atendimento</Botao>
+    </div>
+    <div class="foot__cols grid">
+      {site.unidades.map((u, i) => (
+        <ul class="foot__col">
+          <li><span class="foot__kicker">0{i + 1} • UNIDADE</span>{u.nome}</li>
+          <li>{u.rua}</li>
+          <li>{u.bairro}</li>
+          <li class="foot__coords">{u.coords}</li>
+          <li><a class="foot__maplink" href={u.mapa} rel="noopener">Traçar rota no mapa &rarr;</a></li>
+        </ul>
+      ))}
+      <ul class="foot__col">
+        <li><span class="foot__kicker">03 • MAISON</span>Hair Zenith</li>
+        <li><a href="/tratamentos/">Tratamentos &amp; Sinais</a></li>
+        <li><a href="/equipe/">Corpo Clínico</a></li>
+        <li><a href="/equipe/larissa-pessoa/">Dra. Larissa Pessoa</a></li>
+        <li><a href="/consulta/">Modalidades de Consulta</a></li>
+        <li><a href="/sobre/">A História da Marca</a></li>
+        <li><a href="/nova-clinica/">Sede Março 2027</a></li>
+        <li><a href="/conteudo/">Journal &amp; Glossário</a></li>
+      </ul>
+      <ul class="foot__col">
+        <li><span class="foot__kicker">04 • CONCIERGE PRIVADO</span>Contato</li>
+        <li><a href={wa()}>WhatsApp {site.whatsTexto}</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><a href={site.instagram} rel="noopener">Instagram {site.instagramTexto}</a></li>
+        <li>Atendimento exclusivo com hora marcada</li>
+      </ul>
+    </div>
+    <div class="foot__word" aria-hidden="true"><svg viewBox="0 0 1000 185"><text x="500" y="150" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="164" font-weight="300" letter-spacing="10" textLength="980" lengthAdjust="spacing">HAIR ZENITH</text></svg></div>
+    <div class="foot__legal">
+      <p>© 2026 Hair Zenith, antiga Larissa Pessoa Tricologia Integrativa. As informações deste site têm caráter informativo e não substituem uma consulta clínica.</p>
+      <p set:html={site.creditos} />
+    </div>
+  </div>
+</footer>
+<a class="concierge-float" href={wa()} aria-label="Agendar consulta pelo WhatsApp">
+  <span class="concierge-float__dot" aria-hidden="true"></span>
+  <span class="concierge-float__label">Concierge WhatsApp</span>
+</a>

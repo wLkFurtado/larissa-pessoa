@@ -1,0 +1,50 @@
+---
+// Página de cada artigo da coleção src/content/conteudo/.
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Kicker from '../../components/Kicker.astro';
+import Moldura from '../../components/Moldura.astro';
+import Indice from '../../components/Indice.astro';
+import Fecho from '../../components/Fecho.astro';
+import { site, dataPorExtenso } from '../../lib/site';
+import { ORG_ID, LARISSA_ID, migalhas, schemaLarissa } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const artigos = await getCollection('conteudo');
+  return artigos.map((artigo) => ({ params: { id: artigo.id }, props: { artigo } }));
+}
+
+const { artigo } = Astro.props as { artigo: CollectionEntry<'conteudo'> };
+const { Content } = await render(artigo);
+const a = artigo.data;
+const caminho = `/conteudo/${artigo.id}/`;
+const schema = [
+  {
+    '@type': 'BlogPosting', headline: a.titulo, description: a.resumo,
+    datePublished: a.data.toISOString().slice(0, 10), dateModified: (a.atualizado ?? a.data).toISOString().slice(0, 10),
+    author: { '@id': LARISSA_ID }, publisher: { '@id': ORG_ID }, image: `${site.url}/assets/img/${a.imagem}.jpg`,
+    mainEntityOfPage: site.url + caminho, inLanguage: 'pt-BR',
+  },
+  migalhas([['Hair Zenith', '/'], ['Conteúdo', '/conteudo/'], [a.titulo, caminho]]),
+  schemaLarissa(),
+];
+---
+<Base titulo={`${a.titulo} | Hair Zenith`} descricao={a.resumo} ativo="conteudo" schema={schema} imagem={a.imagem} tipo="article">
+  <article class="article wrap grid" aria-labelledby="titulo">
+    <div class="article__header">
+      <Kicker data-load style="--d:100ms">JOURNAL CLÍNICO • HAIR ZENITH</Kicker>
+      <h1 id="titulo" class="lines"><span class="line"><span data-line>{a.titulo}</span></span></h1>
+      <p class="article__meta" data-load style="--d:300ms">Por <a href="/equipe/larissa-pessoa/">{a.autoria}</a>, fundadora da Hair Zenith • Publicado em {dataPorExtenso(a.data)}.</p>
+    </div>
+    <figure class="article__pic"><Moldura nome={a.imagem} alt={a.imagemAlt} sizes="100vw" attrs={{ 'data-shutter': '' }} prioridade /></figure>
+    <div class="article__body"><p class="lead">{a.resumo}</p><Content /></div>
+    <script is:inline>document.querySelectorAll('.article__body > p:not(.lead), .article__body > h2').forEach((el) => el.setAttribute('data-reveal', ''));</script>
+    <aside class="article__aside" aria-label="Sobre a autora" data-reveal data-spotlight>
+      <Kicker>AUTORA</Kicker>
+      <Moldura nome="larissa-sentada" alt="Larissa Pessoa sentada em uma poltrona clara" sizes="(max-width: 900px) 60vw, 22vw" />
+      <p>Larissa Pessoa é tricologista, fundadora e CEO da Hair Zenith. <a class="link" href="/equipe/larissa-pessoa/">Conheça a trajetória &rarr;</a></p>
+    </aside>
+  </article>
+  <Indice titulo="Guias por sinal" id="h-guias" />
+  <Fecho frase="Se a sua queda passou do normal, a avaliação mostra a causa." pergunta="Quer uma avaliação?" />
+</Base>

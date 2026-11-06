@@ -1,0 +1,69 @@
+---
+// As seis páginas de problema (queda, calvície feminina e masculina, couro aparente, afinamento, densidade).
+import Base from '../layouts/Base.astro';
+import Phero from '../components/Phero.astro';
+import TabelaSinais from '../components/TabelaSinais.astro';
+import Definicoes from '../components/Definicoes.astro';
+import Dividida from '../components/Dividida.astro';
+import Passos from '../components/Passos.astro';
+import Faixa from '../components/Faixa.astro';
+import Perguntas from '../components/Perguntas.astro';
+import Indice from '../components/Indice.astro';
+import Fecho from '../components/Fecho.astro';
+import Botao from '../components/Botao.astro';
+import { site, problemas, wa, doi, type Problema } from '../lib/site';
+import { ORG_ID, LARISSA_ID, migalhas, schemaLarissa } from '../lib/schema';
+
+export function getStaticPaths() {
+  return problemas.map((p) => ({ params: { problema: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: Problema };
+// "Alterações do couro cabeludo" pede o verbo no plural
+const plural = p.nome.split(' ')[0].endsWith('s');
+const schema = [
+  {
+    '@type': 'MedicalWebPage',
+    '@id': `${site.url}/${p.slug}/#pagina`,
+    url: `${site.url}/${p.slug}/`,
+    name: p.titulo,
+    inLanguage: 'pt-BR',
+    lastReviewed: site.atualizado,
+    reviewedBy: { '@id': LARISSA_ID },
+    publisher: { '@id': ORG_ID },
+    about: {
+      '@type': 'MedicalCondition',
+      name: p.condicao.nome,
+      alternateName: p.condicao.alternativos,
+      signOrSymptom: p.sinais.map((s) => ({ '@type': 'MedicalSignOrSymptom', name: s.nome })),
+      possibleTreatment: p.tratamentos.map((t) => ({ '@type': 'MedicalTherapy', name: t.nome })),
+    },
+  },
+  { '@type': 'FAQPage', mainEntity: p.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+  migalhas([['Hair Zenith', '/'], ['Tratamentos', '/tratamentos/'], [p.nome, `/${p.slug}/`]]),
+  schemaLarissa(),
+];
+---
+<Base titulo={p.titulo} descricao={p.descricao} ativo="tratamentos" schema={schema}>
+  <Phero h1={p.nome} lead={p.lead} alto={p.alto} quadrado={p.quadrado}>
+    <Botao href={wa(site.msgPadrao)}>Agendar consulta</Botao><a class="link" href="#h-faq">Perguntas frequentes</a>
+  </Phero>
+  <TabelaSinais titulo={['Quando procurar', 'uma avaliação']} linhas={p.sinais} foto={p.lateral} />
+  <Definicoes titulo="Por que acontece" intro="A mesma aparência pode ter causas diferentes, e cada causa pede um tratamento. Estas são as mais comuns." itens={p.causas} foto={p.causasPic} />
+  <Dividida titulo="Como tratamos" foto={p.tratPic} id="h-trat">
+    <p class="lead">O plano parte do diagnóstico, nunca de um pacote pronto. Os tratamentos da Hair Zenith são clínicos e sem cirurgia.</p>
+    <Passos itens={p.tratamentos}>
+      {p.slug === 'calvicie-feminina' && (
+        <p class="treat-study"><a class="link" href={doi(site.artigos[1].doi)} rel="noopener">Ler o estudo de caso publicado no Brazilian Journal of Hair Health &rarr;</a></p>
+      )}
+    </Passos>
+  </Dividida>
+  <Faixa titulo="Tudo começa pela avaliação" foto={{ img: 'tela-tricoscopia-retrato', alt: 'Imagem ampliada dos fios na tela durante a tricoscopia' }}>
+    <p>Na consulta, fios e couro cabeludo são avaliados, com tricoscopia digital de até 200 vezes quando indicada. Com o histórico e, se necessário, exames, a profissional responsável define a causa e apresenta o plano de cuidado: em casa, no consultório ou nos dois.</p>
+    <p>Você pode ser atendida pela equipe Hair Zenith ou por Larissa Pessoa, fundadora da clínica.</p>
+    <Fragment slot="acoes"><Botao href={wa()} variante="gold">Agendar consulta</Botao><a class="link" href="/consulta/">Como é a consulta &rarr;</a></Fragment>
+  </Faixa>
+  <Perguntas itens={p.faq} />
+  <Indice titulo="Outros sinais" atual={p.slug} />
+  <Fecho frase={`${p.nome} ${plural ? 'têm' : 'tem'} tratamento. Comece pela causa.`} pergunta="Pronto para a avaliação?" />
+</Base>

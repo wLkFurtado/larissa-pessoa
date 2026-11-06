@@ -1,0 +1,29 @@
+---
+// Fotos reunidas em volta de um título, com a chamada no slot.
+import Kicker from './Kicker.astro';
+import Moldura from './Moldura.astro';
+import type { Imagem } from '../lib/site';
+
+interface Props {
+  titulo: string;
+  texto: string | string[];
+  fotos: Imagem[];
+  id?: string;
+  kicker?: string;
+}
+const { titulo, texto, fotos, id = 'h-reunidas', kicker = 'ARQUITETURA & EXPANSÃO • 2027' } = Astro.props;
+const paragrafos = Array.isArray(texto) ? texto : [texto];
+---
+<section class="gather wrap" aria-labelledby={id}>
+  <div class="gather__card" data-spotlight>
+    <div class="gather__head" data-reveal>
+      <Kicker>{kicker}</Kicker>
+      <h2 id={id}>{titulo}</h2>
+      {paragrafos.map((t) => <p>{t}</p>)}
+      <div class="gather__cta"><slot /></div>
+    </div>
+    <ul class="gather__pics">
+      {fotos.map((f, i) => <li class="gather__item" data-spotlight><Moldura nome={f.img} alt={f.alt} sizes="(max-width: 900px) 45vw, 260px" attrs={{ 'data-open': '', 'data-lightbox': '', style: `--i:${i}` }} /></li>)}
+    </ul>
+  </div>
+</section>

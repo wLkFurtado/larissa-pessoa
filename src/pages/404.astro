@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Phero from '../components/Phero.astro';
+import Indice from '../components/Indice.astro';
+import Botao from '../components/Botao.astro';
+---
+<Base titulo="Página não encontrada | Hair Zenith" descricao="Esta página não existe. Veja os tratamentos da Hair Zenith.">
+  <Phero
+    h1="Página não encontrada"
+    lead="O endereço mudou ou não existe. As páginas da antiga Larissa Pessoa Tricologia agora fazem parte da Hair Zenith."
+    alto={{ img: 'larissa-poltrona', alt: 'Larissa Pessoa sentada em uma poltrona clara' }}
+    quadrado={{ img: 'tricoscopio', alt: 'Tricoscópio digital apoiado no couro cabeludo' }}
+  >
+    <Botao href="/">Ir para o início</Botao><a class="link" href="/tratamentos/">Tratamentos &rarr;</a>
+  </Phero>
+  <Indice titulo="Talvez você procure" id="h-talvez" />
+</Base>

@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Phero from '../../components/Phero.astro';
+import Kicker from '../../components/Kicker.astro';
+import Moldura from '../../components/Moldura.astro';
+import Nomes from '../../components/Nomes.astro';
+import Definicoes from '../../components/Definicoes.astro';
+import Indice from '../../components/Indice.astro';
+import Fecho from '../../components/Fecho.astro';
+import Botao from '../../components/Botao.astro';
+import { site, listas, wa, doi, dataPorExtenso } from '../../lib/site';
+import { ORG_ID, migalhas, schemaLarissa } from '../../lib/schema';
+
+const artigos = (await getCollection('conteudo')).sort((a, b) => b.data.data.valueOf() - a.data.data.valueOf());
+const publicacoes = [
+  ['Brazilian Journal of Hair Health, 2025', ...site.artigos.map((a) => `<a href="${doi(a.doi)}" rel="noopener">${a.curto} &#8599;</a>`)],
+  ['Autoras', 'Larissa Mota Barros Pessoa', 'Thaina Candido de Souza', 'Lara Junqueira, UFRJ'],
+];
+const schema = [
+  {
+    '@type': 'Blog', url: site.url + '/conteudo/', name: 'Saúde capilar, explicada', publisher: { '@id': ORG_ID }, inLanguage: 'pt-BR',
+    blogPost: artigos.map((a) => ({ '@type': 'BlogPosting', headline: a.data.titulo, url: `${site.url}/conteudo/${a.id}/` })),
+  },
+  migalhas([['Hair Zenith', '/'], ['Conteúdo', '/conteudo/']]),
+  schemaLarissa(),
+];
+---
+<Base
+  titulo="Conteúdo sobre saúde capilar, queda e calvície | Hair Zenith"
+  descricao="Textos da equipe Hair Zenith sobre queda de cabelo, calvície e saúde do couro cabeludo, e os estudos de caso publicados pela clínica no Brazilian Journal of Hair Health."
+  ativo="conteudo"
+  schema={schema}
+>
+  <Phero
+    h1={['Saúde capilar,', 'explicada']}
+    lead="Textos da equipe Hair Zenith sobre queda, calvície e cuidados com o couro cabeludo, com fundamento clínico e linguagem direta."
+    alto={{ img: 'escovando', alt: 'Mulher observa os fios enquanto escova o cabelo' }}
+    quadrado={{ img: 'fio-na-mao', alt: 'Mulher segura entre os dedos um fio que caiu' }}
+  >
+    <Botao href={wa()}>Agendar consulta</Botao>
+  </Phero>
+
+  <section class="posts wrap grid" aria-labelledby="h-artigos">
+    <h2 id="h-artigos" class="sr-only">Artigos</h2>
+    {artigos.map((a, i) => (
+      <a class="post" href={`/conteudo/${a.id}/`} data-reveal data-spotlight>
+        <Moldura nome={a.data.capa ?? a.data.imagem} alt={a.data.capaAlt ?? a.data.imagemAlt} sizes="(max-width: 900px) 100vw, 44vw" attrs={{}} />
+        <div class="post__text">
+          <Kicker>{i === 0 ? 'ARTIGO EM DESTAQUE • JOURNAL' : 'JOURNAL'}</Kicker>
+          <h2>{a.data.titulo}</h2>
+          <p>{a.data.resumo}</p>
+          <p class="small">Por {a.data.autoria} • {dataPorExtenso(a.data.data)} • <span class="link">Ler artigo completo &rarr;</span></p>
+        </div>
+      </a>
+    ))}
+  </section>
+
+  <Nomes titulo="Publicações científicas" grupos={publicacoes} id="h-cientificas" />
+  <Definicoes titulo="Glossário" intro="Os termos que aparecem na consulta e nos exames, explicados sem rodeios." itens={listas.glossario} foto={{ img: 'cowper-1698', alt: 'Gravura de 1698 com cortes de pele e folículos capilares ampliados' }} id="h-glossario" />
+  <Indice titulo="Guias por sinal" id="h-guias" />
+  <Fecho frase="Leu e se reconheceu em algum sinal? A avaliação mostra a causa." pergunta="Quer uma avaliação?" />
+</Base>

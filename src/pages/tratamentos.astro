@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Phero from '../components/Phero.astro';
+import Indice from '../components/Indice.astro';
+import Definicoes from '../components/Definicoes.astro';
+import Faixa from '../components/Faixa.astro';
+import Momentos from '../components/Momentos.astro';
+import Fecho from '../components/Fecho.astro';
+import Botao from '../components/Botao.astro';
+import { site, problemas, listas, wa } from '../lib/site';
+import { ORG_ID, migalhas, schemaLarissa } from '../lib/schema';
+
+const schema = [
+  {
+    '@type': 'MedicalWebPage', url: site.url + '/tratamentos/', name: 'Tratamentos para queda e calvície', inLanguage: 'pt-BR', publisher: { '@id': ORG_ID },
+    hasPart: problemas.map((p) => ({ '@type': 'MedicalWebPage', url: `${site.url}/${p.slug}/`, name: p.nome })),
+  },
+  { '@type': 'ItemList', itemListElement: problemas.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.nome, url: `${site.url}/${p.slug}/` })) },
+  migalhas([['Hair Zenith', '/'], ['Tratamentos', '/tratamentos/']]),
+  schemaLarissa(),
+];
+---
+<Base
+  titulo="Tratamentos para queda de cabelo e calvície no Rio de Janeiro | Hair Zenith"
+  descricao="Tratamentos sem cirurgia para queda de cabelo, calvície feminina e masculina, couro cabeludo aparente, afinamento dos fios e perda de densidade. Hair Zenith, Rio de Janeiro e Cabo Frio."
+  ativo="tratamentos"
+  schema={schema}
+>
+  <Phero
+    h1={['Tratamentos para', 'queda e calvície']}
+    lead="Cada tratamento começa por um diagnóstico. Escolha o que você está percebendo para entender as causas, os sinais e como tratamos."
+    alto={{ img: 'mesoject-retrato', alt: 'Caneta do Mesoject aplicada sobre o couro cabeludo' }}
+    quadrado={{ img: 'tricoscopio', alt: 'Tricoscópio digital apoiado no couro cabeludo' }}
+  >
+    <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="/consulta/">Como é a consulta &rarr;</a>
+  </Phero>
+  <Indice titulo="O que você está percebendo" id="h-problemas" />
+  <Definicoes titulo="Tecnologias" intro="Equipamentos e protocolos escolhidos para tratar a causa, sem cirurgia. O plano combina o que o seu caso pede." itens={listas.tecnologias} foto={{ img: 'laser-led', alt: 'Capacete de laser e LED posicionado sobre a cabeça de uma paciente' }} id="h-tecnologias" />
+  <Faixa titulo="Seu cabelo, sem cirurgia" foto={{ img: 'microinfusao', alt: 'Aplicação de ativos ao longo da risca do cabelo' }} id="h-sem-cirurgia">
+    <p>Os tratamentos da Hair Zenith são clínicos: recuperam e preservam o seu próprio cabelo, sem cirurgia. Em casa, no consultório ou nos dois, com acompanhamento a cada etapa.</p>
+    <p>Em casos muito avançados, a avaliação indica com franqueza se o transplante deve ser considerado.</p>
+    <Fragment slot="acoes"><Botao href={wa()} variante="gold">Agendar consulta</Botao></Fragment>
+  </Faixa>
+  <Momentos />
+  <Fecho frase="Não sabe por onde começar? A consulta existe para isso." pergunta="Vamos descobrir a causa?" />
+</Base>

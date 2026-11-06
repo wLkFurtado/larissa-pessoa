@@ -1,0 +1,11 @@
+---
+// Grade de cartões com título e texto, usada em "Como tratamos", método e publicações.
+interface Props {
+  itens: { nome: string; texto: string }[];
+}
+const { itens } = Astro.props;
+---
+<div class="treat-grid">
+  {itens.map((it) => <div class="treat-step" data-spotlight><h3>{it.nome}</h3><p set:html={it.texto} /></div>)}
+  <slot />
+</div>

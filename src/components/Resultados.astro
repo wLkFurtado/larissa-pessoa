@@ -1,0 +1,30 @@
+---
+// Fotos de antes e depois, numa faixa horizontal com a primeira em destaque.
+import Kicker from './Kicker.astro';
+import Moldura from './Moldura.astro';
+import Botao from './Botao.astro';
+import { listas, manifestoImagens, wa } from '../lib/site';
+---
+<section class="run wrap" aria-labelledby="h-resultados">
+  <div class="grid">
+    <div class="run__aside">
+      <Kicker data-reveal>PORTFÓLIO CLÍNICO</Kicker>
+      <h2 id="h-resultados" data-reveal>Resultados documentados</h2>
+      <p class="run__lead" data-reveal>Registros padronizados sob o mesmo ângulo e iluminação, demonstrando a recuperação de cobertura e densidade sem intervenção cirúrgica.</p>
+      <Botao href={wa()}>Agendar uma avaliação</Botao>
+      <p class="run__note">Pacientes atendidos pela equipe, fotografados de cima, antes e depois do tratamento. Os resultados variam de pessoa para pessoa.</p>
+    </div>
+    <div class="run__track" tabindex="0" aria-label="Fotos de antes e depois, role para o lado">
+      {listas.resultados.map((r, i) => {
+        const [w, h] = manifestoImagens[r.img].g;
+        return (
+          <figure class={i === 0 ? 'shot shot--lifted' : 'shot'} data-spotlight>
+            <div class="shot__header"><span>CASO CLÍNICO 0{i + 1}</span><span>{r.fato.toUpperCase()}</span></div>
+            <Moldura nome={r.img} alt={`${r.nome}: fotos de antes e depois do tratamento`} sizes="(max-width: 900px) 88vw, 420px" attrs={{ 'data-open': '', 'data-lightbox': '', style: `--i:${i};--r:${w}/${h}` }} />
+            <figcaption><span>{r.nome}</span><span class="shot__zoom">Ampliar registro &#8599;</span></figcaption>
+          </figure>
+        );
+      })}
+    </div>
+  </div>
+</section>

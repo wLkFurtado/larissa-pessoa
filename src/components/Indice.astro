@@ -1,0 +1,30 @@
+---
+// Índice dos seis problemas, com prévia da foto ao passar o cursor.
+import Kicker from './Kicker.astro';
+import { problemas } from '../lib/site';
+
+interface Props {
+  titulo: string;
+  atual?: string;
+  id?: string;
+}
+const { titulo, atual, id = 'h-indice' } = Astro.props;
+const primeiro = problemas[0].alto;
+---
+<section class="index wrap grid" aria-labelledby={id}>
+  <div class="index__head">
+    <Kicker data-reveal>ÍNDICE DE CONDIÇÕES CAPILARES</Kicker>
+    <h2 id={id} data-reveal>{titulo}</h2>
+  </div>
+  <ul class="index__list" data-preview-list={`#previa-${id}`}>
+    {problemas.map((p, i) => (
+      <li><a href={`/${p.slug}/`} data-src={`/assets/img/${p.alto.img}-p.jpg`} data-alt={p.alto.alt} aria-current={p.slug === atual ? 'page' : undefined}>
+        <span class="index__num">0{i + 1}</span>
+        <span class="index__name">{p.nome}</span>
+        <span class="index__where">{p.onde}</span>
+        <span class="index__arrow" aria-hidden="true">&rarr;</span>
+      </a></li>
+    ))}
+  </ul>
+  <figure class="index__preview"><div class="frame"><img id={`previa-${id}`} src={`/assets/img/${primeiro.img}-p.jpg`} alt={primeiro.alt} width="760" height="950" loading="lazy" decoding="async" /></div></figure>
+</section>

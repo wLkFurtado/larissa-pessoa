@@ -1,0 +1,162 @@
+{
+ "resultados": [
+  {
+   "img": "resultado-1",
+   "nome": "Coroa",
+   "fato": "antes e depois"
+  },
+  {
+   "img": "resultado-7",
+   "nome": "Topo da cabeça",
+   "fato": "antes e depois"
+  },
+  {
+   "img": "resultado-4",
+   "nome": "Risca central",
+   "fato": "três etapas"
+  },
+  {
+   "img": "resultado-2",
+   "nome": "Linha frontal",
+   "fato": "antes e depois"
+  },
+  {
+   "img": "resultado-5",
+   "nome": "Topo",
+   "fato": "três etapas"
+  },
+  {
+   "img": "resultado-3",
+   "nome": "Têmpora",
+   "fato": "antes e depois"
+  },
+  {
+   "img": "resultado-6",
+   "nome": "Região frontal",
+   "fato": "antes e depois"
+  }
+ ],
+ "momentos": [
+  {
+   "titulo": "Primeiro, a sua história",
+   "texto": "Você conta quando a queda começou, o que mudou na rotina e o que espera do tratamento.",
+   "img": "larissa-sentada",
+   "alt": "Larissa Pessoa sentada em uma poltrona clara",
+   "tag": "Anamnese Clínica"
+  },
+  {
+   "titulo": "Depois, a avaliação capilar",
+   "texto": "Fios e couro cabeludo são analisados, com tricoscopia digital de até 200 vezes quando indicada: inflamação, descamação, afinamento, unidades foliculares vazias.",
+   "img": "tricoscopio-retrato",
+   "alt": "Tricoscópio digital apoiado no couro cabeludo",
+   "tag": "Exame Óptico 200×"
+  },
+  {
+   "titulo": "Na tela, com você",
+   "texto": "As imagens ampliadas aparecem na tela, e cada achado é explicado durante a consulta.",
+   "img": "tela-tricoscopia-retrato",
+   "alt": "Imagem ampliada dos fios na tela durante a tricoscopia",
+   "tag": "Mapeamento Visual"
+  },
+  {
+   "titulo": "Exames, se precisar",
+   "texto": "Quando a causa pede investigação, são solicitados exames: ferro, vitaminas, tireoide, hormônios.",
+   "img": "analise-imagens",
+   "alt": "Paciente revisa no notebook as imagens dos próprios fios",
+   "tag": "Investigação Sistêmica"
+  },
+  {
+   "titulo": "O plano de tratamento",
+   "texto": "Em casa, no consultório ou nos dois, com tecnologias escolhidas para a causa: laser e LED, MMP, microinfusão, Mesoject.",
+   "img": "microinfusao",
+   "alt": "Aplicação de ativos ao longo da risca do cabelo",
+   "tag": "Protocolo Sob Medida"
+  },
+  {
+   "titulo": "Os primeiros sinais",
+   "texto": "Os resultados costumam aparecer entre 60 e 120 dias, conforme a causa e o protocolo.",
+   "img": "laser-led",
+   "alt": "Capacete de laser e LED sobre a cabeça de uma paciente",
+   "tag": "Ciclo de Resposta"
+  },
+  {
+   "titulo": "As reavaliações",
+   "texto": "A evolução é fotografada e comparada a cada retorno, e o plano é ajustado a cada etapa.",
+   "img": "mesoject-retrato",
+   "alt": "Caneta do Mesoject aplicada sobre o couro cabeludo",
+   "tag": "Controle Evolutivo"
+  }
+ ],
+ "glossario": [
+  {
+   "nome": "Tricoscopia",
+   "texto": "Exame que amplia o couro cabeludo e os fios, na Hair Zenith em até 200 vezes, para ver o que o olho não alcança: inflamação, miniaturização, densidade."
+  },
+  {
+   "nome": "Folículo piloso",
+   "texto": "A estrutura dentro da pele que produz o fio. Enquanto está ativo, pode ser estimulado; quando se perde, não volta."
+  },
+  {
+   "nome": "Unidade folicular",
+   "texto": "O grupo natural de um a quatro fios que nascem juntos. Unidades com menos fios, ou vazias, indicam perda de densidade."
+  },
+  {
+   "nome": "Miniaturização",
+   "texto": "Afinamento progressivo do fio a cada ciclo, típico da alopecia androgenética. O folículo encolhe e produz fios cada vez mais finos e curtos."
+  },
+  {
+   "nome": "Alopecia androgenética",
+   "texto": "O nome técnico da calvície, feminina e masculina. Tem base genética e hormonal e evolui aos poucos."
+  },
+  {
+   "nome": "Eflúvio telógeno",
+   "texto": "Queda difusa e intensa que aparece semanas depois de um gatilho, como febre, parto, cirurgia ou estresse. Costuma ser reversível."
+  },
+  {
+   "nome": "Densidade capilar",
+   "texto": "A quantidade de fios por centímetro quadrado de couro cabeludo. É ela que define o volume, junto com a espessura de cada fio."
+  },
+  {
+   "nome": "Ciclo capilar",
+   "texto": "As fases de vida de cada fio: crescimento, transição e repouso, até cair e dar lugar a um novo. A queda e a calvície alteram esse ciclo."
+  }
+ ],
+ "tecnologias": [
+  {
+   "nome": "Tricoscopia digital",
+   "texto": "Amplia o couro cabeludo e os fios em até 200 vezes para identificar inflamação, miniaturização, densidade e unidades foliculares vazias."
+  },
+  {
+   "nome": "Laser e LED capilar",
+   "texto": "Luz de baixa intensidade que estimula o crescimento, melhora a circulação do couro cabeludo e fortalece os fios. Indicado para queda difusa e afinamento."
+  },
+  {
+   "nome": "MMP",
+   "texto": "Microinfusão de medicamentos na pele: ativos aplicados diretamente no couro cabeludo para estimular as unidades foliculares."
+  },
+  {
+   "nome": "Microinfusão de ativos",
+   "texto": "Regeneração capilar com ativos direcionados para fortalecer os fios, reduzir a queda e melhorar a vitalidade do cabelo."
+  },
+  {
+   "nome": "Mesoject",
+   "texto": "Tecnologia de eletroporação que leva ativos ao couro cabeludo sem agulhas. Para quem busca conforto aliado à eficiência."
+  },
+  {
+   "nome": "Terapia capilar",
+   "texto": "Cuidados preventivos e terapêuticos para identificar, tratar e controlar disfunções do couro cabeludo e do fio."
+  }
+ ],
+ "romanos": [
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "VI",
+  "VII",
+  "VIII",
+  "IX",
+  "X"
+ ]
+}

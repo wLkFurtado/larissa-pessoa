@@ -3,7 +3,7 @@
 Uso (na raiz do projeto):  python3 tools/imagens.py
 Requer Pillow. Cada entrada define o arquivo de origem, a proporção do recorte e o
 ponto de foco vertical/horizontal (0 = topo/esquerda, 1 = base/direita).
-Saída: site/assets/img/<nome>.jpg e <nome>-p.jpg, mais imagens.json com as dimensões.
+Saída: public/assets/img/<nome>.jpg e <nome>-p.jpg, mais imagens.json com as dimensões.
 """
 import site
 import sys
@@ -16,7 +16,7 @@ from PIL import Image
 
 RAIZ = Path(__file__).resolve().parent.parent
 ORIGEM = RAIZ / "fotos-originais"
-DESTINO = RAIZ / "site" / "assets" / "img"
+DESTINO = RAIZ / "public" / "assets" / "img"
 PEDRA = (214, 208, 199)  # --field, fundo dos retratos recortados
 
 # nome: (arquivo, proporção largura/altura, foco x, foco y, larguras)
@@ -27,7 +27,7 @@ IMAGENS = {
     "larissa-blazer": ("ANA_4259---Editado.png", 3 / 4, 0.5, 0.2, (1400, 760)),
     "larissa-rosa": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 16 / 10, 0.62, 0.4, (1600, 900)),
     "larissa-rosa-retrato": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-75adc9ca-07862fa0.png", 4 / 5, 0.5, 0.15, (1200, 640)),
-    "og-hairzenit": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
+    "og-hairzenith": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
     # Clínica e procedimentos
     "tricoscopio": ("0A7A6778--281-29-2880w.png", 1, 0.5, 0.42, (1200, 640)),
     "tricoscopio-retrato": ("0A7A6778--281-29-2880w.png", 4 / 5, 0.5, 0.4, (1400, 760)),
@@ -38,6 +38,10 @@ IMAGENS = {
     "microinfusao": ("_MG_8762.jpg", 4 / 5, 0.5, 0.5, (1200, 640)),
     "laser-led": ("_MG_8825.jpg", 4 / 5, 0.5, 0.5, (1200, 640)),
     "analise-imagens": ("DSC_3925.jpg", 4 / 5, 0.5, 0.55, (1200, 640)),
+    # Nova clínica: projeto arquitetônico (Studio Kajuu) e registros da obra
+    "projeto-recepcao": ("nova-clinica/projeto-recepcao-studio-kajuu.png", 4 / 5, 0.4, 0.5, (1100, 640)),
+    "projeto-recepcao-quadrado": ("nova-clinica/projeto-recepcao-studio-kajuu.png", 1, 0.42, 0.5, (1100, 640)),
+    "obra-novembro-2026": ("nova-clinica/obra-novembro-2026.png", 4 / 5, 0.5, 0.52, (900, 640)),
     # Banco de imagens do site anterior
     "escovando": ("AdobeStock_377067790-1920w.jpeg", 16 / 10, 0.5, 0.5, (1600, 900)),
     "escova-fios": ("Tratamento-para-queda-de-cabelo-2880w.png", 16 / 10, 0.5, 0.5, (1600, 900)),
@@ -48,7 +52,7 @@ IMAGENS = {
     "fio-na-mao": ("Especialista_em_tricologia_no_Rio_de_Janeiro_Quando_a_queda_de_cabelo_nao_e_normal.png", 3 / 2, 0.5, 0.5, (712, 600)),
     "textura-loira": ("AdobeStock_481109349-2880w.jpeg", 21 / 9, 0.5, 0.5, (1800, 900)),
     "textura-castanha": ("JsvcKabjSDqFp4kkOqxf_AdobeStock_306899500.v2.0000000-1920w.jpg", 21 / 9, 0.5, 0.5, (1800, 900)),
-    # Acervo aberto (créditos em site/assets/img/creditos.json)
+    # Acervo aberto (créditos no README)
     "cowper-1698": ("acervo-aberto/the-anatomy-of-humane-bodies-skin-and.jpg", 3 / 4, 0.5, 0.45, (1100, 640)),
     "avenida-copacabana": ("acervo-aberto/avenida-nossa-senhora-de-copacabana-1.jpg", 4 / 5, 0.5, 0.5, (1000, 600)),
 }
@@ -63,6 +67,12 @@ RESULTADOS = [
     "WhatsApp_Image_2025-11-05_at_16.33.40_(1).jpeg",
     "WhatsApp_Image_2025-11-05_at_16.33.40_(2).jpeg",
 ]
+
+
+# Arquivos que chegaram com moldura (prints de tela): área útil (esquerda, topo, direita, base).
+MOLDURAS = {
+    "nova-clinica/projeto-recepcao-studio-kajuu.png": (8, 14, 1266, 1272),
+}
 
 
 def abrir(caminho):
@@ -119,13 +129,16 @@ def icones():
         r = L * 0.094
         d.ellipse((L / 2 - r, L * 0.3125 - r, L / 2 + r, L * 0.3125 + r), fill=bronze)
         d.rectangle((L * 0.22, L * 0.625, L * 0.78, L * 0.6875), fill=osso)
-        im.resize((lado, lado), Image.LANCZOS).save(RAIZ / "site" / nome)
+        im.resize((lado, lado), Image.LANCZOS).save(RAIZ / "public" / nome)
 
 
 def main():
     DESTINO.mkdir(parents=True, exist_ok=True)
     for nome, (arquivo, prop, fx, fy, larguras) in IMAGENS.items():
-        salvar(recortar(abrir(ORIGEM / arquivo), prop, fx, fy), nome, larguras)
+        im = abrir(ORIGEM / arquivo)
+        if arquivo in MOLDURAS:
+            im = im.crop(MOLDURAS[arquivo])
+        salvar(recortar(im, prop, fx, fy), nome, larguras)
     for i, arquivo in enumerate(RESULTADOS, 1):
         salvar(aparar(abrir(ORIGEM / arquivo)), f"resultado-{i}", (1000, 560))
     icones()

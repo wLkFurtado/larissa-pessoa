@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import Phero from '../../components/Phero.astro';
+import Kicker from '../../components/Kicker.astro';
+import Moldura from '../../components/Moldura.astro';
+import Membro from '../../components/Membro.astro';
+import Dividida from '../../components/Dividida.astro';
+import Passos from '../../components/Passos.astro';
+import Nomes from '../../components/Nomes.astro';
+import Fecho from '../../components/Fecho.astro';
+import Botao from '../../components/Botao.astro';
+import { site, equipe, wa, doi } from '../../lib/site';
+import { migalhas, schemaLarissa, schemaArtigos, schemaEquipe } from '../../lib/schema';
+
+const metodo = [
+  { nome: 'A mesma avaliação', texto: 'História clínica, tricoscopia com ampliação de até 200 vezes e exames complementares quando a causa pede investigação.' },
+  { nome: 'Os mesmos protocolos', texto: 'Planos de tratamento construídos a partir da experiência clínica de Larissa Pessoa e revisados em equipe nos casos mais complexos.' },
+  { nome: 'O mesmo acompanhamento', texto: 'Reavaliações com fotos padronizadas, para comparar a evolução e ajustar o plano a cada etapa.' },
+];
+const publicacoes = [
+  ['Brazilian Journal of Hair Health, 2025', ...site.artigos.map((a) => `<a href="${doi(a.doi)}" rel="noopener">${a.curto} &#8599;</a>`)],
+  ['Autoras', 'Larissa Mota Barros Pessoa', 'Thaina Candido de Souza', 'Lara Junqueira, UFRJ'],
+];
+const schema = [
+  schemaLarissa(),
+  ...schemaEquipe(),
+  migalhas([['Hair Zenith', '/'], ['Equipe', '/equipe/']]),
+  ...schemaArtigos(),
+];
+---
+<Base
+  titulo="Equipe Hair Zenith: Larissa Pessoa, Dra. Thaina Candido de Souza e Dra. Júlia Macedo"
+  descricao="Conheça a equipe da Hair Zenith: Larissa Pessoa, fundadora, CEO e tricologista, a Dra. Thaina Candido de Souza, em Copacabana, e a Dra. Júlia Macedo, em Cabo Frio."
+  ativo="equipe"
+  schema={schema}
+>
+  <Phero
+    h1="Equipe Hair Zenith"
+    lead="Três tricologistas, um mesmo método. A Hair Zenith nasce como clínica, com equipe própria e uma fundadora presente."
+    alto={{ img: 'larissa-blazer', alt: 'Larissa Pessoa de blazer branco, com a mão no rosto' }}
+    quadrado={{ img: 'tricoscopio', alt: 'Tricoscópio digital apoiado no couro cabeludo' }}
+  >
+    <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="/consulta/">As duas consultas &rarr;</a>
+  </Phero>
+
+  <section class="founder wrap grid" aria-labelledby="h-larissa" id="larissa">
+    <figure class="founder__pic"><Moldura nome="larissa-poltrona" alt="Larissa Pessoa sentada em uma poltrona clara" sizes="(max-width: 900px) 100vw, 40vw" /></figure>
+    <div class="founder__text" data-reveal>
+      <Kicker>DIREÇÃO CLÍNICA &amp; FUNDAÇÃO</Kicker>
+      <h2 id="h-larissa">Larissa Pessoa</h2>
+      <p class="founder__role">Fundadora e CEO da Hair Zenith. Tricologista.</p>
+      <p>Larissa construiu sua trajetória no tratamento da queda de cabelo e da calvície, primeiro com a clínica que levava o seu nome, Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio. Hoje dirige a Hair Zenith e segue atendendo pacientes.</p>
+      <p>É autora, com a equipe, de dois estudos de caso sobre alopecia androgenética publicados no Brazilian Journal of Hair Health.</p>
+      <div class="actions"><Botao href={wa(site.msgLarissa)}>Consulta com Larissa</Botao><a class="link" href="/equipe/larissa-pessoa/">A trajetória de Larissa &rarr;</a></div>
+    </div>
+  </section>
+
+  <section class="pair wrap grid" aria-labelledby="h-tricologistas">
+    <div class="pair__head">
+      <Kicker data-reveal>ESPECIALISTAS</Kicker>
+      <h2 id="h-tricologistas" data-reveal>Tricologistas Hair Zenith</h2>
+    </div>
+    {equipe.map((pessoa, i) => <Membro pessoa={pessoa} i={i} />)}
+  </section>
+
+  <Dividida titulo="Um método, três profissionais" foto={{ img: 'tela-tricoscopia-retrato', alt: 'Imagem ampliada dos fios na tela durante a tricoscopia' }} id="h-metodo">
+    <p class="lead">Na Hair Zenith, a consulta não depende de quem está na agenda. O método é o mesmo para todas as tricologistas.</p>
+    <Passos itens={metodo} />
+  </Dividida>
+  <Nomes titulo="Publicações" grupos={publicacoes} id="h-publicacoes" />
+  <Fecho frase="Consulta Hair Zenith ou Consulta com Larissa Pessoa: o método é o mesmo." pergunta="Com quem você quer ser atendido?" />
+</Base>

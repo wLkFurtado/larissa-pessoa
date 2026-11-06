@@ -1,0 +1,21 @@
+---
+import Kicker from './Kicker.astro';
+
+interface Props {
+  titulo?: string;
+  itens: { q: string; a: string }[];
+  id?: string;
+}
+const { titulo = 'Perguntas frequentes', itens, id = 'h-faq' } = Astro.props;
+---
+<section class="faq wrap grid" aria-labelledby={id}>
+  <div class="faq__head">
+    <Kicker data-reveal>DÚVIDAS FREQUENTES</Kicker>
+    <h2 id={id} data-reveal>{titulo}</h2>
+  </div>
+  <div class="faq__list" data-reveal style="--i:1">
+    {itens.map((it) => (
+      <details data-spotlight><summary><span class="faq__q">{it.q}</span><span class="faq__icon" aria-hidden="true"></span></summary><div class="faq__ans"><p>{it.a}</p></div></details>
+    ))}
+  </div>
+</section>

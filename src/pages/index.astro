@@ -1,0 +1,205 @@
+---
+import Base from '../layouts/Base.astro';
+import Kicker from '../components/Kicker.astro';
+import Moldura from '../components/Moldura.astro';
+import Pic from '../components/Pic.astro';
+import Botao from '../components/Botao.astro';
+import Definicoes from '../components/Definicoes.astro';
+import Resultados from '../components/Resultados.astro';
+import Nomes from '../components/Nomes.astro';
+import Reunidas from '../components/Reunidas.astro';
+import Fecho from '../components/Fecho.astro';
+import svg from '../data/svg.json';
+import { site, problemas, wa, doi, profissional } from '../lib/site';
+import { ORG_ID, schemaLarissa } from '../lib/schema';
+
+// Os sinais da lista "O que você está percebendo?", na ordem em que aparecem.
+const sinaisHome = ['queda-de-cabelo', 'calvicie-feminina', 'calvicie-masculina', 'afinamento-dos-fios', 'alteracoes-do-couro-cabeludo']
+  .map((slug) => problemas.find((p) => p.slug === slug)!);
+const processo = [
+  { nome: 'Escuta e histórico', texto: 'Compreendemos o início dos sintomas, histórico de saúde, hábitos e tratamentos anteriores.' },
+  { nome: 'Avaliação capilar', texto: 'Analisamos os fios e o couro cabeludo, utilizando a tricoscopia digital quando indicada.' },
+  { nome: 'Plano de cuidado', texto: 'A partir dos achados, a profissional responsável apresenta as possibilidades de cuidado, a necessidade de investigação complementar e o acompanhamento recomendado.' },
+];
+const thaina = profissional('thaina');
+const julia = profissional('julia');
+const fatos = [['Fundadora', 'Larissa Pessoa'], ['Especialidade', 'Queda e calvície'], ['Atendimento', 'Copacabana e Cabo Frio'], ['Nova clínica', 'Março de 2027']];
+const grupos = [
+  ['Equipe', '<a href="/equipe/larissa-pessoa/">Larissa Pessoa, fundadora</a>', `<a href="/equipe/#thaina">${thaina.tratamento} ${thaina.nome}</a>`, `<a href="/equipe/#julia">${julia.tratamento} ${julia.nome}</a>`],
+  ['Publicado em', 'Brazilian Journal of Hair Health, 2025', ...site.artigos.map((a) => `<a href="${doi(a.doi)}" rel="noopener">${a.curto} &#8599;</a>`)],
+  ['Coautoria', 'Lara Junqueira, Faculdade de Farmácia da UFRJ'],
+  ['Tecnologias', 'Tricoscopia digital', 'Laser e LED capilar', 'MMP', 'Microinfusão de ativos', 'Mesoject'],
+  ['Atendimento', 'Mulheres e homens', 'Copacabana, Rio de Janeiro', 'Novo Portinho, Cabo Frio'],
+];
+const schema = [
+  { '@type': 'WebSite', '@id': site.url + '/#site', url: site.url + '/', name: 'Hair Zenith', alternateName: 'Larissa Pessoa Tricologia', inLanguage: 'pt-BR', publisher: { '@id': ORG_ID } },
+  schemaLarissa(),
+];
+---
+<Base
+  titulo="Hair Zenith | Especialistas em queda, calvície e perda de densidade capilar"
+  descricao="Hair Zenith é a clínica de tricologia fundada por Larissa Pessoa, especializada em queda de cabelo, calvície e perda de densidade capilar. Atendimento em Copacabana e Cabo Frio."
+  schema={schema}
+>
+  <section class="hero wrap" aria-labelledby="titulo">
+    <div class="hero__grid grid">
+      <div class="hero__copy">
+        <Kicker data-load style="--d:100ms">CLÍNICA DE ALTA TRICOLOGIA • RIO DE JANEIRO &amp; CABO FRIO</Kicker>
+        <h1 id="titulo" class="lines">
+          <span class="line"><span data-line style="--i:0">Entender a causa muda</span></span>
+          <span class="line"><span data-line style="--i:1"><em>o caminho do tratamento.</em></span></span>
+        </h1>
+        <p class="hero__lead" data-load style="--d:320ms">Cuidado especializado para queda de cabelo, calvície e alterações do couro cabeludo.</p>
+        <p class="hero__sub" data-load style="--d:400ms">Na Hair Zenith, unimos avaliação individualizada, tecnologia e acompanhamento clínico para compreender cada caso e definir os próximos passos do cuidado capilar.</p>
+        <div class="actions" data-load style="--d:480ms">
+          <Botao href={wa()}>Agendar consulta</Botao>
+          <a class="link" href="/sobre/">Conheça a Hair Zenith &rarr;</a>
+        </div>
+        <p class="hero__founder" data-load style="--d:520ms">Fundada por Larissa Pessoa. Atendimento em Copacabana e Cabo Frio.</p>
+        <dl class="hero__metrics" data-load style="--d:560ms">
+          <div><dt>Diagnóstico</dt><dd>Tricoscopia 200&times;</dd></div>
+          <div><dt>Pesquisa</dt><dd>Publicações BJHH '25</dd></div>
+          <div><dt>Unidades</dt><dd>Copacabana &amp; Cabo Frio</dd></div>
+        </dl>
+      </div>
+      <div class="hero__stage">
+        <figure class="hero__tall">
+          <Moldura nome="larissa-poltrona" alt="Larissa Pessoa, de terno claro, sentada em uma poltrona" sizes="(max-width: 900px) 84vw, 34vw" attrs={{ 'data-shutter': '' }} prioridade />
+          <figcaption>Larissa Pessoa, fundadora e CEO da Hair Zenith</figcaption>
+        </figure>
+        <figure class="hero__square" data-load style="--d:260ms">
+          <Moldura nome="tricoscopio" alt="Tricoscópio digital apoiado no couro cabeludo de uma paciente" sizes="(max-width: 900px) 45vw, 14vw" attrs={{}} />
+          <div class="hero__float-caption">
+            <span class="hero__float-tag">PRECISÃO ÓPTICA</span>
+            <p>Análise folicular ampliada em até 200 vezes</p>
+          </div>
+        </figure>
+        <div class="hero__wide" data-load style="--d:620ms">
+          <figure class="hero__wide-pic">
+            <Moldura nome="mesoject" alt="Caneta do Mesoject aplicada sobre o couro cabeludo de uma paciente" sizes="(max-width: 900px) 100vw, 22vw" attrs={{}} />
+            <figcaption>Mesoject: ativos no couro cabeludo, sem agulhas</figcaption>
+          </figure>
+          <a class="hero__note" href="/nova-clinica/" data-countdown={site.inauguracao}>
+            <span class="hero__note-kicker">NOVA SEDE • 2027</span>
+            <span class="hero__days" data-days>Março</span>
+            <span class="hero__unit" data-unit>de 2027</span>
+            <span class="link">A nova clínica &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pano" aria-labelledby="h-zenite">
+    <div class="wrap">
+      <div class="pano__header grid">
+        <div class="pano__title-col">
+          <Kicker ouro data-reveal>O PONTO MAIS ALTO DO DIAGNÓSTICO</Kicker>
+          <h2 id="h-zenite" class="display" data-reveal>Vista de cima, <em>fio a fio</em></h2>
+        </div>
+        <div class="pano__captions">
+          <p data-reveal style="--i:1">Hair Zenith vem de zenith, o zênite: o ponto mais alto. É de cima que a tricologia examina o couro cabeludo: a risca, a coroa e a densidade de uma só vez.</p>
+          <p data-reveal style="--i:2">Quando indicada, a tricoscopia digital amplia os fios e o couro cabeludo em até 200 vezes.</p>
+        </div>
+      </div>
+      <figure class="pano__image" data-open data-lightbox>
+        <div class="pano__hud" aria-hidden="true"><span>TRICOSCOPIA DIGITAL • 200&times;</span><span>MAPEAMENTO FOLICULAR NÃO INVASIVO</span></div>
+        <Pic nome="tela-tricoscopia" alt="Fios do couro cabeludo ampliados na tela durante uma tricoscopia" sizes="100vw" prioridade />
+      </figure>
+    </div>
+  </section>
+
+  <section class="signs wrap" aria-labelledby="h-sinais">
+    <div class="signs__header">
+      <Kicker data-reveal>O QUE VOCÊ ESTÁ PERCEBENDO?</Kicker>
+      <h2 id="h-sinais" class="head" data-reveal><span class="indent">Cada alteração capilar</span> <em>tem uma história.</em></h2>
+      <p class="signs__intro" data-reveal style="--i:1">Uma queda mais intensa, o couro cabeludo aparente ou a redução progressiva do volume podem ter causas diferentes. Identificar essas alterações é parte fundamental da avaliação.</p>
+    </div>
+    <div class="signs__body grid">
+      <div class="signs__map zmap" data-on="calvicie-masculina" data-reveal data-spotlight>
+        <div class="zmap__topbar"><span>VISTA DO ZÊNITE</span><span>SELECIONE UMA REGIÃO</span></div>
+        <Fragment set:html={svg.zenite} />
+        <p class="zmap__caption" aria-live="polite">Passe o cursor pela lista ou toque no desenho para ver onde cada sinal aparece.</p>
+      </div>
+      <div class="signs__right">
+        <p class="signs__label">{String(sinaisHome.length).padStart(2, '0')} QUADROS AVALIADOS</p>
+        <div class="signs__table">
+          {sinaisHome.map((p, i) => (
+            <a class="row" data-spotlight href={`/${p.slug}/`} data-zone={p.slug} data-name={p.nome} data-text={p.zona}>
+              <span class="row__idx">0{i + 1}</span>
+              <span class="row__main"><span class="row__name">{p.nome}</span><span class="row__kind">{'chamada' in p ? p.chamada : p.onde}</span></span>
+              <span class="row__go">Explorar <span class="arrow" aria-hidden="true">&rarr;</span></span>
+            </a>
+          ))}
+        </div>
+        <div class="signs__foot actions"><Botao href="/tratamentos/">Conheça as condições avaliadas</Botao></div>
+      </div>
+    </div>
+  </section>
+
+  <Definicoes
+    titulo="Antes de tratar, precisamos compreender."
+    intro="O cuidado capilar começa com uma investigação individualizada."
+    itens={processo}
+    foto={{ img: 'tricoscopio-retrato', alt: 'Tricoscópio digital apoiado no couro cabeludo durante a avaliação' }}
+    id="h-processo"
+    kicker="NOSSO PROCESSO DE AVALIAÇÃO"
+  >
+    <Fragment slot="acoes"><Botao href="/consulta/">Como funciona a consulta</Botao></Fragment>
+  </Definicoes>
+
+  <section class="mosaic wrap" aria-labelledby="h-nasce">
+    <div class="grid">
+      <div class="mosaic__header">
+        <Kicker data-reveal>A TRAJETÓRIA DA MARCA</Kicker>
+        <h2 id="h-nasce" class="head" data-reveal>Por que a Hair Zenith nasce</h2>
+        <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
+      </div>
+      <figure class="mosaic__photo">
+        <Moldura nome="larissa-rosa" alt="Larissa Pessoa de vestido rosé em uma sala clara" sizes="(max-width: 900px) 100vw, 58vw" />
+        <div class="mosaic__paper" data-spotlight>
+          <Kicker>EMPATIA CLÍNICA</Kicker>
+          <p>Larissa já passou pela queda de cabelo e conhece o impacto dela na autoestima. Essa experiência orienta o jeito como cada paciente é recebido. <a class="link" href="/sobre/">A história da marca &rarr;</a></p>
+        </div>
+      </figure>
+      <div class="mosaic__side" data-reveal style="--i:2">
+        <div class="mosaic__tile" data-spotlight>
+          <div class="mosaic__tile-bar"><span>CARTA COSTEIRA • RJ</span><span>02 UNIDADES ATIVAS</span></div>
+          <Fragment set:html={svg.litoral} />
+        </div>
+        <dl class="mosaic__facts">{fatos.map(([a, b]) => <div class="mosaic__fact-card" data-spotlight><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+      </div>
+    </div>
+  </section>
+
+  <Resultados />
+  <Nomes titulo="Ciência e método" grupos={grupos} id="h-ciencia" />
+
+  <Reunidas
+    kicker="UMA NOVA FASE"
+    titulo="A próxima etapa da Hair Zenith já está em construção."
+    texto={[
+      'Nossa nova estrutura tem inauguração prevista para março de 2027.',
+      'Enquanto preparamos esse novo espaço, nossos atendimentos seguem normalmente em Copacabana e Cabo Frio, com agendamento mediante disponibilidade.',
+    ]}
+    fotos={[
+      { img: 'projeto-recepcao', alt: 'Projeto da recepção da nova Hair Zenith, com madeira, pedra clara e jardim interno' },
+      { img: 'obra-novembro-2026', alt: 'Obra da nova clínica com a estrutura das paredes internas em montagem' },
+      { img: 'laser-led', alt: 'Capacete de laser e LED sobre a cabeça de uma paciente' },
+      { img: 'tricoscopio-retrato', alt: 'Tricoscópio apoiado no couro cabeludo' },
+      { img: 'larissa-sentada', alt: 'Larissa Pessoa sentada em uma poltrona clara' },
+      { img: 'mesoject-retrato', alt: 'Caneta do Mesoject sobre o couro cabeludo' },
+    ]}
+  >
+    <Botao href="/nova-clinica/" variante="gold">Acompanhe a nova clínica</Botao>
+  </Reunidas>
+
+  <Fecho
+    kicker="SUA AVALIAÇÃO COMEÇA AQUI"
+    titulo="Vamos entender o que está acontecendo com seu cabelo?"
+    texto="Escolha a unidade e converse com nossa equipe para conhecer a disponibilidade de consultas."
+  >
+    <li><Botao href={wa(site.msgCopacabana)}>Agendar no Rio de Janeiro</Botao></li>
+    <li><Botao href={wa(site.msgCaboFrio)} variante="gold">Agendar em Cabo Frio</Botao></li>
+  </Fecho>
+</Base>

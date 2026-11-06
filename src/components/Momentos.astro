@@ -1,0 +1,33 @@
+---
+// A consulta em sete atos, numa fileira que rola para o lado.
+import Kicker from './Kicker.astro';
+import Moldura from './Moldura.astro';
+import { listas, ROMANOS } from '../lib/site';
+
+interface Props {
+  titulo?: string;
+  id?: string;
+}
+const { titulo = 'Como é a consulta', id = 'h-consulta' } = Astro.props;
+---
+<section class="moments" data-drag aria-labelledby={id}>
+  <div class="wrap">
+    <div class="moments__top">
+      <div>
+        <Kicker data-reveal>PROTOCOLO DE AVALIAÇÃO</Kicker>
+        <h2 id={id} class="head" data-reveal>{titulo}</h2>
+      </div>
+      <div class="moments__buttons"><button type="button" data-prev aria-label="Voltar">&larr;</button><button type="button" data-next aria-label="Avançar">&rarr;</button></div>
+    </div>
+    <div class="progress" aria-hidden="true"><span></span></div>
+  </div>
+  <div class="moments__row" tabindex="0" aria-label="Etapas da consulta, role para o lado">
+    {listas.momentos.map((m, i) => (
+      <article class="moment" data-spotlight>
+        <div class="moment__meta"><span class="moment__num">ATO {ROMANOS[i]}</span><span class="moment__tag">{m.tag}</span></div>
+        <Moldura nome={m.img} alt={m.alt} sizes="(max-width: 900px) 76vw, 340px" />
+        <div class="moment__body"><h3>{m.titulo}</h3><p>{m.texto}</p></div>
+      </article>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import Phero from '../components/Phero.astro';
+import Kicker from '../components/Kicker.astro';
+import Moldura from '../components/Moldura.astro';
+import Reunidas from '../components/Reunidas.astro';
+import Fecho from '../components/Fecho.astro';
+import Botao from '../components/Botao.astro';
+import { site, wa, ROMANOS } from '../lib/site';
+import { ORG_ID, migalhas } from '../lib/schema';
+
+// Diário de obra: acrescente uma linha a cada etapa. Estado: done (feito), now (em andamento), next (próximo).
+const entradas = [
+  { quando: 'Outubro de 2026', titulo: 'A marca Hair Zenith é apresentada', texto: 'Larissa Pessoa Tricologia Integrativa passa a se chamar Hair Zenith. Equipe, endereços e contatos continuam os mesmos.', estado: 'done' },
+  { quando: 'Novembro de 2026', titulo: 'Estrutura das novas salas', texto: 'As paredes internas em drywall estão sendo montadas, já no desenho do projeto arquitetônico do Studio Kajuu.', estado: 'now' },
+  { quando: 'Março de 2027', titulo: 'Inauguração', texto: 'A nova Hair Zenith abre as portas e os atendimentos passam para a nova sede.', estado: 'next' },
+];
+const schema = [
+  { '@type': 'WebPage', url: site.url + '/nova-clinica/', name: 'Nova clínica Hair Zenith', inLanguage: 'pt-BR', about: { '@id': ORG_ID }, image: site.url + '/assets/img/projeto-recepcao.jpg' },
+  {
+    '@type': 'Event', name: 'Inauguração da nova clínica Hair Zenith', startDate: site.inauguracao, eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode', organizer: { '@id': ORG_ID }, image: site.url + '/assets/img/projeto-recepcao.jpg',
+    location: { '@type': 'Place', name: 'Hair Zenith', address: { '@type': 'PostalAddress', addressLocality: 'Rio de Janeiro', addressRegion: 'RJ', addressCountry: 'BR' } },
+  },
+  migalhas([['Hair Zenith', '/'], ['Nova clínica', '/nova-clinica/']]),
+];
+---
+<Base
+  titulo="Nova clínica Hair Zenith: inauguração em março de 2027"
+  descricao="A nova Hair Zenith está em construção e chega em março de 2027. Acompanhe o projeto e a obra. Enquanto isso, a equipe segue atendendo em Copacabana e Cabo Frio."
+  ativo="nova-clinica"
+  schema={schema}
+>
+  <Phero
+    h1="Nova clínica Hair Zenith"
+    lead="A nova Hair Zenith chega em março de 2027."
+    texto="Uma clínica construída do zero para a saúde capilar. Enquanto a obra avança, nossa equipe segue atendendo em Copacabana e Cabo Frio."
+    alto={{ img: 'larissa-rosa-retrato', alt: 'Retrato de Larissa Pessoa de vestido rosé' }}
+    quadrado={{ img: 'projeto-recepcao-quadrado', alt: 'Projeto da recepção da nova Hair Zenith, com painel de madeira iluminado e jardim interno' }}
+  >
+    <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="#h-diario">Diário de obra &rarr;</a>
+  </Phero>
+
+  <section class="count" aria-labelledby="h-marco" data-countdown={site.inauguracao}>
+    <div class="wrap grid">
+      <div class="count__copy">
+        <Kicker ouro data-reveal>NOVA SEDE • CONTAGEM REGRESSIVA</Kicker>
+        <h2 id="h-marco" data-reveal>Março de 2027</h2>
+        <p data-reveal style="--i:1">É quando a Hair Zenith passa a ter a sua própria casa: um espaço pensado a partir do atendimento em tricologia, da chegada do paciente à reavaliação.</p>
+      </div>
+      <p class="count__n" aria-live="polite"><span data-days>Março</span> <small data-unit>de 2027</small></p>
+    </div>
+  </section>
+
+  <section class="obra wrap grid" aria-labelledby="h-projeto">
+    <div class="obra__head">
+      <Kicker data-reveal>PROJETO ARQUITETÔNICO • STUDIO KAJUU</Kicker>
+      <h2 id="h-projeto" data-reveal>Do projeto à obra</h2>
+      <p data-reveal style="--i:1">A recepção da nova Hair Zenith foi desenhada pelo Studio Kajuu: madeira, pedra clara e luz indireta, com um banco curvo e um jardim interno para quem espera. Junto dele, a obra como está hoje.</p>
+    </div>
+    <figure class="obra__projeto">
+      <Moldura nome="projeto-recepcao" alt="Projeto da recepção: parede de madeira com luz indireta sobre pedra clara, banco curvo de madeira com jardim interno e porta de madeira ao fundo" sizes="(max-width: 900px) 100vw, 52vw" />
+      <figcaption>Projeto da recepção. Imagem ilustrativa, Studio Kajuu.</figcaption>
+    </figure>
+    <figure class="obra__hoje">
+      <Moldura nome="obra-novembro-2026" alt="Obra da nova clínica com a estrutura metálica das paredes em drywall sendo montada" sizes="(max-width: 900px) 80vw, 34vw" attrs={{ 'data-open': '', 'data-lightbox': '' }} />
+      <figcaption>A obra em novembro de 2026: a estrutura das novas salas.</figcaption>
+    </figure>
+  </section>
+
+  <section class="log wrap grid" aria-labelledby="h-diario">
+    <div class="log__head">
+      <Kicker data-reveal>CRONOGRAMA ARQUITETÔNICO</Kicker>
+      <h2 id="h-diario" data-reveal>Diário de obra</h2>
+      <p class="log__intro" data-reveal style="--i:1">O projeto arquitetônico e a evolução da construção, etapa por etapa, até a inauguração.</p>
+    </div>
+    <ol>
+      {entradas.map((e, i) => (
+        <li data-state={e.estado} data-spotlight data-reveal style={`--i:${i}`}><div class="log__meta"><span class="log__roman">{ROMANOS[i]}</span><p class="log__when">{e.quando}</p></div><div><h3>{e.titulo}</h3><p>{e.texto}</p></div></li>
+      ))}
+    </ol>
+  </section>
+
+  <Reunidas
+    titulo="Enquanto isso, seguimos atendendo"
+    texto="Em Copacabana e em Cabo Frio, com a mesma equipe e o mesmo método."
+    id="h-enquanto"
+    fotos={[
+      { img: 'tricoscopio-retrato', alt: 'Tricoscópio apoiado no couro cabeludo' },
+      { img: 'microinfusao', alt: 'Aplicação de ativos ao longo da risca' },
+      { img: 'larissa-sentada', alt: 'Larissa Pessoa sentada em uma poltrona clara' },
+      { img: 'laser-led', alt: 'Capacete de laser e LED sobre a cabeça de uma paciente' },
+      { img: 'tela-tricoscopia-retrato', alt: 'Fios ampliados na tela da tricoscopia' },
+      { img: 'analise-imagens', alt: 'Paciente revisa as imagens dos próprios fios' },
+    ]}
+  >
+    <Botao href={wa()} variante="gold">Agendar consulta</Botao>
+  </Reunidas>
+  <Fecho frase="A obra não interrompe os atendimentos." pergunta="Quer agendar agora?" />
+</Base>

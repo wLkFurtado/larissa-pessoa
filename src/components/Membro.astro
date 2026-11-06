@@ -1,0 +1,23 @@
+---
+// Uma tricologista da equipe (dados em src/data/equipe.json). Quando existir um retrato com o
+// mesmo id em imagens.json, ele entra no topo. O registro só aparece quando não for provisório.
+import Kicker from './Kicker.astro';
+import Moldura from './Moldura.astro';
+import { manifestoImagens, registroValido, type Profissional } from '../lib/site';
+
+interface Props {
+  pessoa: Profissional;
+  i: number;
+}
+const { pessoa, i } = Astro.props;
+const temRetrato = pessoa.id in manifestoImagens;
+const iniciais = pessoa.nome.split(' ').slice(0, 2).map((p) => p[0]).join('').toUpperCase();
+---
+<article class="member" id={pessoa.id} data-spotlight data-reveal style={`--i:${i}`}>
+  {temRetrato ? <Moldura nome={pessoa.id} alt={`Retrato de ${pessoa.tratamento} ${pessoa.nome}`} sizes="(max-width: 900px) 100vw, 40vw" /> : <div class="member__monogram" aria-hidden="true"><span>{iniciais}</span></div>}
+  <Kicker>{pessoa.local}</Kicker>
+  <h3>{pessoa.tratamento} {pessoa.nome}</h3>
+  <p class="member__role">Tricologista Hair Zenith{registroValido(pessoa) && <> • {pessoa.conselho} {pessoa.registro}</>}</p>
+  <p>{pessoa.texto}</p>
+  <ul class="member__list">{pessoa.itens.map((x) => <li>{x}</li>)}</ul>
+</article>

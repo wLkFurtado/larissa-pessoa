@@ -1,8 +1,24 @@
 {
-  "name": "hairzenit-site",
+  "name": "hairzenith-site",
+  "type": "module",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "build": "echo 'Site estatico pronto em site/'"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "imagens": "python3 tools/imagens.py",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.4.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^6.0.3"
   }
 }

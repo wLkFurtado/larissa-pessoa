@@ -1,0 +1,30 @@
+[
+ {
+  "id": "thaina",
+  "tratamento": "Dra.",
+  "nome": "Thaina Candido de Souza",
+  "unidade": "copacabana",
+  "local": "RIO DE JANEIRO • COPACABANA",
+  "conselho": "CRBM",
+  "registro": "000",
+  "texto": "Atendimento em tricologia. Consulta com avaliação individualizada de queda capilar, calvície e alterações do couro cabeludo.",
+  "itens": [
+   "Consulta Hair Zenith em Copacabana",
+   "Coautora dos estudos publicados no Brazilian Journal of Hair Health"
+  ]
+ },
+ {
+  "id": "julia",
+  "tratamento": "Dra.",
+  "nome": "Júlia Macedo",
+  "unidade": "cabo-frio",
+  "local": "CABO FRIO • NOVO PORTINHO",
+  "conselho": "CRBM",
+  "registro": "0000",
+  "texto": "Consulta capilar em Cabo Frio e acompanhamento de tratamentos nas unidades de Copacabana e Cabo Frio.",
+  "itens": [
+   "Consulta Hair Zenith em Cabo Frio",
+   "Responsável técnica pelas aplicações"
+  ]
+ }
+]

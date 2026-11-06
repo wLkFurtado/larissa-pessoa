@@ -1,0 +1,133 @@
+---
+import Base from '../layouts/Base.astro';
+import Phero from '../components/Phero.astro';
+import Kicker from '../components/Kicker.astro';
+import Moldura from '../components/Moldura.astro';
+import Momentos from '../components/Momentos.astro';
+import Perguntas from '../components/Perguntas.astro';
+import Fecho from '../components/Fecho.astro';
+import Botao from '../components/Botao.astro';
+import { site, wa, profissional } from '../lib/site';
+import { ORG_ID, LARISSA_ID, migalhas, schemaLarissa } from '../lib/schema';
+
+const thaina = profissional('thaina');
+const julia = profissional('julia');
+const comum = [['Avaliação', 'Histórico e avaliação capilar, com tricoscopia de até 200x quando indicada'], ['Exames', 'Solicitados quando a causa pede investigação'], ['Plano', 'Em casa, no consultório ou nos dois']];
+const modalidades = [
+  {
+    classe: 'way--team', selo: 'CORPO CLÍNICO HAIR ZENITH', titulo: 'Consulta Hair Zenith',
+    texto: 'Conduzida por uma tricologista da equipe, com o protocolo completo da clínica.',
+    foto: { img: 'tricoscopio-retrato', alt: 'Tricoscópio digital apoiado no couro cabeludo durante a avaliação' },
+    linhas: [['Quem conduz', `${thaina.tratamento} ${thaina.nome} em Copacabana ou ${julia.tratamento} ${julia.nome} em Cabo Frio`], ...comum, ['Valor', 'Informado no agendamento']],
+    botao: { href: wa(site.msgEquipe), variante: 'shimmer' as const, texto: 'Agendar Consulta Hair Zenith' },
+  },
+  {
+    classe: 'way--founder', selo: 'SIGNATURE • COM A FUNDADORA', titulo: 'Consulta com Larissa Pessoa',
+    texto: 'Conduzida pela fundadora da Hair Zenith, para quem deseja ser acompanhado por ela.',
+    foto: { img: 'larissa-blazer', alt: 'Larissa Pessoa de blazer branco' },
+    linhas: [['Quem conduz', 'Larissa Pessoa, fundadora e tricologista'], ...comum, ['Valor', 'Diferenciado, informado no agendamento']],
+    botao: { href: wa(site.msgLarissa), variante: 'gold' as const, texto: 'Agendar com Larissa' },
+  },
+];
+const escolhas = [
+  { nome: 'tipo', legenda: '01 • Modalidade de Consulta', opcoes: ['Consulta Hair Zenith', 'Consulta com Larissa Pessoa'], marcada: 'Consulta Hair Zenith' },
+  { nome: 'unidade', legenda: '02 • Unidade de Preferência', opcoes: ['Copacabana', 'Cabo Frio', 'Tanto faz'], marcada: 'Copacabana' },
+  { nome: 'queixa', legenda: '03 • O que você está percebendo', opcoes: ['Queda de cabelo', 'Calvície', 'Couro cabeludo aparente', 'Fios mais finos', 'Perda de volume', 'Prefiro contar na consulta'], marcada: 'Prefiro contar na consulta' },
+  { nome: 'periodo', legenda: '04 • Período Preferencial', opcoes: ['Manhã', 'Tarde', 'Qualquer horário'], marcada: 'Qualquer horário' },
+];
+const faq = [
+  { q: 'Qual a diferença entre as duas consultas?', a: 'O método é o mesmo: história clínica, tricoscopia, exames quando necessários e plano de tratamento. Na Consulta com Larissa Pessoa, quem conduz é a fundadora, com agenda própria e valor diferenciado.' },
+  { q: 'Quanto custa a consulta?', a: 'Os valores das duas modalidades são informados no agendamento, pelo WhatsApp.' },
+  { q: 'O tratamento começa na mesma consulta?', a: 'A consulta é de avaliação e planejamento. O tratamento começa depois, em casa, no consultório ou nos dois, conforme o plano definido.' },
+  { q: 'O que levar?', a: 'Exames de sangue recentes, se você tiver, e a lista dos medicamentos e suplementos que usa.' },
+  { q: 'Vocês atendem homens e mulheres?', a: 'Sim. A Hair Zenith trata queda e calvície em mulheres e homens.' },
+];
+const schema = [
+  {
+    '@type': 'WebPage', url: site.url + '/consulta/', name: 'Consulta de tricologia', inLanguage: 'pt-BR',
+    mainEntity: [
+      { '@type': 'Service', name: 'Consulta Hair Zenith', serviceType: 'Consulta de tricologia', provider: { '@id': ORG_ID }, description: 'Consulta conduzida por uma tricologista da equipe Hair Zenith, com tricoscopia de até 200x e plano de tratamento.' },
+      { '@type': 'Service', name: 'Consulta com Larissa Pessoa', serviceType: 'Consulta de tricologia', provider: { '@id': LARISSA_ID }, description: 'Consulta conduzida pela fundadora da Hair Zenith, com agenda própria e valor diferenciado.' },
+    ],
+  },
+  migalhas([['Hair Zenith', '/'], ['Consulta', '/consulta/']]),
+  schemaLarissa(),
+];
+---
+<Base
+  titulo="Consulta de tricologia no Rio de Janeiro: Hair Zenith ou Larissa Pessoa"
+  descricao="Duas modalidades: Consulta Hair Zenith, com a equipe, e Consulta com Larissa Pessoa, com valor diferenciado. Tricoscopia de até 200x, em Copacabana e Cabo Frio."
+  ativo="consulta"
+  schema={schema}
+>
+  <Phero
+    h1="Consulta de tricologia"
+    lead="Duas modalidades, um mesmo método. O que muda é quem conduz a sua consulta."
+    alto={{ img: 'tela-tricoscopia-retrato', alt: 'Imagem ampliada dos fios na tela durante a tricoscopia' }}
+    quadrado={{ img: 'larissa-sentada', alt: 'Larissa Pessoa sentada em uma poltrona clara' }}
+  >
+    <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="#h-modalidades">Comparar as modalidades &rarr;</a>
+  </Phero>
+
+  <section class="ways wrap grid" aria-labelledby="h-modalidades">
+    <div class="ways__head">
+      <Kicker data-reveal>MODALIDADES DE ATENDIMENTO</Kicker>
+      <h2 id="h-modalidades" data-reveal>Escolha como ser atendido</h2>
+      <p class="ways__intro" data-reveal style="--i:1">As duas consultas seguem o mesmo protocolo de avaliação e o mesmo cuidado. A diferença está em quem conduz e na agenda.</p>
+    </div>
+    {modalidades.map((m) => (
+      <article class={`way ${m.classe}`} data-spotlight data-reveal>
+        <div class="way__top"><span class="way__badge">{m.selo}</span></div>
+        <Moldura nome={m.foto.img} alt={m.foto.alt} sizes="(max-width: 900px) 100vw, 44vw" />
+        <div class="way__body">
+          <h3>{m.titulo}</h3>
+          <p>{m.texto}</p>
+          <dl>{m.linhas.map(([a, b]) => <div><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+          <div class="actions"><Botao href={m.botao.href} variante={m.botao.variante}>{m.botao.texto}</Botao></div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <Momentos titulo="Como é a consulta" id="h-etapas" />
+
+  <section class="composer" aria-labelledby="h-mensagem">
+    <div class="wrap grid">
+      <div class="composer__head">
+        <Kicker data-reveal>CONCIERGE DIGITAL</Kicker>
+        <h2 id="h-mensagem" data-reveal>Monte sua mensagem</h2>
+        <p class="composer__intro" data-reveal style="--i:1">Escolha a consulta, a unidade e o que você está sentindo. A mensagem fica pronta para enviar pelo WhatsApp, e a equipe responde com os horários e o valor.</p>
+      </div>
+      <form class="composer__form" data-composer={site.whats} data-spotlight>
+        {escolhas.map((c) => (
+          <fieldset>
+            <legend>{c.legenda}</legend>
+            <div class="choices">{c.opcoes.map((o) => <label><input type="radio" name={c.nome} value={o} checked={o === c.marcada} /><span>{o}</span></label>)}</div>
+          </fieldset>
+        ))}
+        <div class="composer__preview" aria-live="polite">
+          <span class="composer__preview-label">MENSAGEM PRONTA PARA ENVIO</span>
+          <p data-message>{site.msgEquipe}</p>
+        </div>
+        <div><Botao href={wa(site.msgEquipe)} data-send target="_blank" rel="noopener">Enviar pelo WhatsApp</Botao></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="places wrap grid" aria-labelledby="h-unidades">
+    <div class="places__head">
+      <Kicker data-reveal>ENDEREÇOS EXCLUSIVOS</Kicker>
+      <h2 id="h-unidades" data-reveal>Onde atendemos</h2>
+    </div>
+    <figure class="places__pic"><Moldura nome="avenida-copacabana" alt="A Avenida Nossa Senhora de Copacabana, com prédios e árvores dos dois lados" sizes="(max-width: 900px) 84vw, 34vw" /><figcaption>Avenida Nossa Senhora de Copacabana</figcaption></figure>
+    <div class="places__list" data-reveal>
+      {site.unidades.map((u) => (
+        <div class="place" data-spotlight><Kicker>{u.coords}</Kicker><h3>{u.nome}</h3><p>{u.rua}<br />{u.bairro}</p><a class="link" href={u.mapa} rel="noopener">Como chegar &rarr;</a></div>
+      ))}
+      <div class="place place--dark" data-spotlight><Kicker ouro>EXPANSÃO • 2027</Kicker><h3>Março de 2027</h3><p>A nova Hair Zenith abre as portas. Até lá, os atendimentos seguem nestes dois endereços.</p><a class="link" href="/nova-clinica/">A nova clínica &rarr;</a></div>
+    </div>
+  </section>
+
+  <Perguntas itens={faq} />
+  <Fecho frase="Agende pelo WhatsApp e receba os horários das duas consultas." pergunta="Pronto para agendar?" />
+</Base>

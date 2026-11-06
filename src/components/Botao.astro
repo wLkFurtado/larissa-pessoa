@@ -1,0 +1,9 @@
+---
+interface Props {
+  href: string;
+  variante?: 'shimmer' | 'gold';
+  [atributo: string]: unknown;
+}
+const { href, variante = 'shimmer', ...resto } = Astro.props;
+---
+<a class={`button button--${variante}`} href={href} {...resto}><span><slot /></span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>

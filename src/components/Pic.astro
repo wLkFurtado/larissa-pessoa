@@ -1,0 +1,23 @@
+---
+// Uma foto do site em duas larguras, com as dimensões reais lidas de imagens.json.
+import { manifestoImagens } from '../lib/site';
+
+interface Props {
+  nome: string;
+  alt: string;
+  sizes?: string;
+  prioridade?: boolean;
+}
+const { nome, alt, sizes = '(max-width: 900px) 100vw, 40vw', prioridade = false } = Astro.props;
+const { g, p } = manifestoImagens[nome];
+---
+<img
+  src={`/assets/img/${nome}.jpg`}
+  srcset={`/assets/img/${nome}-p.jpg ${p[0]}w, /assets/img/${nome}.jpg ${g[0]}w`}
+  sizes={sizes}
+  width={g[0]}
+  height={g[1]}
+  alt={alt}
+  fetchpriority={prioridade ? 'high' : undefined}
+  decoding={prioridade ? undefined : 'async'}
+/>

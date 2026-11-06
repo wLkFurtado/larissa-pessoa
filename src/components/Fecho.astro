@@ -1,0 +1,46 @@
+---
+// Cartão de fechamento de cada página, com o convite para agendar.
+// Com "titulo", a frase grande vira o título da seção e os botões vêm do slot.
+import Kicker from './Kicker.astro';
+import Moldura from './Moldura.astro';
+import Botao from './Botao.astro';
+import { site, wa, type Imagem } from '../lib/site';
+
+interface Props {
+  frase?: string;
+  titulo?: string;
+  pergunta?: string;
+  texto?: string;
+  kicker?: string;
+  retrato?: Imagem;
+}
+const {
+  frase,
+  titulo,
+  pergunta = 'Qual consulta é para você?',
+  texto,
+  kicker = 'ATENDIMENTO PERSONALIZADO',
+  retrato = { img: 'larissa-sentada', alt: 'Larissa Pessoa sorri sentada em uma poltrona clara' },
+} = Astro.props;
+---
+<section class="close wrap" aria-labelledby="h-agendar">
+  <div class="close__card grid" data-spotlight>
+    <div class="close__copy">
+      <Kicker>{kicker}</Kicker>
+      {titulo ? <h2 id="h-agendar" class="close__sentence" data-reveal>{titulo}</h2> : <p class="close__sentence" data-reveal>{frase}</p>}
+    </div>
+    <div class="close__portrait"><Moldura nome={retrato.img} alt={retrato.alt} sizes="(max-width: 900px) 30vw, 14vw" /></div>
+    <div class="close__links" data-reveal style="--i:2">
+      {titulo ? texto && <p class="close__text">{texto}</p> : <h2 id="h-agendar">{pergunta}</h2>}
+      <ul class="close__list">
+        {Astro.slots.has('default') ? <slot /> : (
+          <>
+            <li><Botao href={wa()}>Agendar pelo WhatsApp</Botao></li>
+            <li><a class="link" href="/consulta/">Comparar as consultas &rarr;</a></li>
+          </>
+        )}
+      </ul>
+      <p class="small">Copacabana e Cabo Frio, com hora marcada. WhatsApp {site.whatsTexto}.</p>
+    </div>
+  </div>
+</section>

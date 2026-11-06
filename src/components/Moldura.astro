@@ -1,0 +1,15 @@
+---
+// A moldura de uma foto. Por padrão abre em cortina ao entrar na tela (data-open).
+import Pic from './Pic.astro';
+
+interface Props {
+  nome: string;
+  alt: string;
+  sizes?: string;
+  prioridade?: boolean;
+  class?: string;
+  attrs?: Record<string, string>;
+}
+const { nome, alt, sizes, prioridade = false, class: classe = 'frame', attrs = { 'data-open': '' } } = Astro.props;
+---
+<div class={classe} {...attrs}><Pic nome={nome} alt={alt} sizes={sizes} prioridade={prioridade} /></div>

@@ -1,0 +1,831 @@
+[
+ {
+  "slug": "queda-de-cabelo",
+  "nome": "Queda de cabelo",
+  "titulo": "Queda de cabelo: avaliação e tratamento no Rio de Janeiro | Hair Zenith",
+  "descricao": "Queda acima de 100 fios por dia tem causa, e a causa tem tratamento. Avaliação com tricoscopia e plano personalizado na Hair Zenith, em Copacabana e Cabo Frio.",
+  "lead": "Perder de 50 a 100 fios por dia faz parte do ciclo do cabelo. Quando a queda passa disso, ou não para, ela tem uma causa que pode ser encontrada e tratada.",
+  "onde": "No ralo e na escova",
+  "zona": "Fios soltos no travesseiro, no ralo e na escova, em quantidade acima do habitual.",
+  "condicao": {
+   "nome": "Queda de cabelo",
+   "alternativos": [
+    "Eflúvio telógeno",
+    "Queda capilar"
+   ]
+  },
+  "alto": {
+   "img": "espelho-retrato",
+   "alt": "Mulher penteia o cabelo diante do espelho"
+  },
+  "quadrado": {
+   "img": "escova-fios",
+   "alt": "Fios presos nas cerdas de uma escova"
+  },
+  "lateral": {
+   "img": "escovando",
+   "alt": "Mulher observa os fios enquanto escova o cabelo"
+  },
+  "sinais": [
+   {
+    "nome": "Mais de 100 fios por dia",
+    "texto": "No travesseiro, no ralo e na escova, de forma contínua."
+   },
+   {
+    "nome": "Fio que cai com a raiz",
+    "texto": "O bulbo aparece na ponta do fio, em grande quantidade."
+   },
+   {
+    "nome": "Queda depois de um evento",
+    "texto": "Dois a três meses após febre alta, cirurgia, parto, dieta restritiva ou estresse intenso."
+   },
+   {
+    "nome": "Couro cabeludo irritado",
+    "texto": "Coceira, descamação, sensibilidade ou oleosidade junto com a queda."
+   },
+   {
+    "nome": "Falhas arredondadas",
+    "texto": "Áreas lisas e circulares, que pedem avaliação sem demora."
+   },
+   {
+    "nome": "Rabo de cavalo mais fino",
+    "texto": "O volume diminui mesmo sem você notar os fios caindo."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Eflúvio telógeno",
+    "texto": "Queda difusa que aparece semanas depois de um gatilho: febre, cirurgia, parto, perda rápida de peso, estresse. Costuma ser reversível quando o gatilho é tratado."
+   },
+   {
+    "nome": "Alterações hormonais",
+    "texto": "Tireoide, pós-parto, menopausa e o início ou a suspensão de anticoncepcionais mudam o ciclo do fio."
+   },
+   {
+    "nome": "Deficiências nutricionais",
+    "texto": "Ferro, ferritina, vitamina D, zinco e proteína baixos aparecem com frequência nos exames de quem perde cabelo."
+   },
+   {
+    "nome": "Inflamação do couro cabeludo",
+    "texto": "Dermatite seborreica, psoríase e infecções fúngicas enfraquecem o folículo e mantêm a queda ativa."
+   },
+   {
+    "nome": "Predisposição genética",
+    "texto": "Quando a queda vem com afinamento progressivo, pode ser o início da alopecia androgenética, a calvície."
+   },
+   {
+    "nome": "Medicamentos",
+    "texto": "Alguns remédios têm a queda como efeito colateral. A investigação inclui a lista do que você usa."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Tratar a causa",
+    "texto": "Corrigir deficiências, controlar a inflamação do couro cabeludo e, quando a origem é hormonal, trabalhar junto com o médico que acompanha você."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estimulam o folículo e a circulação do couro cabeludo. Indicados para queda difusa e afinamento."
+   },
+   {
+    "nome": "Microinfusão de ativos",
+    "texto": "Ativos levados diretamente ao couro cabeludo para reduzir a queda e fortalecer o fio."
+   },
+   {
+    "nome": "Mesoject",
+    "texto": "Eletroporação: os ativos entram no couro cabeludo sem agulhas, com conforto."
+   },
+   {
+    "nome": "Cuidado em casa",
+    "texto": "Produtos e rotina definidos para o seu couro cabeludo, entre uma sessão e outra."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Quantos fios é normal perder por dia?",
+    "a": "Entre 50 e 100, variando com a genética, a estação do ano e a rotina de lavagem. Queda contínua acima disso, falhas visíveis ou fios mais finos pedem avaliação."
+   },
+   {
+    "q": "Queda de cabelo tem tratamento?",
+    "a": "Tem, quando o tratamento é dirigido à causa. Por isso a consulta começa pela investigação: história clínica, tricoscopia e, se necessário, exames."
+   },
+   {
+    "q": "Em quanto tempo aparece resultado?",
+    "a": "Os primeiros sinais costumam aparecer entre 60 e 90 dias, conforme a causa e o protocolo. A evolução é acompanhada nas reavaliações."
+   },
+   {
+    "q": "Preciso fazer exames de sangue?",
+    "a": "Nem sempre. Quando a história e a tricoscopia sugerem uma causa interna, como anemia, tireoide ou falta de vitaminas, os exames confirmam o diagnóstico."
+   },
+   {
+    "q": "Lavar o cabelo todo dia aumenta a queda?",
+    "a": "Não. Os fios que caem na lavagem já estavam soltos. Lavar com menos frequência só acumula esses fios para o dia seguinte."
+   }
+  ],
+  "causasPic": {
+   "img": "analise-imagens",
+   "alt": "Paciente revisa no notebook as imagens ampliadas dos próprios fios"
+  },
+  "tratPic": {
+   "img": "laser-led",
+   "alt": "Capacete de laser e LED posicionado sobre a cabeça de uma paciente"
+  },
+  "chamada": "Quando a quantidade de fios que caem começa a chamar sua atenção."
+ },
+ {
+  "slug": "calvicie-feminina",
+  "nome": "Calvície feminina",
+  "titulo": "Calvície feminina: tratamento sem cirurgia no Rio de Janeiro | Hair Zenith",
+  "descricao": "Risca mais larga, topo com menos volume, fios mais finos: sinais de calvície feminina. Avaliação com tricoscopia e tratamento personalizado na Hair Zenith.",
+  "lead": "Na mulher, a calvície raramente forma entradas. Ela aparece como uma risca que se alarga e um topo que perde volume, enquanto a linha da testa continua no lugar.",
+  "onde": "Na risca do cabelo",
+  "zona": "A risca central se alarga e o topo fica mais ralo; a linha da testa costuma se manter.",
+  "condicao": {
+   "nome": "Alopecia androgenética feminina",
+   "alternativos": [
+    "Calvície feminina",
+    "Alopecia de padrão feminino"
+   ]
+  },
+  "alto": {
+   "img": "analise-imagens",
+   "alt": "Paciente revisa no notebook as imagens ampliadas dos próprios fios"
+  },
+  "quadrado": {
+   "img": "resultado-4",
+   "alt": "Risca central de uma paciente em três momentos do tratamento"
+  },
+  "lateral": {
+   "img": "espelho",
+   "alt": "Mulher penteia o cabelo diante do espelho"
+  },
+  "sinais": [
+   {
+    "nome": "Risca mais larga",
+    "texto": "Dá para ver mais pele ao longo da risca central do que antes."
+   },
+   {
+    "nome": "Topo com menos volume",
+    "texto": "O cabelo assenta mais rente ao couro cabeludo no alto da cabeça."
+   },
+   {
+    "nome": "Rabo de cavalo mais fino",
+    "texto": "O elástico dá mais voltas do que dava alguns anos atrás."
+   },
+   {
+    "nome": "Fios de espessuras diferentes",
+    "texto": "Fios finos e curtos misturados aos normais, sinal de miniaturização."
+   },
+   {
+    "nome": "Couro cabeludo sob a luz",
+    "texto": "Em fotos com flash ou sob luz de cima, o topo aparece."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Alopecia androgenética",
+    "texto": "Predisposição genética e sensibilidade do folículo aos hormônios androgênios. O fio afina a cada ciclo até ficar quase invisível."
+   },
+   {
+    "nome": "Mudanças hormonais",
+    "texto": "Menopausa, pós-parto, síndrome dos ovários policísticos e a suspensão de anticoncepcionais podem iniciar ou acelerar o quadro."
+   },
+   {
+    "nome": "Queda associada",
+    "texto": "Falta de ferro, alterações de tireoide e estresse se somam à calvície e aumentam a perda de volume."
+   },
+   {
+    "nome": "Microinflamação",
+    "texto": "Inflamação discreta ao redor do folículo, visível na tricoscopia, que contribui para a miniaturização."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Plano multimodal",
+    "texto": "Tecnologias, ativos e cuidado em casa combinados conforme o grau da calvície. É a abordagem descrita no estudo de caso da equipe sobre alopecia androgenética feminina, publicado em 2025."
+   },
+   {
+    "nome": "MMP",
+    "texto": "Microinfusão de medicamentos na pele: ativos aplicados diretamente na região afetada para estimular as unidades foliculares."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estimulam o folículo e a circulação, com sessões sem dor e sem tempo de recuperação."
+   },
+   {
+    "nome": "Mesoject",
+    "texto": "Ativos levados ao couro cabeludo por eletroporação, sem agulhas."
+   },
+   {
+    "nome": "Fator hormonal",
+    "texto": "Quando há componente hormonal, o tratamento é conduzido junto com a ginecologista ou a endocrinologista."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Calvície feminina tem cura?",
+    "a": "Não existe cura definitiva, mas existe controle. O tratamento contínuo desacelera a miniaturização, recupera densidade e preserva os fios que você tem."
+   },
+   {
+    "q": "Como diferenciar calvície de queda?",
+    "a": "Na queda, você vê fios caindo. Na calvície, você vê o volume diminuir, muitas vezes sem queda perceptível. A tricoscopia mostra a miniaturização e separa os dois quadros, que podem acontecer juntos."
+   },
+   {
+    "q": "Em quanto tempo aparece resultado?",
+    "a": "Os primeiros sinais aparecem entre 60 e 120 dias, conforme o estágio. A calvície pede acompanhamento contínuo, com reavaliações periódicas."
+   },
+   {
+    "q": "Vou precisar de transplante?",
+    "a": "Na maioria dos casos tratados cedo, não. O tratamento clínico recupera e mantém densidade sem cirurgia. Em quadros muito avançados, a avaliação indica se vale considerar o transplante."
+   },
+   {
+    "q": "A menopausa piora a calvície?",
+    "a": "Pode acelerar. Com a queda do estrogênio, o folículo fica mais exposto aos androgênios. Por isso a avaliação considera a sua fase hormonal."
+   }
+  ],
+  "causasPic": {
+   "img": "cowper-1698",
+   "alt": "Gravura de 1698 com cortes de pele e folículos capilares ampliados"
+  },
+  "tratPic": {
+   "img": "microinfusao",
+   "alt": "Aplicação de ativos ao longo da risca do cabelo"
+  },
+  "chamada": "Quando a risca se alarga ou o couro cabeludo fica mais visível."
+ },
+ {
+  "slug": "calvicie-masculina",
+  "nome": "Calvície masculina",
+  "titulo": "Calvície masculina: tratamento sem cirurgia no Rio de Janeiro | Hair Zenith",
+  "descricao": "Entradas subindo e coroa abrindo? A calvície masculina pode ser controlada sem cirurgia. Tricoscopia, protocolo por estágio e acompanhamento na Hair Zenith.",
+  "lead": "As entradas sobem, a coroa abre. A calvície masculina é progressiva, e quanto antes é tratada, mais fios ainda podem ser preservados.",
+  "onde": "Nas entradas e na coroa",
+  "zona": "Entradas que sobem nas têmporas e uma coroa que se abre no alto da cabeça.",
+  "condicao": {
+   "nome": "Alopecia androgenética masculina",
+   "alternativos": [
+    "Calvície masculina",
+    "Alopecia de padrão masculino"
+   ]
+  },
+  "alto": {
+   "img": "homem-entradas-retrato",
+   "alt": "Homem de barba grisalha examina as entradas no espelho"
+  },
+  "quadrado": {
+   "img": "resultado-7",
+   "alt": "Topo da cabeça de um paciente antes e depois do tratamento"
+  },
+  "lateral": {
+   "img": "homem-entradas",
+   "alt": "Homem de barba grisalha examina as entradas no espelho"
+  },
+  "sinais": [
+   {
+    "nome": "Entradas mais fundas",
+    "texto": "As têmporas recuam e a linha da testa ganha a forma de um M."
+   },
+   {
+    "nome": "Coroa aparente",
+    "texto": "O redemoinho no alto da cabeça se abre e mostra o couro cabeludo."
+   },
+   {
+    "nome": "Fios mais finos na frente",
+    "texto": "O cabelo da região frontal fica mais curto e mais fraco que o das laterais."
+   },
+   {
+    "nome": "Histórico na família",
+    "texto": "Pai, avô ou tios com calvície aumentam a chance, dos dois lados da família."
+   },
+   {
+    "nome": "Fotos antigas",
+    "texto": "A comparação com fotos de alguns anos atrás mostra o que o espelho do dia a dia esconde."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Alopecia androgenética",
+    "texto": "A di-hidrotestosterona (DHT) age sobre folículos geneticamente sensíveis e os miniaturiza a cada ciclo."
+   },
+   {
+    "nome": "Herança genética",
+    "texto": "A sensibilidade do folículo é herdada e pode vir tanto do lado materno quanto do paterno."
+   },
+   {
+    "nome": "O que acelera",
+    "texto": "Estresse, tabagismo, deficiências nutricionais e inflamação do couro cabeludo podem acelerar o processo."
+   },
+   {
+    "nome": "Hormônios e anabolizantes",
+    "texto": "Substâncias que elevam a testosterona aceleram a calvície em quem tem predisposição."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Protocolo por estágio",
+    "texto": "O grau da calvície define a combinação de tecnologias e ativos. Entradas iniciais pedem um plano; coroas abertas, outro."
+   },
+   {
+    "nome": "MMP",
+    "texto": "Microinfusão de medicamentos na pele, diretamente nas regiões afetadas, para estimular as unidades foliculares."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estímulo ao folículo e à circulação, em sessões sem dor e sem afastamento da rotina."
+   },
+   {
+    "nome": "Microinfusão de ativos",
+    "texto": "Ativos que fortalecem o fio e reduzem a queda associada."
+   },
+   {
+    "nome": "Manutenção",
+    "texto": "A calvície é crônica. Depois da fase intensiva, um plano de manutenção preserva o que foi recuperado."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Calvície tem cura?",
+    "a": "Não, mas pode ser controlada. Com tratamento contínuo é possível desacelerar a evolução, recuperar densidade e preservar os fios existentes, sem cirurgia."
+   },
+   {
+    "q": "Quando começar o tratamento?",
+    "a": "Assim que as entradas ou a coroa começam a mudar. Um folículo miniaturizado ainda responde ao tratamento; um folículo perdido, não."
+   },
+   {
+    "q": "Em quanto tempo aparece resultado?",
+    "a": "Os primeiros sinais aparecem entre 60 e 120 dias, conforme o estágio e o protocolo."
+   },
+   {
+    "q": "O tratamento substitui o transplante?",
+    "a": "Em estágios iniciais e intermediários, o tratamento clínico pode evitar a cirurgia. Em quem já fez transplante, ele protege os fios nativos ao redor."
+   }
+  ],
+  "causasPic": {
+   "img": "tricoscopio-retrato",
+   "alt": "Tricoscópio digital apoiado no couro cabeludo durante a avaliação"
+  },
+  "tratPic": {
+   "img": "mesoject-retrato",
+   "alt": "Caneta do Mesoject aplicada sobre o couro cabeludo"
+  },
+  "chamada": "Quando as entradas aumentam ou há perda de densidade na coroa."
+ },
+ {
+  "slug": "afinamento-dos-fios",
+  "nome": "Afinamento dos fios",
+  "titulo": "Afinamento dos fios: causas e tratamento no Rio de Janeiro | Hair Zenith",
+  "descricao": "Fios mais finos, curtos e frágeis são o primeiro sinal de miniaturização. Veja como a Hair Zenith avalia e trata o afinamento capilar.",
+  "lead": "Muitas vezes o primeiro sinal não é a queda, é o fio. Ele nasce mais fino, cresce menos e quebra mais fácil, e o volume vai embora sem que você veja os fios caindo.",
+  "onde": "No rabo de cavalo",
+  "zona": "Os fios ficam mais finos em toda a cabeça e o rabo de cavalo perde espessura.",
+  "condicao": {
+   "nome": "Miniaturização capilar",
+   "alternativos": [
+    "Afinamento dos fios",
+    "Afinamento capilar"
+   ]
+  },
+  "alto": {
+   "img": "tricoscopio-retrato",
+   "alt": "Tricoscópio digital apoiado no couro cabeludo durante a avaliação"
+  },
+  "quadrado": {
+   "img": "fio-na-mao",
+   "alt": "Mulher segura entre os dedos um fio que caiu"
+  },
+  "lateral": {
+   "img": "textura-castanha",
+   "alt": "Fios castanhos lisos vistos de perto"
+  },
+  "sinais": [
+   {
+    "nome": "Rabo de cavalo mais fino",
+    "texto": "A mesma quantidade de cabelo dá mais voltas no elástico."
+   },
+   {
+    "nome": "Fios que não crescem",
+    "texto": "O comprimento parece travado: o fio cai antes de chegar onde chegava."
+   },
+   {
+    "nome": "Pontas finas e quebradiças",
+    "texto": "O fio perde diâmetro e se parte com facilidade."
+   },
+   {
+    "nome": "Fios curtos no topo",
+    "texto": "Fios finos e curtos aparecem no meio do cabelo, principalmente na risca."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Miniaturização",
+    "texto": "A cada ciclo o folículo produz um fio mais fino. É o mecanismo da calvície, feminina e masculina."
+   },
+   {
+    "nome": "Deficiências nutricionais",
+    "texto": "Proteína, ferro e vitaminas em falta comprometem a fabricação do fio."
+   },
+   {
+    "nome": "Danos químicos e térmicos",
+    "texto": "Descolorações, alisamentos e calor frequente afinam e quebram o fio, sem afetar a raiz."
+   },
+   {
+    "nome": "Fase hormonal",
+    "texto": "Pós-parto, menopausa e alterações de tireoide mudam a espessura do fio."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Raiz ou haste",
+    "texto": "A tricoscopia mostra se o problema está no folículo, que produz um fio fino, ou na haste, danificada depois de nascer."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estimulam o folículo a voltar a produzir fios de maior diâmetro."
+   },
+   {
+    "nome": "Microinfusão de ativos",
+    "texto": "Ativos que nutrem o folículo e fortalecem o fio desde a raiz."
+   },
+   {
+    "nome": "Terapia capilar",
+    "texto": "Cuidados com foco terapêutico, não só estético, para a saúde do couro cabeludo e da fibra."
+   },
+   {
+    "nome": "Rotina em casa",
+    "texto": "Produtos e hábitos ajustados ao seu tipo de fio entre uma sessão e outra."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Fio fino volta a engrossar?",
+    "a": "Quando o folículo ainda está ativo, sim. Tratado a tempo, ele volta a produzir fios mais grossos ao longo dos ciclos seguintes."
+   },
+   {
+    "q": "Afinamento é o começo da calvície?",
+    "a": "Pode ser. Fios de espessuras diferentes na mesma região são o sinal mais precoce da alopecia androgenética. Mas também há causas nutricionais e hormonais, que a avaliação separa."
+   },
+   {
+    "q": "Química e escova estragam a raiz?",
+    "a": "Danificam a haste, o fio que já nasceu. A raiz continua produzindo normalmente. A tricoscopia mostra qual dos dois está acontecendo."
+   },
+   {
+    "q": "Quanto tempo para ver diferença?",
+    "a": "O fio novo leva meses para ganhar comprimento. Os primeiros sinais aparecem entre 60 e 120 dias, com melhora progressiva."
+   }
+  ],
+  "causasPic": {
+   "img": "cowper-1698",
+   "alt": "Gravura de 1698 com cortes de pele e folículos capilares ampliados"
+  },
+  "tratPic": {
+   "img": "laser-led",
+   "alt": "Capacete de laser e LED posicionado sobre a cabeça de uma paciente"
+  },
+  "chamada": "Quando o cabelo parece mais fino ou perde volume ao longo do tempo."
+ },
+ {
+  "slug": "alteracoes-do-couro-cabeludo",
+  "nome": "Alterações do couro cabeludo",
+  "titulo": "Alterações do couro cabeludo: coceira, caspa e oleosidade | Hair Zenith",
+  "descricao": "Coceira, descamação, oleosidade ou desconforto persistente no couro cabeludo têm causa e podem afetar os fios. Avaliação individualizada na Hair Zenith, em Copacabana e Cabo Frio.",
+  "lead": "Coceira, descamação, oleosidade ou desconforto que não passam são sinais de que o couro cabeludo precisa de atenção. É dele que nasce cada fio.",
+  "onde": "Na pele, entre os fios",
+  "chamada": "Coceira, descamação, oleosidade ou desconforto persistente.",
+  "zona": "Coceira, descamação, oleosidade ou desconforto em toda a área do couro cabeludo.",
+  "condicao": {
+   "nome": "Alterações do couro cabeludo",
+   "alternativos": [
+    "Dermatite seborreica",
+    "Caspa",
+    "Oleosidade do couro cabeludo"
+   ]
+  },
+  "alto": {
+   "img": "tricoscopio-retrato",
+   "alt": "Tricoscópio digital apoiado no couro cabeludo durante a avaliação"
+  },
+  "quadrado": {
+   "img": "textura-castanha",
+   "alt": "Fios castanhos lisos vistos de perto"
+  },
+  "lateral": {
+   "img": "analise-imagens",
+   "alt": "Paciente revisa no notebook as imagens ampliadas do próprio couro cabeludo"
+  },
+  "sinais": [
+   {
+    "nome": "Coceira persistente",
+    "texto": "Vontade de coçar que volta todos os dias, com ou sem lesões visíveis."
+   },
+   {
+    "nome": "Descamação",
+    "texto": "Flocos brancos ou amarelados no couro cabeludo, nos ombros ou na roupa."
+   },
+   {
+    "nome": "Oleosidade excessiva",
+    "texto": "O cabelo fica oleoso poucas horas depois da lavagem."
+   },
+   {
+    "nome": "Vermelhidão ou ardência",
+    "texto": "Áreas avermelhadas, sensíveis ou que ardem com o xampu ou a água quente."
+   },
+   {
+    "nome": "Desconforto ao toque",
+    "texto": "Dor, repuxamento ou sensibilidade ao pentear ou prender o cabelo."
+   },
+   {
+    "nome": "Queda associada",
+    "texto": "Fios caindo mais junto com qualquer um desses sinais."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Dermatite seborreica",
+    "texto": "Inflamação ligada à oleosidade e a fungos que vivem na pele. Provoca descamação, vermelhidão e coceira, e tende a ir e voltar."
+   },
+   {
+    "nome": "Oleosidade em excesso",
+    "texto": "Glândulas sebáceas mais ativas, por fatores hormonais, genéticos ou de rotina, deixam o couro cabeludo pesado e favorecem a inflamação."
+   },
+   {
+    "nome": "Sensibilidade e irritação",
+    "texto": "Produtos, químicas, água muito quente e lavagens agressivas podem irritar a pele e causar ardência e descamação."
+   },
+   {
+    "nome": "Doenças de pele",
+    "texto": "Quadros como psoríase e foliculite também aparecem no couro cabeludo e pedem diagnóstico médico. Quando a avaliação indica, o caso é encaminhado ao dermatologista."
+   }
+  ],
+  "causasPic": {
+   "img": "cowper-1698",
+   "alt": "Gravura de 1698 com cortes de pele e folículos capilares ampliados"
+  },
+  "tratamentos": [
+   {
+    "nome": "Avaliar a pele e os fios",
+    "texto": "A avaliação capilar, com tricoscopia digital quando indicada, mostra descamação, inflamação, oleosidade e o estado das unidades foliculares."
+   },
+   {
+    "nome": "Terapia capilar",
+    "texto": "Cuidados com foco terapêutico para equilibrar oleosidade, reduzir a descamação e acalmar o couro cabeludo."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Luz de baixa intensidade que melhora a circulação e apoia a recuperação do couro cabeludo."
+   },
+   {
+    "nome": "Rotina em casa",
+    "texto": "Produtos, frequência de lavagem e hábitos ajustados ao seu couro cabeludo entre uma sessão e outra."
+   },
+   {
+    "nome": "Encaminhamento quando necessário",
+    "texto": "Quando os achados sugerem uma doença de pele, o plano é conduzido junto com o dermatologista."
+   }
+  ],
+  "tratPic": {
+   "img": "laser-led",
+   "alt": "Capacete de laser e LED posicionado sobre a cabeça de uma paciente"
+  },
+  "faq": [
+   {
+    "q": "Caspa é falta de higiene?",
+    "a": "Não. A descamação costuma estar ligada à oleosidade, a fungos da própria pele e à sensibilidade do couro cabeludo. Lavar mais vezes nem sempre resolve, e às vezes piora."
+   },
+   {
+    "q": "Couro cabeludo inflamado faz o cabelo cair?",
+    "a": "Pode contribuir. A inflamação persistente enfraquece o ambiente em que o fio cresce e pode se somar a outras causas de queda. Por isso as duas coisas são avaliadas juntas."
+   },
+   {
+    "q": "Preciso parar de usar meus produtos?",
+    "a": "Não necessariamente. A avaliação identifica o que pode estar irritando e ajusta a rotina, em vez de cortar tudo de uma vez."
+   },
+   {
+    "q": "Em quanto tempo melhora?",
+    "a": "Coceira e oleosidade costumam melhorar nas primeiras semanas de cuidado. Quadros que vão e voltam, como a dermatite seborreica, pedem acompanhamento contínuo."
+   }
+  ]
+ },
+ {
+  "slug": "couro-cabeludo-aparente",
+  "nome": "Couro cabeludo aparente",
+  "titulo": "Couro cabeludo aparente: causas e tratamento no Rio de Janeiro | Hair Zenith",
+  "descricao": "Couro cabeludo aparecendo no topo, na risca ou sob a luz? Entenda as causas e como a Hair Zenith avalia e trata a perda de cobertura capilar.",
+  "lead": "Sob a luz do banheiro, no flash do celular, com o cabelo molhado: quando o couro cabeludo começa a aparecer, os fios perderam número, espessura ou os dois.",
+  "onde": "Sob a luz, no topo",
+  "zona": "O topo da cabeça aparece sob luz forte, no flash ou com o cabelo molhado.",
+  "condicao": {
+   "nome": "Rarefação capilar",
+   "alternativos": [
+    "Couro cabeludo aparente",
+    "Baixa cobertura capilar"
+   ]
+  },
+  "alto": {
+   "img": "tela-tricoscopia-retrato",
+   "alt": "Imagem ampliada dos fios na tela durante a tricoscopia"
+  },
+  "quadrado": {
+   "img": "resultado-5",
+   "alt": "Topo da cabeça de uma paciente em três momentos do tratamento"
+  },
+  "lateral": {
+   "img": "tela-tricoscopia",
+   "alt": "Imagem ampliada dos fios na tela durante a tricoscopia"
+  },
+  "sinais": [
+   {
+    "nome": "No flash e sob luz de cima",
+    "texto": "O couro cabeludo aparece em fotos e em elevadores, mesmo com o cabelo seco."
+   },
+   {
+    "nome": "Com o cabelo molhado",
+    "texto": "Os fios se agrupam e deixam caminhos de pele visíveis."
+   },
+   {
+    "nome": "Na risca e no redemoinho",
+    "texto": "As duas regiões abrem primeiro, porque já separam os fios naturalmente."
+   },
+   {
+    "nome": "Penteados que mudaram",
+    "texto": "Você passou a escolher a risca ou o volume para esconder o topo."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Miniaturização",
+    "texto": "Os fios continuam lá, mas mais finos. Cobrem menos e deixam a pele aparecer: é o caminho da calvície."
+   },
+   {
+    "nome": "Menos fios por área",
+    "texto": "Uma queda que se prolonga reduz o número de fios em cada unidade folicular."
+   },
+   {
+    "nome": "Unidades foliculares vazias",
+    "texto": "Na tricoscopia, aparecem como pontos sem fio, onde o folículo parou de produzir."
+   },
+   {
+    "nome": "Couro cabeludo inflamado",
+    "texto": "Vermelhidão e descamação deixam a pele mais visível e prejudicam o crescimento."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Mapear antes de tratar",
+    "texto": "A tricoscopia mostra onde a cobertura caiu e por quê: fio mais fino, menos fios ou inflamação."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estimulam os folículos ainda ativos a produzir fios mais grossos."
+   },
+   {
+    "nome": "MMP",
+    "texto": "Ativos aplicados diretamente nas áreas de menor cobertura."
+   },
+   {
+    "nome": "Microinfusão de ativos",
+    "texto": "Fortalece o fio e reduz a queda que mantém o topo ralo."
+   },
+   {
+    "nome": "Acompanhamento por imagem",
+    "texto": "Fotos padronizadas do topo em cada reavaliação mostram a evolução da cobertura."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Couro cabeludo aparente é sempre calvície?",
+    "a": "Não. Pode ser calvície, queda prolongada, inflamação ou uma combinação delas. A tricoscopia diferencia os quadros."
+   },
+   {
+    "q": "Dá para recuperar a cobertura?",
+    "a": "Quando o folículo ainda está ativo, sim: tratar a causa e estimular o fio devolve espessura e densidade. Por isso a avaliação cedo faz diferença."
+   },
+   {
+    "q": "Maquiagem e pigmentação capilar resolvem?",
+    "a": "Disfarçam, e podem ser usadas durante o tratamento. Não tratam a causa."
+   },
+   {
+    "q": "Quanto tempo leva?",
+    "a": "Os primeiros sinais aparecem entre 60 e 120 dias. A cobertura melhora de forma gradual ao longo dos meses de acompanhamento."
+   }
+  ],
+  "causasPic": {
+   "img": "cowper-1698",
+   "alt": "Gravura de 1698 com cortes de pele e folículos capilares ampliados"
+  },
+  "tratPic": {
+   "img": "tricoscopio-retrato",
+   "alt": "Tricoscópio digital apoiado no couro cabeludo durante a avaliação"
+  }
+ },
+ {
+  "slug": "perda-de-densidade-capilar",
+  "nome": "Perda de densidade capilar",
+  "titulo": "Perda de densidade capilar: tratamento no Rio de Janeiro | Hair Zenith",
+  "descricao": "Cabelo com menos volume e menos fios por área? A perda de densidade capilar tem tratamento. Avaliação com tricoscopia e protocolo personalizado na Hair Zenith.",
+  "lead": "Densidade é a quantidade de fios por centímetro quadrado. Quando ela cai, o cabelo perde corpo e volume, mesmo antes de qualquer falha ficar visível.",
+  "onde": "No volume, ano a ano",
+  "zona": "O cabelo inteiro perde corpo e volume, sem uma falha localizada.",
+  "condicao": {
+   "nome": "Perda de densidade capilar",
+   "alternativos": [
+    "Rarefação capilar difusa"
+   ]
+  },
+  "alto": {
+   "img": "laser-led",
+   "alt": "Capacete de laser e LED posicionado sobre a cabeça de uma paciente"
+  },
+  "quadrado": {
+   "img": "textura-loira",
+   "alt": "Mechas loiras onduladas vistas de perto"
+  },
+  "lateral": {
+   "img": "textura-loira",
+   "alt": "Mechas loiras onduladas vistas de perto"
+  },
+  "sinais": [
+   {
+    "nome": "Menos volume que antes",
+    "texto": "O cabelo parece mais leve e mais rente à cabeça, com o mesmo corte."
+   },
+   {
+    "nome": "Penteados que não seguram",
+    "texto": "O volume não se sustenta ao longo do dia."
+   },
+   {
+    "nome": "Fios mais espaçados",
+    "texto": "Ao separar o cabelo em mechas, há mais espaço entre os fios."
+   },
+   {
+    "nome": "Diferença em fotos antigas",
+    "texto": "O contraste aparece ao comparar com fotos de dois ou três anos atrás."
+   }
+  ],
+  "causas": [
+   {
+    "nome": "Calvície em estágio inicial",
+    "texto": "A alopecia androgenética reduz a densidade antes de abrir falhas visíveis."
+   },
+   {
+    "nome": "Queda crônica",
+    "texto": "Um eflúvio que se prolonga por meses diminui o número de fios em crescimento."
+   },
+   {
+    "nome": "Envelhecimento do folículo",
+    "texto": "Com a idade, parte dos folículos passa a produzir menos fios por unidade folicular."
+   },
+   {
+    "nome": "Saúde geral",
+    "texto": "Tireoide, anemia, dietas restritivas e estresse prolongado se refletem na densidade."
+   }
+  ],
+  "tratamentos": [
+   {
+    "nome": "Medir para comparar",
+    "texto": "A densidade é registrada na primeira consulta e comparada nas reavaliações, com fotos na mesma posição."
+   },
+   {
+    "nome": "Laser e LED capilar",
+    "texto": "Estímulo contínuo aos folículos ativos para recuperar fios em crescimento."
+   },
+   {
+    "nome": "MMP",
+    "texto": "Ativos aplicados nas regiões de menor densidade."
+   },
+   {
+    "nome": "Mesoject",
+    "texto": "Ativos por eletroporação, sem agulhas, para quem busca conforto."
+   },
+   {
+    "nome": "Plano contínuo",
+    "texto": "A densidade se recupera ciclo a ciclo. O plano prevê uma fase intensiva e uma de manutenção."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Como se mede a densidade capilar?",
+    "a": "Pela tricoscopia, que amplia o couro cabeludo e permite contar fios e unidades foliculares em uma área definida."
+   },
+   {
+    "q": "A densidade perdida volta?",
+    "a": "Enquanto os folículos estiverem ativos, é possível recuperar parte da densidade e preservar o restante. A resposta varia de pessoa para pessoa."
+   },
+   {
+    "q": "Qual a diferença entre densidade e espessura?",
+    "a": "Densidade é quantos fios você tem; espessura é o diâmetro de cada fio. As duas definem o volume, e o tratamento considera as duas."
+   },
+   {
+    "q": "Em quanto tempo aparece resultado?",
+    "a": "Os primeiros sinais aparecem entre 60 e 120 dias. A densidade melhora de forma progressiva ao longo do acompanhamento."
+   }
+  ],
+  "causasPic": {
+   "img": "tela-tricoscopia-retrato",
+   "alt": "Imagem ampliada dos fios na tela durante a tricoscopia"
+  },
+  "tratPic": {
+   "img": "mesoject-retrato",
+   "alt": "Caneta do Mesoject aplicada sobre o couro cabeludo"
+  }
+ }
+]

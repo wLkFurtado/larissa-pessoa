@@ -1,0 +1,52 @@
+---
+import Emblema from './Emblema.astro';
+import Botao from './Botao.astro';
+import { site, wa, ROMANOS } from '../lib/site';
+
+interface Props {
+  ativo?: string;
+}
+const { ativo } = Astro.props;
+const links = [
+  { chave: 'tratamentos', rotulo: 'Tratamentos', href: '/tratamentos/' },
+  { chave: 'equipe', rotulo: 'Equipe', href: '/equipe/' },
+  { chave: 'consulta', rotulo: 'Consulta', href: '/consulta/' },
+  { chave: 'sobre', rotulo: 'Sobre', href: '/sobre/' },
+  { chave: 'nova-clinica', rotulo: 'Nova clínica', href: '/nova-clinica/' },
+  { chave: 'conteudo', rotulo: 'Conteúdo', href: '/conteudo/' },
+];
+const menu = [{ chave: 'inicio', rotulo: 'Início', href: '/' }, ...links];
+const atual = (chave: string) => (chave === ativo ? 'page' : undefined);
+---
+<header class="site-header">
+  <div class="notice"><div class="wrap notice__inner"><span class="notice__tag">TRANSIÇÃO DE MARCA</span><p>Larissa Pessoa Tricologia agora é <strong>Hair Zenith</strong>. A nova clínica chega em março de 2027. <a class="link" href="/nova-clinica/">Acompanhe a obra &rarr;</a></p></div></div>
+  <div class="nav-shell">
+    <nav class="nav wrap" aria-label="Principal">
+      <a class="wordmark" href="/" aria-label="Hair Zenith, página inicial">
+        <Emblema />
+        <span class="wordmark__text">
+          <span class="wordmark__name">Hair Zenith</span>
+          <span class="wordmark__sub">Tricologia • Larissa Pessoa</span>
+        </span>
+      </a>
+      <div class="nav__links">{links.map((l) => <a href={l.href} aria-current={atual(l.chave)}>{l.rotulo}</a>)}</div>
+      <div class="nav__actions">
+        <Botao href={wa()}>Agendar consulta</Botao>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu"><span>Menu</span></button>
+      </div>
+    </nav>
+  </div>
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="menu__top">
+      <span class="wordmark"><Emblema /><span class="wordmark__text"><span class="wordmark__name">Hair Zenith</span><span class="wordmark__sub">Maison de Tricologia</span></span></span>
+      <button class="menu__close" type="button">Fechar &times;</button>
+    </div>
+    <ul>
+      {menu.map((l, i) => <li style={`--i:${i}`}><span class="menu__roman">{ROMANOS[i]}</span><a href={l.href} aria-current={atual(l.chave)}>{l.rotulo}</a></li>)}
+    </ul>
+    <div class="menu__footer">
+      <Botao href={wa()} variante="gold">Agendar pelo WhatsApp</Botao>
+      <p class="menu__note">Copacabana (RJ) e Novo Portinho (Cabo Frio) • WhatsApp {site.whatsTexto}.</p>
+    </div>
+  </div>
+</header>
