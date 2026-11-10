@@ -20,22 +20,21 @@ SAIDA = RAIZ / "site"
 
 # ---------------------------------------------------------------- dados da clínica
 def _site():
-    """Origem canônica. O domínio ainda não está confirmado: use SITE_URL para trocar
-    canonical, sitemap, Open Graph e JSON-LD sem espalhar o endereço pelo código."""
-    bruto = os.environ.get("SITE_URL", "").strip() or "https://www.hairzenit.com.br"
+    """Origem canônica. O domínio final é https://hairzenith.com.
+    SITE_URL troca canonical, sitemap, Open Graph e JSON-LD num lugar só."""
+    bruto = os.environ.get("SITE_URL", "").strip() or "https://hairzenith.com"
     bruto = bruto.rstrip("/")
     partes = urlparse(bruto)
     if partes.scheme != "https" or not partes.netloc or partes.path not in ("", "/") or partes.query or partes.fragment:
         raise SystemExit(
-            "SITE_URL precisa ser uma origem https, sem caminho. Ex.: https://www.hairzenit.com.br"
+            "SITE_URL precisa ser uma origem https, sem caminho. Ex.: https://hairzenith.com"
         )
     return f"https://{partes.netloc}"
 
 
 SITE = _site()
 ATUALIZADO = "2026-11-10"
-# Nome oficial confirmado pelo cliente: Hairzenith (com h).
-# O domínio padrão continua www.hairzenit.com.br até alguém confirmar o endereço final.
+# Nome oficial: Hairzenith. Domínio final: https://hairzenith.com (sem www e sem .br).
 MARCA = "Hairzenith"
 WHATS = "5521972780789"
 WHATS_TEXTO = "(21) 97278-0789"
