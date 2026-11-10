@@ -46,7 +46,7 @@ IMAGENS = {
     "espelho": ("AdobeStock_486445543-2880w.png", 16 / 10, 0.5, 0.5, (1600, 900)),
     "espelho-retrato": ("AdobeStock_486445543-2880w.png", 4 / 5, 0.62, 0.5, (1200, 640)),
     "fio-na-mao": ("Especialista_em_tricologia_no_Rio_de_Janeiro_Quando_a_queda_de_cabelo_nao_e_normal.png", 3 / 2, 0.5, 0.5, (712, 600)),
-    "textura-loira": ("AdobeStock_481109349-2880w.jpeg", 21 / 9, 0.5, 0.5, (1800, 900)),
+    "textura-loira": ("AdobeStock_481109349-2880w.jpeg", 21 / 9, 0.5, 0.5, (1200, 720)),
     "textura-castanha": ("JsvcKabjSDqFp4kkOqxf_AdobeStock_306899500.v2.0000000-1920w.jpg", 21 / 9, 0.5, 0.5, (1800, 900)),
     # Acervo aberto (créditos em site/assets/img/creditos.json)
     "cowper-1698": ("acervo-aberto/the-anatomy-of-humane-bodies-skin-and.jpg", 3 / 4, 0.5, 0.45, (1100, 640)),
@@ -103,7 +103,9 @@ def salvar(im, nome, larguras):
     for sufixo, lw in zip(("", "-p"), larguras):
         lw = min(lw, im.width)
         out = im.resize((lw, round(im.height * lw / im.width)), Image.LANCZOS)
-        out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=80, optimize=True, progressive=True)
+        # A textura loira é a foto mais pesada; 1200 px cobre o tamanho em que ela aparece.
+        qualidade = 74 if nome == "textura-loira" else 80
+        out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=qualidade, optimize=True, progressive=True)
         MANIFESTO[nome]["g" if not sufixo else "p"] = list(out.size)
 
 

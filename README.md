@@ -6,7 +6,8 @@ framework, prontas para qualquer hospedagem estática.
 ## Ver no computador
 
 ```bash
-python3 build.py                                   # gera as páginas em site/
+python3 build.py                                   # ou: npm run build
+python3 tools/verificar.py                         # ou: npm run lint
 python3 -m http.server 8080 --directory site       # abre em http://localhost:8080
 ```
 
@@ -47,8 +48,12 @@ Equipe passa a mostrar o retrato sozinha.
 1. Registrar `hairzenit.com.br` (e `hairzenit.com`). Em 28/10/2026 os dois apareciam livres no WHOIS.
 2. Subir a pasta `site/` em Netlify, Vercel ou Cloudflare Pages. Os redirecionamentos já estão prontos:
    `_redirects` (Netlify/Cloudflare) e `vercel.json` (Vercel).
-3. Se o domínio final não for `www.hairzenit.com.br`, troque `SITE` no `build.py` e gere de novo
-   (canonical, sitemap e dados estruturados usam esse endereço).
+3. O domínio padrão é `https://www.hairzenit.com.br` e ainda precisa ser confirmado. Canonical,
+   sitemap, Open Graph e JSON-LD saem todos dessa origem. Para outro endereço:
+   `SITE_URL=https://www.seudominio.com.br python3 build.py`
+   Pixel da Meta, Google Analytics e Tag Manager só entram se você exportar `META_PIXEL_ID`,
+   `GA_MEASUREMENT_ID` ou `GTM_ID` (um ID real; não deixe placeholder no HTML). Use o GTM ou o
+   Analytics, não os dois, para não contar a visita duas vezes.
 4. Google Search Console: cadastrar o domínio novo e enviar `sitemap.xml`.
 5. Quando o site novo estiver no ar, apontar `larissapessoa.com` para ele. As URLs antigas caem nas novas com
    redirecionamento 301 (mapa em `REDIRECIONAMENTOS`, no `build.py`), o que transfere a autoridade página a página.
@@ -65,7 +70,11 @@ Equipe passa a mostrar o retrato sozinha.
   e o briefing dizem. Vale a Larissa ler e ajustar o tom.
 - **Diário de obra:** as três entradas são as únicas datas conhecidas (lançamento da marca, obra em andamento,
   inauguração em março de 2027). Acrescente as etapas e as imagens do projeto arquitetônico em `nova_clinica()`.
-- **Registro profissional:** sites de saúde costumam exibir o número do conselho da responsável técnica no rodapé.
+- **Registro profissional:** o site não publica CRM nem outro conselho, e o schema da Larissa é `Person`, não `Physician`. O nome antigo "Dra. Larissa Pessoa Tricologia" segue só como alternateName. Confirmar o número antes de usar "Dra." no ar.
+- **Grafia da marca:** o site inteiro usa **Hairzenit**. Confirmar se a forma oficial é essa ou "Hair Zenith".
+- **CEP, horário e pin:** os dois endereços e o WhatsApp (21) 97278-0789 estão no código. CEP, horário de funcionamento e a coordenada medida no prédio não estão. O mapa usa grau e minuto aproximado.
+- **Endereço da nova clínica:** não está no projeto. A página só marca a inauguração em março de 2027.
+- **Pixel, Analytics e Tag Manager:** não há ID no repositório. Sem a variável de ambiente, a tag não é publicada.
 - **E-mail e Instagram:** ainda são os da marca antiga (`lamptricologia@gmail.com`, `@larissapessoatricologia`).
 - **Fotos de antes e depois:** vieram do site antigo e trazem a marca d'água Larissa Pessoa. Confirmar a
   autorização das pacientes e as regras do conselho profissional para esse tipo de imagem.
