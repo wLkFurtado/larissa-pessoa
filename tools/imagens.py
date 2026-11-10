@@ -51,7 +51,12 @@ IMAGENS = {
     # Acervo aberto (créditos em site/assets/img/creditos.json)
     "cowper-1698": ("acervo-aberto/the-anatomy-of-humane-bodies-skin-and.jpg", 3 / 4, 0.5, 0.45, (1100, 640)),
     "avenida-copacabana": ("acervo-aberto/avenida-nossa-senhora-de-copacabana-1.jpg", 4 / 5, 0.5, 0.5, (1000, 600)),
+    # Retratos da equipe (proporção 4/5, como os outros retratos)
+    "thaina": ("thaina.png", 4 / 5, 0.5, 0.5, (1400, 640)),
+    "julia": ("julia.png", 4 / 5, 0.5, 0.5, (1400, 640)),
 }
+
+RETRATOS = {"thaina", "julia"}
 
 # Antes e depois (fotos de pacientes do site anterior, 1:1)
 RESULTADOS = [
@@ -106,6 +111,9 @@ def salvar(im, nome, larguras):
         # A textura loira é a foto mais pesada; 1200 px cobre o tamanho em que ela aparece.
         qualidade = 74 if nome == "textura-loira" else 80
         out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=qualidade, optimize=True, progressive=True)
+        if nome in RETRATOS:
+            out.save(DESTINO / f"{nome}{sufixo}.webp", "WEBP", quality=78, method=6)
+            out.save(DESTINO / f"{nome}{sufixo}.avif", "AVIF", quality=48, speed=6)
         MANIFESTO[nome]["g" if not sufixo else "p"] = list(out.size)
 
 
@@ -122,6 +130,18 @@ def icones():
         d.ellipse((L / 2 - r, L * 0.3125 - r, L / 2 + r, L * 0.3125 + r), fill=bronze)
         d.rectangle((L * 0.22, L * 0.625, L * 0.78, L * 0.6875), fill=osso)
         im.resize((lado, lado), Image.LANCZOS).save(RAIZ / "site" / nome)
+
+
+def somente_retratos():
+    """Grava só Thaina e Júlia e preserva o restante de imagens.json."""
+    DESTINO.mkdir(parents=True, exist_ok=True)
+    atual = json.loads((DESTINO / "imagens.json").read_text())
+    for nome in ("thaina", "julia"):
+        arquivo, prop, fx, fy, larguras = IMAGENS[nome]
+        salvar(recortar(abrir(ORIGEM / arquivo), prop, fx, fy), nome, larguras)
+        atual[nome] = MANIFESTO[nome]
+    (DESTINO / "imagens.json").write_text(json.dumps(atual, indent=1) + "\n")
+    print("retratos:", ", ".join(f"{n} {atual[n]}" for n in ("thaina", "julia")))
 
 
 def main():

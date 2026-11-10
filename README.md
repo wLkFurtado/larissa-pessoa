@@ -1,6 +1,6 @@
-# Site Hairzenit
+# Site Hairzenith
 
-Site estático da Hairzenit (antiga Larissa Pessoa Tricologia Integrativa). São 15 páginas em HTML puro, sem
+Site estático da Hairzenith (antiga Larissa Pessoa Tricologia Integrativa). São 15 páginas em HTML puro, sem
 framework, prontas para qualquer hospedagem estática.
 
 ## Ver no computador
@@ -26,9 +26,15 @@ Abra pelo servidor local, e não clicando direto no `index.html`: os links usam 
 Depois de editar, rode `python3 build.py` de novo. Se mexer nas fotos, rode antes `python3 tools/imagens.py`
 (precisa do Pillow).
 
-**Para colocar o retrato da Thaina ou da Júlia:** salve a foto em `fotos-originais/`, acrescente uma linha em
-`IMAGENS` no `tools/imagens.py` com o nome `thaina` ou `julia` (proporção 4/5), rode os dois scripts. A página
-Equipe passa a mostrar o retrato sozinha.
+Os retratos da Thaina e da Júlia estão em `fotos-originais/thaina.png` e `fotos-originais/julia.png`.
+Para trocar só essas fotos, substitua o arquivo e rode:
+
+```bash
+python3 -c "import importlib.util; s=importlib.util.spec_from_file_location('imagens','tools/imagens.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); m.somente_retratos()"
+python3 build.py
+```
+
+`python3 tools/imagens.py` recria o acervo inteiro.
 
 ## Páginas
 
@@ -51,19 +57,27 @@ Equipe passa a mostrar o retrato sozinha.
 3. O domínio padrão é `https://www.hairzenit.com.br` e ainda precisa ser confirmado. Canonical,
    sitemap, Open Graph e JSON-LD saem todos dessa origem. Para outro endereço:
    `SITE_URL=https://www.seudominio.com.br python3 build.py`
-   Pixel da Meta, Google Analytics e Tag Manager só entram se você exportar `META_PIXEL_ID`,
-   `GA_MEASUREMENT_ID` ou `GTM_ID` (um ID real; não deixe placeholder no HTML). Use o GTM ou o
-   Analytics, não os dois, para não contar a visita duas vezes.
+   Pixel da Meta, GA4 e Tag Manager só entram com ID real, pelas variáveis abaixo. Há dois caminhos,
+   e eles não se misturam:
+
+   - **Recomendado:** só `GTM_ID`. Dentro do Tag Manager, crie a tag do GA4 e a do Pixel.
+     O clique no WhatsApp já envia `dataLayer.push({ event: 'whatsapp_click' })`.
+     No GTM, use um acionador de evento personalizado com o nome `whatsapp_click` e marque essa conversão no GA4.
+   - **Direto, sem Tag Manager:** `GA_MEASUREMENT_ID` (formato `G-…`) e/ou `META_PIXEL_ID` (só números).
+     O gerador coloca as tags no HTML.
+
+   Se `GTM_ID` estiver definido, `GA_MEASUREMENT_ID` e `META_PIXEL_ID` são ignorados, para não contar
+   a visita nem o pixel duas vezes. Nunca publique o GTM e, ao mesmo tempo, as tags diretas.
 4. Google Search Console: cadastrar o domínio novo e enviar `sitemap.xml`.
 5. Quando o site novo estiver no ar, apontar `larissapessoa.com` para ele. As URLs antigas caem nas novas com
    redirecionamento 301 (mapa em `REDIRECIONAMENTOS`, no `build.py`), o que transfere a autoridade página a página.
-6. Google Business Profile: atualizar o nome para Hairzenit nas duas unidades, mantendo endereço e telefone
+6. Google Business Profile: atualizar o nome para Hairzenith nas duas unidades, mantendo endereço e telefone
    idênticos aos do site.
 
 ## Confirmar antes de publicar
 
-- **Júlia:** sobrenome, formação e foto. Hoje a página mostra só o primeiro nome.
-- **Thaina e Júlia:** retratos (a seção está montada para recebê-los).
+- **Júlia:** sobrenome e formação. A foto já está na página Equipe; o texto continua só com o primeiro nome.
+- **Thaina:** a foto já está na página Equipe.
 - **Quem atende onde:** o site não diz qual profissional atende em qual unidade.
 - **Valores das consultas:** o site diz "informado no agendamento". Se quiser publicar, edite em `consulta()`.
 - **Texto da história** (`/sobre/` e `/equipe/larissa-pessoa/`): foi escrito a partir do que o site antigo
@@ -71,10 +85,10 @@ Equipe passa a mostrar o retrato sozinha.
 - **Diário de obra:** as três entradas são as únicas datas conhecidas (lançamento da marca, obra em andamento,
   inauguração em março de 2027). Acrescente as etapas e as imagens do projeto arquitetônico em `nova_clinica()`.
 - **Registro profissional:** o site não publica CRM nem outro conselho, e o schema da Larissa é `Person`, não `Physician`. O nome antigo "Dra. Larissa Pessoa Tricologia" segue só como alternateName. Confirmar o número antes de usar "Dra." no ar.
-- **Grafia da marca:** o site inteiro usa **Hairzenit**. Confirmar se a forma oficial é essa ou "Hair Zenith".
+- **Domínio:** a marca oficial é **Hairzenith** (com h). O padrão do site continua `https://www.hairzenit.com.br`, sem o h. Vale registrar ou apontar um domínio com a grafia nova e gerar de novo com `SITE_URL`.
 - **CEP, horário e pin:** os dois endereços e o WhatsApp (21) 97278-0789 estão no código. CEP, horário de funcionamento e a coordenada medida no prédio não estão. O mapa usa grau e minuto aproximado.
 - **Endereço da nova clínica:** não está no projeto. A página só marca a inauguração em março de 2027.
-- **Pixel, Analytics e Tag Manager:** não há ID no repositório. Sem a variável de ambiente, a tag não é publicada.
+- **Pixel, Analytics e Tag Manager:** não há ID no repositório. Sem a variável, a tag não é publicada. Com `GTM_ID`, o GA4 e o Pixel ficam de fora do HTML de propósito.
 - **E-mail e Instagram:** ainda são os da marca antiga (`lamptricologia@gmail.com`, `@larissapessoatricologia`).
 - **Fotos de antes e depois:** vieram do site antigo e trazem a marca d'água Larissa Pessoa. Confirmar a
   autorização das pacientes e as regras do conselho profissional para esse tipo de imagem.

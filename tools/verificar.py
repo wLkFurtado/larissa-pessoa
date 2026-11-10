@@ -19,7 +19,8 @@ PLACEHOLDERS = re.compile(
     r"lorem ipsum|seu nome aqui|exemplo\.com|G-X{4,}|GTM-X{4,}|pixel id 123|FIXME",
     re.I,
 )
-GRAFIA_ERRADA = re.compile(r"Hair\s*Zenith|Hairzenith|Hair\s+Zenit\b", re.I)
+# Marca oficial: Hairzenith. O domínio hairzenit.com.br e o arquivo og-hairzenit.jpg ficam de fora.
+GRAFIA_ERRADA = re.compile(r"Hairzenit(?!h)|Hair\s+Zenith", re.I)
 
 
 class Pagina(HTMLParser):
@@ -133,8 +134,8 @@ def main():
 
         if PLACEHOLDERS.search(html):
             erros.append(f"{rotulo}: texto de placeholder")
-        if GRAFIA_ERRADA.search(html):
-            erros.append(f"{rotulo}: grafia divergente de Hairzenit")
+        if GRAFIA_ERRADA.search(texto_sem_dominio(html)):
+            erros.append(f"{rotulo}: a marca no texto precisa ser Hairzenith, sem espaço")
 
         if not parser.title:
             erros.append(f"{rotulo}: sem title")
@@ -264,9 +265,16 @@ def main():
     return 0
 
 
+def texto_sem_dominio(html):
+    """O domínio ainda é hairzenit.com.br e a arte og-hairzenit.jpg não é o nome da marca."""
+    sem = re.sub(r"https?://[^\"'\s>]+", " ", html)
+    sem = re.sub(r"og-hairzenit", " ", sem, flags=re.I)
+    return sem
+
+
 def html_tem_mensagem_diferente():
     """O atalho fixo pede consulta. O compositor e os atalhos da Larissa/equipe mudam o tipo, de propósito."""
-    padrao = "Vim pelo site da Hairzenit"
+    padrao = "Vim pelo site da Hairzenith"
     for arquivo in paginas_html():
         html = arquivo.read_text(encoding="utf-8")
         for href in re.findall(r'href="(https://wa\.me/[^"]+)"', html):

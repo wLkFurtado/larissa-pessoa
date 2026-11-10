@@ -1,4 +1,15 @@
-// Hairzenit — comportamento interativo de alta precisão. Sem dependências externas.
+// Hairzenith — comportamento interativo de alta precisão. Sem dependências externas.
+
+// Clique no WhatsApp vira evento do dataLayer para o Google Tag Manager marcar conversão.
+function registrarWhatsapp() {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event: 'whatsapp_click' });
+}
+document.addEventListener('click', (e) => {
+  const alvo = e.target.closest && e.target.closest('a[href*="wa.me/"], a[href*="api.whatsapp.com/"]');
+  if (!alvo) return;
+  registrarWhatsapp();
+});
 
 // 1. Revelação suave ao entrar na tela (apenas para elementos abaixo da dobra inicial)
 (() => {
@@ -171,7 +182,7 @@ document.querySelectorAll('[data-countdown]').forEach((el) => {
     unit.textContent = days === 1 ? 'dia para a inauguração' : 'dias para a inauguração';
   } else {
     n.textContent = 'Aberta';
-    unit.textContent = 'A nova Hairzenit já recebe pacientes';
+    unit.textContent = 'A nova Hairzenith já recebe pacientes';
   }
 });
 
@@ -188,7 +199,7 @@ document.querySelectorAll('[data-countdown]').forEach((el) => {
     const unidade = data.get('unidade');
     const periodo = data.get('periodo');
     const queixa = data.get('queixa');
-    let msg = `Olá! Vim pelo site da Hairzenit e gostaria de agendar a ${tipo}`;
+    let msg = `Olá! Vim pelo site da Hairzenith e gostaria de agendar a ${tipo}`;
     msg += unidade === 'Tanto faz' ? '.' : `, em ${unidade}.`;
     if (queixa && queixa !== 'Prefiro contar na consulta') msg += ` Meu principal incômodo é: ${queixa.toLowerCase()}.`;
     if (periodo && periodo !== 'Qualquer horário') msg += ` Tenho preferência pelo período da ${periodo.toLowerCase()}.`;
@@ -196,7 +207,11 @@ document.querySelectorAll('[data-countdown]').forEach((el) => {
     go.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   };
   form.addEventListener('change', build);
-  form.addEventListener('submit', (e) => { e.preventDefault(); window.open(go.href, '_blank', 'noopener'); });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    registrarWhatsapp();
+    window.open(go.href, '_blank', 'noopener');
+  });
   build();
 })();
 

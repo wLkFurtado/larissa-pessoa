@@ -1,5 +1,5 @@
 /* ==========================================================================
-   HAIRZENIT — clínica de tricologia de Larissa Pessoa
+   HAIRZENITH — clínica de tricologia de Larissa Pessoa
    Direção Estética: Haute-Clinical Quiet Luxury
    Referências: Clinique La Prairie, Lanserhof, Biologique Recherche, 21st.dev
    ========================================================================== */
@@ -166,7 +166,8 @@ strong { font-weight: 600; color: var(--ink); }
   pointer-events: none;
   z-index: 2;
 }
-.frame img { width: 100%; height: 100%; object-fit: cover; }
+.frame picture { display: block; width: 100%; height: 100%; }
+.frame img, .frame picture img { width: 100%; height: 100%; object-fit: cover; }
 figcaption {
   font-size: var(--step-small);
   color: var(--subtle);
