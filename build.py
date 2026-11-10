@@ -100,10 +100,27 @@ def pic(nome, alt, sizes="(max-width: 900px) 100vw, 40vw", prioridade=False):
     m = MANIFESTO[nome]
     g, p = m["g"], m["p"]
     carregamento = ' fetchpriority="high"' if prioridade else ' decoding="async"'
-    return (
+    img = (
         f'<img src="~/assets/img/{nome}.jpg" srcset="~/assets/img/{nome}-p.jpg {p[0]}w, ~/assets/img/{nome}.jpg {g[0]}w" '
         f'sizes="{sizes}" width="{g[0]}" height="{g[1]}" alt="{e(alt)}"{carregamento}>'
     )
+    # AVIF/WebP só existem nos retratos da equipe. O restante do site continua em JPEG.
+    fontes = []
+    for tipo in ("avif", "webp"):
+        grande = SAIDA / "assets" / "img" / f"{nome}.{tipo}"
+        pequena = SAIDA / "assets" / "img" / f"{nome}-p.{tipo}"
+        if not grande.is_file():
+            continue
+        if pequena.is_file():
+            srcset = f"~/assets/img/{nome}-p.{tipo} {p[0]}w, ~/assets/img/{nome}.{tipo} {g[0]}w"
+        else:
+            srcset = f"~/assets/img/{nome}.{tipo} {g[0]}w"
+        fontes.append(f'<source type="image/{tipo}" srcset="{srcset}" sizes="{sizes}">')
+    if not fontes:
+        return img
+    if not prioridade:
+        img = img.replace(' decoding="async"', ' loading="lazy" decoding="async"', 1)
+    return f'<picture>{"".join(fontes)}{img}</picture>'
 
 
 def moldura(nome, alt, sizes="(max-width: 900px) 100vw, 40vw", attrs="data-open", prioridade=False, classe="frame"):
@@ -1320,9 +1337,16 @@ def tratamentos():
            corpo, ativo="tratamentos", schema=schema)
 
 
+ALTS_RETRATO = {
+    "thaina": "Thaina Candido de Souza, tricologista da Hairzenit, de blazer preto em retrato de rosto",
+    "julia": "Júlia, tricologista da Hairzenit, de blusa branca e calça vermelha, sentada num banquinho",
+}
+
+
 def membro(id_, nome, texto, itens, i):
     """Uma tricologista da equipe. Quando houver retrato em MANIFESTO com o mesmo id, ele entra no topo."""
-    retrato = moldura(id_, f"Retrato de {nome}", "(max-width: 900px) 100vw, 40vw") if id_ in MANIFESTO else ""
+    alt = ALTS_RETRATO.get(id_, f"Retrato de {nome}")
+    retrato = moldura(id_, alt, "(max-width: 900px) 100vw, 40vw") if id_ in MANIFESTO else ""
     iniciais = "".join(p[0] for p in nome.split()[:2]).upper()
     monograma = "" if retrato else f'<div class="member__monogram" aria-hidden="true"><span>{iniciais}</span></div>'
     lista = "".join(f"<li>{x}</li>" for x in itens)
