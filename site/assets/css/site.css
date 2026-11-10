@@ -166,6 +166,7 @@ strong { font-weight: 600; color: var(--ink); }
   pointer-events: none;
   z-index: 2;
 }
+.frame picture { display: block; width: 100%; height: 100%; }
 .frame img { width: 100%; height: 100%; object-fit: cover; }
 figcaption {
   font-size: var(--step-small);
