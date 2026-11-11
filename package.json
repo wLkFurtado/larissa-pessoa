@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "python3 build.py",
-    "lint": "python3 tools/verificar.py"
+    "lint": "python3 tools/verificar.py",
+    "test": "node tools/testar-lead.js"
   }
 }

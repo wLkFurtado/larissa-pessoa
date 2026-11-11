@@ -166,6 +166,59 @@
   <span class="concierge-float__dot" aria-hidden="true"></span>
   <span class="concierge-float__label">WhatsApp</span>
 </a>
+
+<div class="lead-modal" id="lead-modal" hidden>
+  <div class="lead-modal__card" role="dialog" aria-modal="true" aria-labelledby="lead-titulo" aria-describedby="lead-confianca">
+    <button type="button" class="lead-modal__fechar" data-lead-fechar>Fechar</button>
+    <p class="kicker"><span class="kicker__dot"></span> Agendamento</p>
+    <h2 id="lead-titulo">Antes de abrir o WhatsApp</h2>
+    <p id="lead-confianca" class="lead-modal__confianca">Seus dados são usados só para o agendamento.</p>
+    <form id="lead-form" name="agendamento-whatsapp" method="post" action="#lead-form" novalidate>
+      <div class="lead-modal__campo">
+        <label for="lead-nome">Nome</label>
+        <input id="lead-nome" name="name" type="text" autocomplete="name" required maxlength="80" aria-required="true">
+      </div>
+      <div class="lead-modal__campo">
+        <label for="lead-phone">Telefone</label>
+        <input id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required aria-required="true" placeholder="(21) 90000-0000">
+      </div>
+      <div class="lead-modal__campo">
+        <label for="lead-email">E-mail <span class="lead-modal__opcional">opcional</span></label>
+        <input id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120">
+      </div>
+      <fieldset class="lead-modal__campo">
+        <legend>Qual unidade?</legend>
+        <div class="choices" role="radiogroup" aria-label="Qual unidade?">
+          <label><input type="radio" name="unidade" value="Cabo Frio"><span>Cabo Frio</span></label>
+          <label><input type="radio" name="unidade" value="Copacabana"><span>Copacabana (Rio)</span></label>
+        </div>
+      </fieldset>
+      <input type="hidden" name="gclid" value=""><input type="hidden" name="gbraid" value=""><input type="hidden" name="wbraid" value=""><input type="hidden" name="utm_source" value=""><input type="hidden" name="utm_medium" value=""><input type="hidden" name="utm_campaign" value=""><input type="hidden" name="utm_term" value=""><input type="hidden" name="utm_content" value=""><input type="hidden" name="pagina_origem" value=""><input type="hidden" name="landing_page" value="">
+      <p class="lead-modal__alerta" id="lead-alerta" role="alert" hidden></p>
+      <button class="button button--gold" type="submit"><span>Continuar no WhatsApp</span><span class="button__arrow" aria-hidden="true">&rarr;</span></button>
+    </form>
+  </div>
+</div>
+<script>
+window.addEventListener('submit', function (e) {
+  var form = e.target;
+  if (!form || form.nodeName !== 'FORM') return;
+  if (form.id === 'lead-form' && window.HairzenithLead) {
+    window.HairzenithLead.aoEnviar(e);
+    return;
+  }
+  if (form.hasAttribute('data-composer')) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    if (window.registrarWhatsapp) window.registrarWhatsapp();
+    var destino = form.querySelector('[data-send]');
+    if (window.HairzenithLead && destino) window.HairzenithLead.abrir(destino);
+  }
+}, true);
+</script>
+<script src="https://link.growave.com.br/js/external-tracking.js" data-tracking-id="tk_32d9fa7d4ff44c5a9e02cc2dc4fe8065" async onload="this.dataset.hzEstado='ok'" onerror="this.dataset.hzEstado='erro'"></script>
+<script src="/assets/js/lead.js" defer></script>
 <script src="/assets/js/site.js" defer></script>
 </body>
 </html>

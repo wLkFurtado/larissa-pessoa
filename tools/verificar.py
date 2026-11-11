@@ -261,6 +261,18 @@ def main():
             erros.append(f"{rotulo}: sem o iframe noscript do GTM")
         if "gtag(" in html or "googletagmanager.com/gtag" in html or "fbq(" in html:
             erros.append(f"{rotulo}: GA4 ou Pixel direto no HTML com o GTM ativo")
+        if 'id="lead-form"' not in html or 'name="phone"' not in html or 'name="email"' not in html:
+            erros.append(f"{rotulo}: sem o formulário de agendamento")
+        if 'value="Cabo Frio"' not in html or 'value="Copacabana"' not in html:
+            erros.append(f"{rotulo}: unidade do formulário fora do valor do GHL")
+        tag_ghl = (
+            '<script src="https://link.growave.com.br/js/external-tracking.js" '
+            'data-tracking-id="tk_32d9fa7d4ff44c5a9e02cc2dc4fe8065" async '
+        )
+        if tag_ghl not in html:
+            erros.append(f"{rotulo}: sem o External Tracking do GHL")
+        if "/assets/js/lead.js" not in html:
+            erros.append(f"{rotulo}: sem lead.js")
 
     if numeros_wa != {"5521972780789"}:
         erros.append(f"WhatsApp divergente: {sorted(numeros_wa) or 'nenhum'}")

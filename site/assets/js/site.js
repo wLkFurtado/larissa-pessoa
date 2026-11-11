@@ -210,7 +210,7 @@ document.querySelectorAll('[data-countdown]').forEach((el) => {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     registrarWhatsapp();
-    window.open(go.href, '_blank', 'noopener');
+    if (globalThis.HairzenithLead) globalThis.HairzenithLead.abrir(go);
   });
   build();
 })();

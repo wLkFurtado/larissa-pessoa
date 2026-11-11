@@ -64,6 +64,28 @@ python3 build.py
    então o HTML não leva `gtag`. O clique no WhatsApp envia `dataLayer.push({ event: 'whatsapp_click' })`.
    No GTM, o acionador é o evento personalizado `whatsapp_click`.
 
+   O clique abre um formulário HTML (não é iframe) e só então vai ao WhatsApp da unidade.
+   O envio é lido pelo External Tracking do GHL, colado no fim de cada página com `async`
+   (o formulário já está no DOM antes da tag, e o download não segura o `site.js`).
+   O padrão do build já é o script da subconta:
+
+   `https://link.growave.com.br/js/external-tracking.js`
+   `data-tracking-id="tk_32d9fa7d4ff44c5a9e02cc2dc4fe8065"`
+
+   Para trocar, edite `GHL_TRACKING_SRC` e `GHL_TRACKING_ID` em `build.py`, ou exporte na
+   hora do build `GHL_TRACKING_SRC` e `GHL_TRACKING_ID`. Também vale `GHL_TRACKING_SCRIPT`
+   com o `<script>` inteiro de **Settings → External Tracking → Copy Script**. Na Vercel
+   essas variáveis precisam existir no build (não basta configurá-las depois que o HTML
+   já foi gerado) e em seguida um novo deploy. Sem override, o padrão acima entra sozinho.
+
+   O formulário manda `name`, `phone`, `email` (opcional), `unidade` (`Cabo Frio` ou
+   `Copacabana`) e os ocultos `gclid`, `gbraid`, `wbraid`, `utm_source`, `utm_medium`,
+   `utm_campaign`, `utm_term`, `utm_content`, no first-touch de 90 dias. `pagina_origem`
+   e `landing_page` vão junto e o GHL pode ignorá-los. O `fbclid` fica só no cookie.
+   Depois do submit válido o site envia `dataLayer.push({ event: 'generate_lead', unidade: 'cabo_frio' | 'copacabana' })`
+   e abre o WhatsApp na mesma aba: Cabo Frio `5522999037788`, Copacabana `5521972780789`.
+   Se o script do GHL não carregou, o WhatsApp abre na hora.
+
    `GA_MEASUREMENT_ID` e `META_PIXEL_ID` só entram no HTML se não houver GTM. Com o padrão atual,
    os dois são ignorados para não duplicar a visita nem o pixel.
 4. Google Search Console: cadastrar o domínio novo e enviar `sitemap.xml`.

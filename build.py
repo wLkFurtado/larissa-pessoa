@@ -44,6 +44,13 @@ EMAIL = "lamptricologia@gmail.com"
 META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "").strip()
 GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "").strip()
 GTM_ID = os.environ.get("GTM_ID", "").strip() or "GTM-59VNHFK6"
+# External Tracking da subconta LARISSA PESSOA. O id é público (vai no HTML).
+# Para trocar sem editar o arquivo, exporte na hora do build:
+#   GHL_TRACKING_SRC e GHL_TRACKING_ID
+#   ou GHL_TRACKING_SCRIPT com o <script> inteiro copiado do GHL
+# (Settings → External Tracking → Copy Script).
+GHL_TRACKING_SRC = "https://link.growave.com.br/js/external-tracking.js"
+GHL_TRACKING_ID = "tk_32d9fa7d4ff44c5a9e02cc2dc4fe8065"
 INSTAGRAM = "https://www.instagram.com/larissapessoatricologia"
 INSTAGRAM_TEXTO = "@larissapessoatricologia"
 SITE_ANTIGO = "https://www.larissapessoa.com/"
@@ -1220,6 +1227,128 @@ def gtm_noscript():
     )
 
 
+def _ghl_src_valido(src):
+    partes = urlparse(src)
+    return partes.scheme == "https" and bool(partes.netloc) and partes.path.endswith("/js/external-tracking.js")
+
+
+def _ghl_id_valido(tid):
+    return bool(re.fullmatch(r"tk_[A-Za-z0-9]{8,64}", tid))
+
+
+def _extrair_script_ghl(bruto):
+    """Aceita o <script> inteiro, só a URL do src, ou só o data-tracking-id."""
+    src = re.search(r"""src=["']([^"']+)["']""", bruto)
+    tid = re.search(r"""data-tracking-id=["']([^"']+)["']""", bruto)
+    if src and tid:
+        return src.group(1).strip(), tid.group(1).strip()
+    if bruto.startswith("https://") and " " not in bruto:
+        return bruto, ""
+    if re.fullmatch(r"tk_[A-Za-z0-9]{8,64}", bruto):
+        return "", bruto
+    return None
+
+
+def resolver_rastreio_ghl():
+    """Padrão do repositório, sobrescrito por variável de ambiente na hora do build."""
+    if getattr(resolver_rastreio_ghl, "pronto", None):
+        return resolver_rastreio_ghl.pronto
+    src = os.environ.get("GHL_TRACKING_SRC", "").strip()
+    tid = os.environ.get("GHL_TRACKING_ID", "").strip()
+    bruto = os.environ.get("GHL_TRACKING_SCRIPT", "").strip()
+    if bruto:
+        extraido = _extrair_script_ghl(bruto)
+        if not extraido:
+            print("aviso: GHL_TRACKING_SCRIPT inválido; usando o padrão do GHL")
+        else:
+            src = extraido[0] or src
+            tid = extraido[1] or tid
+    src = src or GHL_TRACKING_SRC
+    tid = tid or GHL_TRACKING_ID
+    if not (_ghl_src_valido(src) and _ghl_id_valido(tid)):
+        print(f"aviso: rastreio GHL inválido ({src!r}, {tid!r}); usando o padrão")
+        src, tid = GHL_TRACKING_SRC, GHL_TRACKING_ID
+    resolver_rastreio_ghl.pronto = (src, tid)
+    return resolver_rastreio_ghl.pronto
+
+
+def script_ghl():
+    """External Tracking no fim do body. async para não segurar o site.js."""
+    src, tid = resolver_rastreio_ghl()
+    return (
+        f'<script src="{e(src)}" data-tracking-id="{e(tid)}" async '
+        "onload=\"this.dataset.hzEstado='ok'\" "
+        "onerror=\"this.dataset.hzEstado='erro'\"></script>"
+    )
+
+
+def boot_lead():
+    """Registra o submit antes do script do GHL, para o first-touch entrar no form."""
+    return """<script>
+window.addEventListener('submit', function (e) {
+  var form = e.target;
+  if (!form || form.nodeName !== 'FORM') return;
+  if (form.id === 'lead-form' && window.HairzenithLead) {
+    window.HairzenithLead.aoEnviar(e);
+    return;
+  }
+  if (form.hasAttribute('data-composer')) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    if (window.registrarWhatsapp) window.registrarWhatsapp();
+    var destino = form.querySelector('[data-send]');
+    if (window.HairzenithLead && destino) window.HairzenithLead.abrir(destino);
+  }
+}, true);
+</script>"""
+
+
+def formulario_lead():
+    """Formulário real no DOM. O modal só esconde; o GHL não lê iframe."""
+    ocultos = "".join(
+        f'<input type="hidden" name="{nome}" value="">'
+        for nome in (
+            "gclid", "gbraid", "wbraid",
+            "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+            "pagina_origem", "landing_page",
+        )
+    )
+    return f"""
+<div class="lead-modal" id="lead-modal" hidden>
+  <div class="lead-modal__card" role="dialog" aria-modal="true" aria-labelledby="lead-titulo" aria-describedby="lead-confianca">
+    <button type="button" class="lead-modal__fechar" data-lead-fechar>Fechar</button>
+    <p class="kicker"><span class="kicker__dot"></span> Agendamento</p>
+    <h2 id="lead-titulo">Antes de abrir o WhatsApp</h2>
+    <p id="lead-confianca" class="lead-modal__confianca">Seus dados são usados só para o agendamento.</p>
+    <form id="lead-form" name="agendamento-whatsapp" method="post" action="#lead-form" novalidate>
+      <div class="lead-modal__campo">
+        <label for="lead-nome">Nome</label>
+        <input id="lead-nome" name="name" type="text" autocomplete="name" required maxlength="80" aria-required="true">
+      </div>
+      <div class="lead-modal__campo">
+        <label for="lead-phone">Telefone</label>
+        <input id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required aria-required="true" placeholder="(21) 90000-0000">
+      </div>
+      <div class="lead-modal__campo">
+        <label for="lead-email">E-mail <span class="lead-modal__opcional">opcional</span></label>
+        <input id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120">
+      </div>
+      <fieldset class="lead-modal__campo">
+        <legend>Qual unidade?</legend>
+        <div class="choices" role="radiogroup" aria-label="Qual unidade?">
+          <label><input type="radio" name="unidade" value="Cabo Frio"><span>Cabo Frio</span></label>
+          <label><input type="radio" name="unidade" value="Copacabana"><span>Copacabana (Rio)</span></label>
+        </div>
+      </fieldset>
+      {ocultos}
+      <p class="lead-modal__alerta" id="lead-alerta" role="alert" hidden></p>
+      <button class="button button--gold" type="submit"><span>Continuar no WhatsApp</span><span class="button__arrow" aria-hidden="true">&rarr;</span></button>
+    </form>
+  </div>
+</div>"""
+
+
 def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="og-hairzenith", tipo="website", indexar=True):
     grafo = [schema_org(), *schema_unidades()] + (schema or [])
     ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False, separators=(",", ":"))
@@ -1277,6 +1406,10 @@ def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="o
 {corpo}
 </main>
 {rodape()}
+{formulario_lead()}
+{boot_lead()}
+{script_ghl()}
+<script src="/assets/js/lead.js" defer></script>
 <script src="/assets/js/site.js" defer></script>
 </body>
 </html>
@@ -2024,7 +2157,9 @@ def main():
     apoio()
     print(f"{len(PAGINAS)} páginas geradas em {SAIDA}")
     print(f"domínio: {SITE}")
+    src, tid = resolver_rastreio_ghl()
     print(f"tag manager: {GTM_ID} (GA4 e Pixel ficam dentro do GTM, sem gtag no HTML)")
+    print(f"external tracking: {tid} ({urlparse(src).netloc})")
 
 
 if __name__ == "__main__":
