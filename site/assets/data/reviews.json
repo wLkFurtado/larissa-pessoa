@@ -1,0 +1,51 @@
+{
+  "place": {
+    "rating": 5.0,
+    "review_count": 224,
+    "url": "https://www.google.com/maps?cid=7825929777845215012"
+  },
+  "reviews": [
+    {
+      "first_name": "Alessandra",
+      "rating": 5,
+      "date": "2026-10-05T18:52:18.509680-03:00",
+      "text": "Excelente! Vim fazer o tratamento por indicação do próprio Google e amei! Meu cabelo cresceu muito, ficou cheio! Recebi vários elogios! Equipe atenciosa e dedicada! Obrigada Dra Larissa",
+      "avatar": null
+    },
+    {
+      "first_name": "Allan",
+      "rating": 5,
+      "date": "2026-07-16T18:55:18.350093-03:00",
+      "text": "Gostei bastante do tratamento e tive um ótimo resultado, superando minhas expectativas. A Dra. Larissa Pessoa transmite muita confiança e competência.\nRecomendo!",
+      "avatar": null
+    },
+    {
+      "first_name": "Azael",
+      "rating": 5,
+      "date": "2026-10-01T18:11:01.450695-03:00",
+      "text": "Após a quarta sessão fiquei muito satisfeito com os resultados, estou começanda a ver o cabelo nascer nas áreas que não tinha antes, é confiar no processo.",
+      "avatar": null
+    },
+    {
+      "first_name": "Samantha",
+      "rating": 5,
+      "date": "2026-10-20T17:40:46.076111-03:00",
+      "text": "Meu cabelo é muito fino e cheio de falhas. Em pouco tempo fazendo o protocolo, já percebi meu cabelo cheio e com as falhas preenchidas.  Ótimo ambiente, equipe super gentil e um café de avelã delicioso! Obrigada Dra.Larissa e equipe ❤️",
+      "avatar": null
+    },
+    {
+      "first_name": "André",
+      "rating": 5,
+      "date": "2026-03-07T12:55:15.740553-03:00",
+      "text": "Fui muito bem atendido na clínica da Dra. Larissa e estou bastante satisfeito com os resultados obtidos. A profissional Thaina demonstrou excelência no atendimento, sendo extremamente simpática, educada e competente. Recomendo a clínica a todos.",
+      "avatar": "andre.webp"
+    },
+    {
+      "first_name": "Leo",
+      "rating": 5,
+      "date": "2026-07-03T18:05:54.187157-03:00",
+      "text": "Larissa é uma excelente profissional, entende muito do assunto, fiquei 1 ano e meio tentando varias coisas com Dermatologista e e após iniciar o tratamento com ela, em menos de 2 meses ja obtive resultados incríveis.\nO ambiente é ótimo e as atendentes são atenciosas e cuidadosas.",
+      "avatar": "leo.webp"
+    }
+  ]
+}

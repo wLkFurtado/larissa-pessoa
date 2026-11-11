@@ -264,7 +264,19 @@
     try { return new URL(link.href).searchParams.get('text') || ''; } catch (erro) { return ''; }
   }
 
+  function unidadeMarcada(el) {
+    if (!el || !el.getAttribute) return '';
+    const valor = el.getAttribute('data-unidade');
+    if (valor === 'Cabo Frio' || valor === 'Copacabana') return valor;
+    return '';
+  }
+
   function unidadeDoLink(link) {
+    const direta = unidadeMarcada(link);
+    if (direta) return direta;
+    const bloco = link.closest && link.closest('[data-unidade]');
+    const doBloco = unidadeMarcada(bloco);
+    if (doBloco) return doBloco;
     if (link.closest && link.closest('#cabo-frio')) return 'Cabo Frio';
     if (link.closest && link.closest('#copacabana')) return 'Copacabana';
     const compositor = link.closest && link.closest('[data-composer]');
@@ -364,10 +376,9 @@
     gatilho = link || gatilho;
     if (link) form.dataset.texto = textoDoLink(link);
     const unidade = link ? unidadeDoLink(link) : '';
-    if (unidade) {
-      const radio = form.querySelector('input[name="unidade"][value="' + unidade + '"]');
-      if (radio) radio.checked = true;
-    }
+    form.querySelectorAll('input[name="unidade"]').forEach((radio) => {
+      radio.checked = radio.value === unidade;
+    });
     preencherCampos();
     limparErros(form);
     delete form.dataset.enviando;

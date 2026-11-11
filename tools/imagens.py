@@ -57,6 +57,14 @@ IMAGENS = {
 }
 
 RETRATOS = {"thaina", "julia"}
+# JPEGs grandes que também saem em AVIF e WebP, sem regravar o JPEG.
+PESADAS = {
+    "tela-tricoscopia-retrato",
+    "tela-tricoscopia",
+    "cowper-1698",
+    "avenida-copacabana",
+    *(f"resultado-{i}" for i in range(1, 8)),
+}
 
 # Antes e depois (fotos de pacientes do site anterior, 1:1)
 RESULTADOS = [
@@ -111,7 +119,7 @@ def salvar(im, nome, larguras):
         # A textura loira é a foto mais pesada; 1200 px cobre o tamanho em que ela aparece.
         qualidade = 74 if nome == "textura-loira" else 80
         out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=qualidade, optimize=True, progressive=True)
-        if nome in RETRATOS:
+        if nome in RETRATOS or nome in PESADAS:
             out.save(DESTINO / f"{nome}{sufixo}.webp", "WEBP", quality=78, method=6)
             out.save(DESTINO / f"{nome}{sufixo}.avif", "AVIF", quality=48, speed=6)
         MANIFESTO[nome]["g" if not sufixo else "p"] = list(out.size)
@@ -142,6 +150,19 @@ def somente_retratos():
         atual[nome] = MANIFESTO[nome]
     (DESTINO / "imagens.json").write_text(json.dumps(atual, indent=1) + "\n")
     print("retratos:", ", ".join(f"{n} {atual[n]}" for n in ("thaina", "julia")))
+
+
+def formatos_modernos():
+    """Gera AVIF e WebP ao lado dos JPEG pesados, sem regravar o JPEG."""
+    for nome in sorted(PESADAS):
+        for sufixo in ("", "-p"):
+            jpg = DESTINO / f"{nome}{sufixo}.jpg"
+            if not jpg.is_file():
+                raise SystemExit(f"falta {jpg}")
+            im = Image.open(jpg)
+            im.save(DESTINO / f"{nome}{sufixo}.webp", "WEBP", quality=78, method=6)
+            im.save(DESTINO / f"{nome}{sufixo}.avif", "AVIF", quality=48, speed=6)
+            print(f"{nome}{sufixo}", im.size, "webp+avif")
 
 
 def main():
