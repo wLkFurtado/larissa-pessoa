@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.hairzenit.com.br/sitemap.xml
+Sitemap: https://www.hairzenith.com/sitemap.xml

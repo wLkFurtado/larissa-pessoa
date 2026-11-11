@@ -1,8 +1,10 @@
 {
-  "name": "hairzenit-site",
+  "name": "hairzenith-site",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'Site estatico pronto em site/'"
+    "build": "python3 build.py",
+    "lint": "python3 tools/verificar.py",
+    "test": "node tools/testar-lead.js"
   }
 }

@@ -27,7 +27,7 @@ IMAGENS = {
     "larissa-blazer": ("ANA_4259---Editado.png", 3 / 4, 0.5, 0.2, (1400, 760)),
     "larissa-rosa": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 16 / 10, 0.62, 0.4, (1600, 900)),
     "larissa-rosa-retrato": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-75adc9ca-07862fa0.png", 4 / 5, 0.5, 0.15, (1200, 640)),
-    "og-hairzenit": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
+    "og-hairzenith": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
     # Clínica e procedimentos
     "tricoscopio": ("0A7A6778--281-29-2880w.png", 1, 0.5, 0.42, (1200, 640)),
     "tricoscopio-retrato": ("0A7A6778--281-29-2880w.png", 4 / 5, 0.5, 0.4, (1400, 760)),
@@ -46,12 +46,17 @@ IMAGENS = {
     "espelho": ("AdobeStock_486445543-2880w.png", 16 / 10, 0.5, 0.5, (1600, 900)),
     "espelho-retrato": ("AdobeStock_486445543-2880w.png", 4 / 5, 0.62, 0.5, (1200, 640)),
     "fio-na-mao": ("Especialista_em_tricologia_no_Rio_de_Janeiro_Quando_a_queda_de_cabelo_nao_e_normal.png", 3 / 2, 0.5, 0.5, (712, 600)),
-    "textura-loira": ("AdobeStock_481109349-2880w.jpeg", 21 / 9, 0.5, 0.5, (1800, 900)),
+    "textura-loira": ("AdobeStock_481109349-2880w.jpeg", 21 / 9, 0.5, 0.5, (1200, 720)),
     "textura-castanha": ("JsvcKabjSDqFp4kkOqxf_AdobeStock_306899500.v2.0000000-1920w.jpg", 21 / 9, 0.5, 0.5, (1800, 900)),
     # Acervo aberto (créditos em site/assets/img/creditos.json)
     "cowper-1698": ("acervo-aberto/the-anatomy-of-humane-bodies-skin-and.jpg", 3 / 4, 0.5, 0.45, (1100, 640)),
     "avenida-copacabana": ("acervo-aberto/avenida-nossa-senhora-de-copacabana-1.jpg", 4 / 5, 0.5, 0.5, (1000, 600)),
+    # Retratos da equipe (proporção 4/5, como os outros retratos)
+    "thaina": ("thaina.png", 4 / 5, 0.5, 0.5, (1400, 640)),
+    "julia": ("julia.png", 4 / 5, 0.5, 0.5, (1400, 640)),
 }
+
+RETRATOS = {"thaina", "julia"}
 
 # Antes e depois (fotos de pacientes do site anterior, 1:1)
 RESULTADOS = [
@@ -103,7 +108,12 @@ def salvar(im, nome, larguras):
     for sufixo, lw in zip(("", "-p"), larguras):
         lw = min(lw, im.width)
         out = im.resize((lw, round(im.height * lw / im.width)), Image.LANCZOS)
-        out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=80, optimize=True, progressive=True)
+        # A textura loira é a foto mais pesada; 1200 px cobre o tamanho em que ela aparece.
+        qualidade = 74 if nome == "textura-loira" else 80
+        out.save(DESTINO / f"{nome}{sufixo}.jpg", "JPEG", quality=qualidade, optimize=True, progressive=True)
+        if nome in RETRATOS:
+            out.save(DESTINO / f"{nome}{sufixo}.webp", "WEBP", quality=78, method=6)
+            out.save(DESTINO / f"{nome}{sufixo}.avif", "AVIF", quality=48, speed=6)
         MANIFESTO[nome]["g" if not sufixo else "p"] = list(out.size)
 
 
@@ -120,6 +130,18 @@ def icones():
         d.ellipse((L / 2 - r, L * 0.3125 - r, L / 2 + r, L * 0.3125 + r), fill=bronze)
         d.rectangle((L * 0.22, L * 0.625, L * 0.78, L * 0.6875), fill=osso)
         im.resize((lado, lado), Image.LANCZOS).save(RAIZ / "site" / nome)
+
+
+def somente_retratos():
+    """Grava só Thaina e Júlia e preserva o restante de imagens.json."""
+    DESTINO.mkdir(parents=True, exist_ok=True)
+    atual = json.loads((DESTINO / "imagens.json").read_text())
+    for nome in ("thaina", "julia"):
+        arquivo, prop, fx, fy, larguras = IMAGENS[nome]
+        salvar(recortar(abrir(ORIGEM / arquivo), prop, fx, fy), nome, larguras)
+        atual[nome] = MANIFESTO[nome]
+    (DESTINO / "imagens.json").write_text(json.dumps(atual, indent=1) + "\n")
+    print("retratos:", ", ".join(f"{n} {atual[n]}" for n in ("thaina", "julia")))
 
 
 def main():
