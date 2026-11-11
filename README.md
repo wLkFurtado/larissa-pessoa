@@ -78,8 +78,11 @@ python3 build.py
    essas variáveis precisam existir no build (não basta configurá-las depois que o HTML
    já foi gerado) e em seguida um novo deploy. Sem override, o padrão acima entra sozinho.
 
-   O formulário manda `name`, `phone`, `email` (opcional), `unidade` (`Cabo Frio` ou
-   `Copacabana`) e os ocultos `gclid`, `gbraid`, `wbraid`, `utm_source`, `utm_medium`,
+   O campo visível do nome é `full_name`. `first_name` e `last_name` são preenchidos no
+   submit. O script do GHL descarta `type="hidden"`, então nome, click id e UTM que precisam
+   chegar no payload ficam fora da tela, sem `hidden` e sem `opacity: 0`. O `name="name"`
+   não vira o nome do contato. O formulário também manda `phone`, `email` (opcional) e `unidade` (`Cabo Frio` ou
+   `Copacabana`) e `gclid`, `gbraid`, `wbraid`, `utm_source`, `utm_medium`,
    `utm_campaign`, `utm_term`, `utm_content`, no first-touch de 90 dias. Se esse registro
    tem `gclid`, `gbraid` ou `wbraid` e `utm_source` está vazio, ele é salvo como `google`.
    Se `utm_source` fica `google` e `utm_medium` está vazio, ele é salvo como `cpc`. UTM que

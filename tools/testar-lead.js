@@ -51,6 +51,9 @@ function testarFuncoes() {
   ok(lead.FONES['Cabo Frio'] === '5522999037788', 'WhatsApp de Cabo Frio');
   ok(lead.FONES.Copacabana === '5521972780789', 'WhatsApp de Copacabana');
   ok(lead.SLUGS['Cabo Frio'] === 'cabo_frio' && lead.SLUGS.Copacabana === 'copacabana', 'slugs do dataLayer');
+  const partes = lead.partirNome('Ana Maria Souza');
+  ok(partes.full === 'Ana Maria Souza' && partes.first === 'Ana' && partes.last === 'Maria Souza', 'nome completo vira first e last');
+  ok(lead.partirNome('Ana').last === '', 'nome único não inventa sobrenome');
   const msg = lead.mensagemWhatsapp('Ana Souza', 'Cabo Frio', 'Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta com Larissa Pessoa.');
   ok(msg.includes('Ana Souza') && msg.includes('Cabo Frio') && msg.includes('Larissa Pessoa'), 'mensagem curta com nome e unidade');
 
@@ -210,14 +213,46 @@ async function comChrome(porta, fn) {
   let seq = 0;
   const pendentes = new Map();
   const eventos = [];
+  const bloqueio = { capturas: [] };
+  let enviarDepois = () => {};
+  const ehLocal = (url) => {
+    if (!/^https?:/i.test(url || '')) return true;
+    try {
+      const host = new URL(url).hostname;
+      return host === '127.0.0.1' || host === 'localhost';
+    } catch (erro) {
+      return false;
+    }
+  };
   ws.addEventListener('message', (ev) => {
     const msg = JSON.parse(ev.data);
     if (msg.id && pendentes.has(msg.id)) {
       pendentes.get(msg.id)(msg);
       pendentes.delete(msg.id);
-    } else if (msg.method) {
-      eventos.push(msg);
+      return;
     }
+    if (msg.method === 'Fetch.requestPaused') {
+      const pedido = msg.params.request || {};
+      const url = pedido.url || '';
+      const sess = msg.sessionId;
+      if (!ehLocal(url)) {
+        bloqueio.capturas.push({ url: url, method: pedido.method || '', body: pedido.postData || '' });
+        enviarDepois('Fetch.fulfillRequest', {
+          requestId: msg.params.requestId,
+          responseCode: 204,
+          responseHeaders: [
+            { name: 'access-control-allow-origin', value: '*' },
+            { name: 'access-control-allow-methods', value: 'POST, OPTIONS' },
+            { name: 'access-control-allow-headers', value: 'content-type' },
+            { name: 'content-type', value: 'text/plain' },
+          ],
+        }, sess);
+        return;
+      }
+      enviarDepois('Fetch.continueRequest', { requestId: msg.params.requestId }, sess);
+      return;
+    }
+    if (msg.method) eventos.push(msg);
   });
   const enviar = (method, params, sessionId) => {
     const id = ++seq;
@@ -226,8 +261,9 @@ async function comChrome(porta, fn) {
     ws.send(JSON.stringify(pacote));
     return new Promise((resolve) => pendentes.set(id, resolve));
   };
+  enviarDepois = enviar;
   try {
-    await fn({ enviar, eventos, porta });
+    await fn({ enviar, eventos, porta, bloqueio });
   } finally {
     ws.close();
     proc.kill('SIGKILL');
@@ -235,7 +271,7 @@ async function comChrome(porta, fn) {
 }
 
 async function testarNavegador(porta) {
-  await comChrome(porta, async ({ enviar, eventos }) => {
+  await comChrome(porta, async ({ enviar, eventos, bloqueio }) => {
     const criado = await enviar('Target.createTarget', { url: 'about:blank' });
     const targetId = criado.result.targetId;
     const anexo = await enviar('Target.attachToTarget', { targetId, flatten: true });
@@ -243,6 +279,7 @@ async function testarNavegador(porta) {
     const cmd = (method, params) => enviar(method, params, sessao);
     await cmd('Page.enable');
     await cmd('Runtime.enable');
+    await cmd('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
     await cmd('Emulation.setDeviceMetricsOverride', {
       width: 390, height: 844, deviceScaleFactor: 2, mobile: true,
     });
@@ -326,8 +363,8 @@ async function testarNavegador(porta) {
     const antes = Date.now();
     const eventosDl = await avaliar(`(() => {
       document.getElementById('lead-nome').value = 'Ana Souza';
-      document.getElementById('lead-phone').value = '(22) 99903-7788';
-      document.getElementById('lead-email').value = 'ana@example.com';
+      document.getElementById('lead-phone').value = '(11) 98870-1234';
+      document.getElementById('lead-email').value = '';
       const tag = document.querySelector('script[data-tracking-id]');
       tag.dataset.hzEstado = 'erro';
       window.__hzErros = [];
@@ -361,7 +398,113 @@ async function testarNavegador(porta) {
     ok(ehWhatsapp(destino), 'script ausente abre o WhatsApp de Cabo Frio na mesma aba: ' + destino);
     ok(decodeURIComponent(destino).includes('Ana Souza') && decodeURIComponent(destino).includes('Cabo Frio'), 'mensagem leva o nome e a unidade');
     ok(levou < 800, 'sem o script carregado, não espera o segundo do GHL (' + levou + ' ms)');
+    const postsGhl = bloqueio.capturas.filter((c) => c.method === 'POST' && /leadconnectorhq|growave/i.test(c.url));
+    ok(postsGhl.length === 0, 'o fluxo da página não montou POST para o GHL');
   });
+}
+
+function servirFixture(script) {
+  const html = `<!doctype html><html><body>
+<form id="f">
+  <label for="n">Nome</label>
+  <input id="n" name="full_name" type="text" value="Ana Maria Souza">
+  <input name="first_name" type="text" value="" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden">
+  <input name="last_name" type="text" value="" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden">
+  <input name="phone" type="tel" value="11988701234">
+  <input name="email" type="email" value="">
+  <input name="unidade" type="text" value="Cabo Frio">
+  <input name="utm_source" type="text" value="google" tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden">
+  <input name="gclid" type="hidden" value="NAO-DEVE-SAIR">
+  <button type="submit">Enviar</button>
+</form>
+<script>
+window.__erros = [];
+window.addEventListener('error', function (e) { window.__erros.push(String(e.message)); });
+document.getElementById('f').addEventListener('submit', function () {
+  var nome = document.querySelector('[name=full_name]').value.trim();
+  var pedacos = nome.split(/\\s+/);
+  document.querySelector('[name=first_name]').value = pedacos.shift() || '';
+  document.querySelector('[name=last_name]').value = pedacos.join(' ');
+}, true);
+</script>
+<script src="/external-tracking.js" data-tracking-id="tk_teste_local_apenas"></script>
+</body></html>`;
+  return new Promise((resolve) => {
+    const server = http.createServer((req, res) => {
+      const caminho = req.url.split('?')[0];
+      if (caminho === '/external-tracking.js') {
+        res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8' });
+        res.end(script);
+        return;
+      }
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+      res.end(html);
+    });
+    server.listen(0, '127.0.0.1', () => resolve(server));
+  });
+}
+
+async function testarPayloadDoScript() {
+  const resposta = await fetch('https://link.growave.com.br/js/external-tracking.js');
+  if (!resposta.ok) throw new Error('não baixou o external-tracking.js');
+  const script = Buffer.from(await resposta.arrayBuffer());
+  const server = await servirFixture(script);
+  const porta = server.address().port;
+  try {
+    await comChrome(porta, async ({ enviar, bloqueio }) => {
+      const criado = await enviar('Target.createTarget', { url: 'about:blank' });
+      const anexo = await enviar('Target.attachToTarget', { targetId: criado.result.targetId, flatten: true });
+      const sessao = anexo.result.sessionId;
+      const cmd = (method, params) => enviar(method, params, sessao);
+      await cmd('Page.enable');
+      await cmd('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
+      await cmd('Page.navigate', { url: `http://127.0.0.1:${porta}/fixture.html` });
+      for (let i = 0; i < 40; i += 1) {
+        const pronto = await cmd('Runtime.evaluate', {
+          expression: 'document.readyState !== "loading" && !!document.getElementById("f")',
+          returnByValue: true,
+        });
+        if (pronto.result && pronto.result.result && pronto.result.result.value) break;
+        await esperar(100);
+      }
+      await cmd('Runtime.evaluate', { expression: 'document.getElementById("f").requestSubmit()', returnByValue: true });
+      let corpo = null;
+      for (let i = 0; i < 40; i += 1) {
+        const achado = bloqueio.capturas.find((c) => c.method === 'POST' && c.body.includes('external_form_submission'));
+        if (achado) {
+          corpo = achado;
+          break;
+        }
+        await esperar(100);
+      }
+      if (!corpo) {
+        console.error('capturas', bloqueio.capturas.map((c) => c.method + ' ' + c.url + ' ' + (c.body || '').slice(0, 180)));
+        try {
+          const diag = await cmd('Runtime.evaluate', {
+            expression: 'JSON.stringify({erros: window.__erros || [], forms: document.forms.length, script: !!document.querySelector("script[data-tracking-id]")})',
+            returnByValue: true,
+          });
+          console.error('diag', diag.result && diag.result.result && diag.result.result.value);
+        } catch (erro) {
+          console.error('diag falhou', erro.message);
+        }
+      }
+      ok(!!corpo, 'o script tentou enviar o formulário e a requisição foi interceptada');
+      if (!corpo) return;
+      ok(corpo.url.includes('leadconnectorhq.com'), 'payload ia para ' + corpo.url);
+      const json = JSON.parse(corpo.body);
+      const dados = json.formData || {};
+      ok(dados.full_name === 'Ana Maria Souza', 'payload traz full_name');
+      ok(dados.first_name === 'Ana' && dados.last_name === 'Maria Souza', 'payload traz first_name e last_name');
+      ok(dados.phone === '11988701234' && dados.unidade === 'Cabo Frio', 'phone e unidade continuam no payload');
+      ok(dados.utm_source === 'google', 'utm fora da tela, sem type=hidden, entra no payload');
+      ok(!('gclid' in dados) || dados.gclid == null, 'input type=hidden não entra no payload: ' + JSON.stringify(dados.gclid));
+      ok(!('name' in dados), 'a chave name não é enviada');
+      console.log('payload.formData', JSON.stringify(dados));
+    });
+  } finally {
+    server.close();
+  }
 }
 
 async function main() {
@@ -376,6 +519,8 @@ async function main() {
   } finally {
     server.close();
   }
+  await esperar(400);
+  await testarPayloadDoScript();
   if (falhas) {
     console.error(falhas + ' falha(s)');
     process.exit(1);

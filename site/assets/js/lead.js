@@ -53,6 +53,13 @@
     return limpo.length <= 120 && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(limpo);
   }
 
+  function partirNome(nome) {
+    const limpo = String(nome || '').replace(/\s+/g, ' ').trim();
+    const partes = limpo ? limpo.split(' ') : [];
+    const first = partes.shift() || '';
+    return { full: limpo, first: first, last: partes.join(' ') };
+  }
+
   function mensagemWhatsapp(nome, unidade, texto) {
     const original = String(texto || '');
     let pedido = 'gostaria de agendar uma consulta';
@@ -137,6 +144,7 @@
     normalizarTelefone: normalizarTelefone,
     validarNome: validarNome,
     validarEmail: validarEmail,
+    partirNome: partirNome,
     mensagemWhatsapp: mensagemWhatsapp,
     resolverAtribuicao: resolverAtribuicao,
   };
@@ -215,7 +223,7 @@
   }
 
   function mostrarErros(form, erros) {
-    const ordem = ['name', 'phone', 'email', 'unidade'];
+    const ordem = ['full_name', 'phone', 'email', 'unidade'];
     const textos = [];
     ordem.forEach((chave) => { if (erros[chave]) textos.push(erros[chave]); });
     const alerta = doc.getElementById('lead-alerta');
@@ -223,13 +231,13 @@
       alerta.hidden = false;
       alerta.textContent = textos.join(' ');
     }
-    const nome = form.querySelector('[name="name"]');
+    const nome = form.querySelector('[name="full_name"]');
     const phone = form.querySelector('[name="phone"]');
     const email = form.querySelector('[name="email"]');
-    if (erros.name && nome) nome.setAttribute('aria-invalid', 'true');
+    if (erros.full_name && nome) nome.setAttribute('aria-invalid', 'true');
     if (erros.phone && phone) phone.setAttribute('aria-invalid', 'true');
     if (erros.email && email) email.setAttribute('aria-invalid', 'true');
-    const foco = (erros.name && nome) || (erros.phone && phone) || (erros.email && email)
+    const foco = (erros.full_name && nome) || (erros.phone && phone) || (erros.email && email)
       || (erros.unidade && form.querySelector('[name="unidade"]'));
     if (foco) foco.focus();
   }
@@ -237,7 +245,7 @@
   function errosDoForm(form) {
     const dados = new FormData(form);
     const erros = {};
-    if (!validarNome(dados.get('name'))) erros.name = 'Informe seu nome.';
+    if (!validarNome(dados.get('full_name'))) erros.full_name = 'Informe seu nome.';
     if (!normalizarTelefone(dados.get('phone'))) erros.phone = 'Informe um celular com DDD.';
     const email = String(dados.get('email') || '').trim();
     if (!validarEmail(email)) erros.email = 'Confira o e-mail ou deixe em branco.';
@@ -386,7 +394,7 @@
 
   async function iniciarSaida(form) {
     const dados = new FormData(form);
-    const nome = String(dados.get('name') || '').replace(/\s+/g, ' ').trim();
+    const nome = String(dados.get('full_name') || '').replace(/\s+/g, ' ').trim();
     const unidade = String(dados.get('unidade') || '');
     const msg = mensagemWhatsapp(nome, unidade, form.dataset.texto || '');
     const url = 'https://wa.me/' + FONES[unidade] + '?text=' + encodeURIComponent(msg);
@@ -413,10 +421,15 @@
       return;
     }
     preencherCampos();
-    const nome = form.querySelector('[name="name"]');
+    const nome = form.querySelector('[name="full_name"]');
     const email = form.querySelector('[name="email"]');
     const phone = form.querySelector('[name="phone"]');
     if (nome) nome.value = nome.value.replace(/\s+/g, ' ').trim();
+    const partes = partirNome(nome ? nome.value : '');
+    const primeiro = form.querySelector('[name="first_name"]');
+    const ultimo = form.querySelector('[name="last_name"]');
+    if (primeiro) primeiro.value = partes.first;
+    if (ultimo) ultimo.value = partes.last;
     if (email) email.value = email.value.trim();
     if (phone) phone.value = mascararTelefone(phone.value);
     const erros = errosDoForm(form);

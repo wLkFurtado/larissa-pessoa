@@ -1306,8 +1306,9 @@ window.addEventListener('submit', function (e) {
 
 def formulario_lead():
     """Formulário real no DOM. O modal só esconde; o GHL não lê iframe."""
+    # type=hidden é descartado pelo external-tracking.js. O campo fica fora da tela, visível para o script.
     ocultos = "".join(
-        f'<input type="hidden" name="{nome}" value="">'
+        f'<input class="lead-modal__partes" type="text" name="{nome}" tabindex="-1" autocomplete="off" aria-hidden="true" value="">'
         for nome in (
             "gclid", "gbraid", "wbraid",
             "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
@@ -1324,8 +1325,10 @@ def formulario_lead():
     <form id="lead-form" name="agendamento-whatsapp" method="post" action="#lead-form" novalidate>
       <div class="lead-modal__campo">
         <label for="lead-nome">Nome</label>
-        <input id="lead-nome" name="name" type="text" autocomplete="name" required maxlength="80" aria-required="true">
+        <input id="lead-nome" name="full_name" type="text" autocomplete="name" required maxlength="80" aria-required="true">
       </div>
+      <input class="lead-modal__partes" name="first_name" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" value="">
+      <input class="lead-modal__partes" name="last_name" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" value="">
       <div class="lead-modal__campo">
         <label for="lead-phone">Telefone</label>
         <input id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required aria-required="true" placeholder="(21) 90000-0000">

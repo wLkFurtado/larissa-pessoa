@@ -2276,6 +2276,19 @@ main { position: relative; z-index: 1; }
   border-radius: var(--radius-md);
 }
 .lead-modal input[aria-invalid="true"] { border-color: #8c3a32; }
+/* O script do GHL ignora type=hidden e opacity:0. Estas partes ficam fora da tela, mas legíveis para ele. */
+.lead-modal__partes {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .lead-modal .choices { display: grid; grid-template-columns: 1fr 1fr; }
 .lead-modal .choices span {
   width: 100%;
