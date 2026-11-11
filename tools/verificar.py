@@ -233,7 +233,11 @@ def main():
             if "Av. Henrique Terra, 808, Novo Portinho" not in texto_schema:
                 erros.append(f"{rotulo}: schema sem o endereço de Cabo Frio")
             if "+55-21-97278-0789" not in texto_schema:
-                erros.append(f"{rotulo}: schema sem o telefone do WhatsApp")
+                erros.append(f"{rotulo}: schema sem o telefone de Copacabana")
+            if "+55-22-99903-7788" not in texto_schema:
+                erros.append(f"{rotulo}: schema sem o telefone de Cabo Frio")
+            if '"aggregateRating"' not in texto_schema or '"reviewCount":224' not in texto_schema.replace(" ", ""):
+                erros.append(f"{rotulo}: schema sem a nota real do Google")
 
         for href in parser.hrefs:
             if "wa.me/" in href:
@@ -261,8 +265,16 @@ def main():
             erros.append(f"{rotulo}: sem o iframe noscript do GTM")
         if "gtag(" in html or "googletagmanager.com/gtag" in html or "fbq(" in html:
             erros.append(f"{rotulo}: GA4 ou Pixel direto no HTML com o GTM ativo")
-        if 'id="lead-form"' not in html or 'name="phone"' not in html or 'name="email"' not in html:
+        if 'id="lead-form"' not in html or 'name="phone"' not in html:
             erros.append(f"{rotulo}: sem o formulário de agendamento")
+        if 'name="email"' in html:
+            erros.append(f"{rotulo}: o formulário não pede e-mail")
+        bloco_cabo = re.search(r'id="cabo-frio".*?</ul>', html)
+        bloco_copa = re.search(r'id="copacabana".*?</ul>', html)
+        if not bloco_cabo or "5522999037788" not in bloco_cabo.group(0) or "5521972780789" in bloco_cabo.group(0):
+            erros.append(f"{rotulo}: Cabo Frio precisa do WhatsApp (22) 99903-7788")
+        if not bloco_copa or "5521972780789" not in bloco_copa.group(0) or "5522999037788" in bloco_copa.group(0):
+            erros.append(f"{rotulo}: Copacabana precisa do WhatsApp (21) 97278-0789")
         if 'value="Cabo Frio"' not in html or 'value="Copacabana"' not in html:
             erros.append(f"{rotulo}: unidade do formulário fora do valor do GHL")
         tag_ghl = (
@@ -274,7 +286,7 @@ def main():
         if "/assets/js/lead.js" not in html:
             erros.append(f"{rotulo}: sem lead.js")
 
-    if numeros_wa != {"5521972780789"}:
+    if numeros_wa != {"5521972780789", "5522999037788"}:
         erros.append(f"WhatsApp divergente: {sorted(numeros_wa) or 'nenhum'}")
     if html_tem_mensagem_diferente():
         erros.append("há link de WhatsApp sem a mensagem padrão da marca")

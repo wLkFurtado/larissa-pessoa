@@ -408,7 +408,6 @@ async function testarNavegador(porta) {
     const eventosDl = await avaliar(`(() => {
       document.getElementById('lead-nome').value = 'Ana Souza';
       document.getElementById('lead-phone').value = '(11) 98870-1234';
-      document.getElementById('lead-email').value = '';
       const tag = document.querySelector('script[data-tracking-id]');
       tag.dataset.hzEstado = 'erro';
       window.__hzErros = [];

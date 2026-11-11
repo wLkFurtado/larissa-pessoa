@@ -12,6 +12,7 @@ import json
 import math
 import os
 import re
+from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import quote, urlparse
 
@@ -69,6 +70,8 @@ UNIDADES = [
         "cep": "",
         "mapa": "https://www.google.com/maps/search/?api=1&query=" + quote("Av. Nossa Senhora de Copacabana, 807, Copacabana, Rio de Janeiro"),
         "lat": -22.9667, "lon": -43.1856,
+        "whats": "5521972780789",
+        "whats_texto": "(21) 97278-0789",
     },
     {
         "id": "cabo-frio",
@@ -80,6 +83,8 @@ UNIDADES = [
         "cep": "",
         "mapa": "https://www.google.com/maps/search/?api=1&query=" + quote("Av. Henrique Terra, 808, Novo Portinho, Cabo Frio, RJ"),
         "lat": -22.8860, "lon": -42.0330,
+        "whats": "5522999037788",
+        "whats_texto": "(22) 99903-7788",
     },
 ]
 
@@ -110,6 +115,7 @@ CREDITOS = (
 )
 
 MANIFESTO = json.loads((SAIDA / "assets" / "img" / "imagens.json").read_text())
+AVALIACOES = json.loads((SAIDA / "assets" / "data" / "reviews.json").read_text(encoding="utf-8"))
 
 MSG_PADRAO = "Olá! Vim pelo site da Hairzenith e gostaria de agendar uma consulta."
 MSG_LARISSA = "Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta com Larissa Pessoa."
@@ -123,16 +129,20 @@ def href_artigo(artigo):
     return artigo["url"]
 
 
-def wa(msg=MSG_PADRAO):
-    return f"https://wa.me/{WHATS}?text={quote(msg)}"
+def wa(msg=MSG_PADRAO, numero=None):
+    return f"https://wa.me/{numero or WHATS}?text={quote(msg)}"
 
 
-def telefone_internacional():
-    """O mesmo WhatsApp do restante do site, no formato do schema.org."""
-    d = WHATS
+def telefone_internacional(numero=None):
+    """WhatsApp no formato do schema.org. Sem número, usa o de Copacabana."""
+    d = numero or WHATS
     if len(d) == 13 and d.startswith("55"):
         return f"+{d[:2]}-{d[2:4]}-{d[4:9]}-{d[9:]}"
     return "+" + d
+
+
+def fones_unidades():
+    return " · ".join(f'{u["nome"]} {u["whats_texto"]}' for u in UNIDADES)
 
 
 def e(texto):
@@ -172,6 +182,22 @@ def pic(nome, alt, sizes="(max-width: 900px) 100vw, 40vw", prioridade=False):
         fontes.append(f'<source type="image/{tipo}" srcset="{srcset}" sizes="{sizes}">')
     if not fontes:
         return img
+    return f'<picture>{"".join(fontes)}{img}</picture>'
+
+
+def pic_pasta(pasta, nome, alt, grande, pequena, sizes):
+    """Antes e depois que só existem em AVIF e WebP, com a versão -p no srcset."""
+    gw, gh = grande
+    pw, _ph = pequena
+    fontes = []
+    for tipo in ("avif", "webp"):
+        srcset = f"~/assets/img/{pasta}/{nome}-p.{tipo} {pw}w, ~/assets/img/{pasta}/{nome}.{tipo} {gw}w"
+        fontes.append(f'<source type="image/{tipo}" srcset="{srcset}" sizes="{sizes}">')
+    img = (
+        f'<img src="~/assets/img/{pasta}/{nome}.webp" '
+        f'srcset="~/assets/img/{pasta}/{nome}-p.webp {pw}w, ~/assets/img/{pasta}/{nome}.webp {gw}w" '
+        f'sizes="{sizes}" width="{gw}" height="{gh}" alt="{e(alt)}" loading="lazy" decoding="async">'
+    )
     return f'<picture>{"".join(fontes)}{img}</picture>'
 
 
@@ -376,7 +402,8 @@ PROBLEMAS = [
         "slug": "queda-de-cabelo",
         "nome": "Queda de cabelo",
         "titulo": "Queda de cabelo em Copacabana e Cabo Frio | Hairzenith",
-        "descricao": "Queda acima de 100 fios por dia tem causa e tratamento. Tricologista em Copacabana e Cabo Frio, com tricoscopia na Hairzenith.",
+        "descricao": "Queda acima de 100 fios por dia tem causa e tratamento. Tricologista em Copacabana e Cabo Frio, com tricoscopia na Hairzenith e plano na primeira consulta.",
+        "casos": ["resultado-13", "resultado-15"],
         "lead": "Perder de 50 a 100 fios por dia faz parte do ciclo do cabelo. Quando a queda passa disso, ou não para, ela tem uma causa que pode ser encontrada e tratada.",
         "onde": "No ralo e na escova",
         "zona": "Fios soltos no travesseiro, no ralo e na escova, em quantidade acima do habitual.",
@@ -421,7 +448,8 @@ PROBLEMAS = [
         "slug": "calvicie-feminina",
         "nome": "Calvície feminina",
         "titulo": "Calvície feminina em Copacabana e Cabo Frio | Hairzenith",
-        "descricao": "Risca mais larga e menos volume no topo. Tratamento sem cirurgia na Hairzenith, tricologia em Copacabana e Cabo Frio.",
+        "descricao": "Risca mais larga e menos volume no topo. Tratamento sem cirurgia na Hairzenith, com tricoscopia em Copacabana e Cabo Frio, para a calvície feminina.",
+        "casos": ["resultado-08", "resultado-14"],
         "lead": "Na mulher, a calvície raramente forma entradas. Ela aparece como uma risca que se alarga e um topo que perde volume, enquanto a linha da testa continua no lugar.",
         "onde": "Na risca do cabelo",
         "zona": "A risca central se alarga e o topo fica mais ralo; a linha da testa costuma se manter.",
@@ -463,7 +491,8 @@ PROBLEMAS = [
         "slug": "calvicie-masculina",
         "nome": "Calvície masculina",
         "titulo": "Calvície masculina em Copacabana e Cabo Frio | Hairzenith",
-        "descricao": "Entradas subindo e coroa abrindo. Tratamento sem cirurgia na Hairzenith, tricologista em Copacabana e Cabo Frio.",
+        "descricao": "Entradas subindo e coroa abrindo. Tratamento sem cirurgia na Hairzenith, com tricologista em Copacabana e Cabo Frio, a partir da primeira consulta.",
+        "casos": ["resultado-09", "resultado-10"],
         "lead": "As entradas sobem, a coroa abre. A calvície masculina é progressiva, e quanto antes é tratada, mais fios ainda podem ser preservados.",
         "onde": "Nas entradas e na coroa",
         "zona": "Entradas que sobem nas têmporas e uma coroa que se abre no alto da cabeça.",
@@ -503,8 +532,9 @@ PROBLEMAS = [
     {
         "slug": "couro-cabeludo-aparente",
         "nome": "Couro cabeludo aparente",
-        "titulo": "Couro cabeludo aparente em Copacabana | Hairzenith",
-        "descricao": "Couro cabeludo visível no topo, na risca ou sob a luz. Avaliação na Hairzenith, em Copacabana e Cabo Frio.",
+        "titulo": "Couro cabeludo aparente em Copacabana e Cabo Frio | Hairzenith",
+        "descricao": "Couro cabeludo visível no topo, na risca ou sob a luz. Avaliação com tricoscopia na Hairzenith, em Copacabana e Cabo Frio, para recuperar cobertura sem cirurgia.",
+        "casos": ["resultado-11", "resultado-15"],
         "lead": "Sob a luz do banheiro, no flash do celular, com o cabelo molhado: quando o couro cabeludo começa a aparecer, os fios perderam número, espessura ou os dois.",
         "onde": "Sob a luz, no topo",
         "zona": "O topo da cabeça aparece sob luz forte, no flash ou com o cabelo molhado.",
@@ -544,7 +574,8 @@ PROBLEMAS = [
         "slug": "afinamento-dos-fios",
         "nome": "Afinamento dos fios",
         "titulo": "Afinamento dos fios em Copacabana e Cabo Frio | Hairzenith",
-        "descricao": "Fios mais finos, curtos e frágeis podem ser miniaturização. Tricologista em Copacabana e Cabo Frio, na Hairzenith.",
+        "descricao": "Fios mais finos, curtos e frágeis podem ser miniaturização. Tricologista em Copacabana e Cabo Frio, na Hairzenith, com plano definido na consulta.",
+        "casos": ["resultado-13", "resultado-14"],
         "lead": "Muitas vezes o primeiro sinal não é a queda, é o fio. Ele nasce mais fino, cresce menos e quebra mais fácil, e o volume vai embora sem que você veja os fios caindo.",
         "onde": "No rabo de cavalo",
         "zona": "Os fios ficam mais finos em toda a cabeça e o rabo de cavalo perde espessura.",
@@ -583,8 +614,9 @@ PROBLEMAS = [
     {
         "slug": "perda-de-densidade-capilar",
         "nome": "Perda de densidade capilar",
-        "titulo": "Perda de densidade capilar em Copacabana | Hairzenith",
-        "descricao": "Menos volume e menos fios por área. Tratamento na Hairzenith, clínica de tricologia em Copacabana e Cabo Frio.",
+        "titulo": "Perda de densidade capilar em Copacabana e Cabo Frio | Hairzenith",
+        "descricao": "Menos volume e menos fios por área. Tratamento na Hairzenith, clínica de tricologia em Copacabana e Cabo Frio, com acompanhamento por imagem.",
+        "casos": ["resultado-08", "resultado-11"],
         "lead": "Densidade é a quantidade de fios por centímetro quadrado. Quando ela cai, o cabelo perde corpo e volume, mesmo antes de qualquer falha ficar visível.",
         "onde": "No volume, ano a ano",
         "zona": "O cabelo inteiro perde corpo e volume, sem uma falha localizada.",
@@ -624,14 +656,32 @@ PROBLEMAS = [
 POR_SLUG = {p["slug"]: p for p in PROBLEMAS}
 
 RESULTADOS = [
-    ("resultado-1", "Coroa", "antes e depois"),
-    ("resultado-7", "Topo da cabeça", "antes e depois"),
-    ("resultado-4", "Risca central", "três etapas"),
-    ("resultado-2", "Linha frontal", "antes e depois"),
-    ("resultado-5", "Topo", "três etapas"),
-    ("resultado-3", "Têmpora", "antes e depois"),
-    ("resultado-6", "Região frontal", "antes e depois"),
+    ("resultado-1", "Coroa", "antes e depois", "Coroa: fotos de antes e depois do tratamento"),
+    ("resultado-7", "Topo da cabeça", "antes e depois", "Topo da cabeça: fotos de antes e depois do tratamento"),
+    ("resultado-4", "Risca central", "três etapas", "Risca central: fotos de antes e depois do tratamento"),
+    ("resultado-2", "Linha frontal", "antes e depois", "Linha frontal: fotos de antes e depois do tratamento"),
+    ("resultado-5", "Topo", "três etapas", "Topo: fotos de antes e depois do tratamento"),
+    ("resultado-3", "Têmpora", "antes e depois", "Têmpora: fotos de antes e depois do tratamento"),
+    ("resultado-6", "Região frontal", "antes e depois", "Região frontal: fotos de antes e depois do tratamento"),
+    ("resultado-08", "Risca central", "antes e depois", "Risca central: antes e depois do tratamento, com a divisão mais fechada na segunda foto"),
+    ("resultado-09", "Coroa", "antes e depois", "Coroa: antes e depois do tratamento, com mais cobertura no topo na segunda foto"),
+    ("resultado-10", "Linha frontal", "antes e depois", "Linha frontal: antes e depois do tratamento, com a testa mais coberta na segunda foto"),
+    ("resultado-11", "Coroa", "antes e depois", "Coroa: antes e depois do tratamento, com a falha do topo mais preenchida na segunda foto"),
+    ("resultado-12", "Topo da cabeça", "antes e depois", "Topo da cabeça: antes e depois do tratamento, com mais densidade na segunda foto"),
+    ("resultado-13", "Risca e topo", "antes e depois", "Risca e topo: antes e depois do tratamento, com mais volume ao longo da divisão na segunda foto"),
+    ("resultado-14", "Risca", "antes e depois", "Risca: antes e depois do tratamento, com menos couro cabeludo visível na segunda foto"),
+    ("resultado-15", "Topo", "antes e depois", "Topo: antes e depois do tratamento, com a coroa mais coberta na segunda foto"),
 ]
+MEDIDAS_NOVAS = {
+    "resultado-08": ((1200, 789), (600, 395)),
+    "resultado-09": ((1200, 695), (600, 348)),
+    "resultado-10": ((1200, 654), (600, 327)),
+    "resultado-11": ((1200, 673), (600, 336)),
+    "resultado-12": ((1200, 821), (600, 411)),
+    "resultado-13": ((1200, 724), (600, 362)),
+    "resultado-14": ((1200, 603), (600, 301)),
+    "resultado-15": ((1200, 827), (600, 413)),
+}
 
 MOMENTOS = [
     ("Primeiro, a sua história", "Você conta quando a queda começou, o que mudou na rotina e o que espera do tratamento.", "larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara", "Anamnese Clínica"),
@@ -721,7 +771,7 @@ def cabecalho(ativo):
     <ul>{menu}</ul>
     <div class="menu__footer">
       <a class="button button--gold" href="{wa()}"><span>Agendar pelo WhatsApp</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>
-      <p class="menu__note">Copacabana (RJ) e Novo Portinho (Cabo Frio) • WhatsApp {WHATS_TEXTO}.</p>
+      <p class="menu__note">{fones_unidades()}.</p>
     </div>
   </div>
 </header>"""
@@ -734,7 +784,7 @@ def rodape():
             f'<ul class="foot__col" id="{u["id"]}"><li><span class="foot__kicker">0{idx + 1} • UNIDADE</span>{u["nome"]}</li>'
             f'<li>{u["rua"]}</li><li>{u["bairro"]}</li>'
             f'<li class="foot__coords">{u["coords"]}</li>'
-            f'<li><a href="{wa()}">WhatsApp {WHATS_TEXTO}</a></li>'
+            f'<li><a href="{wa(numero=u["whats"])}">WhatsApp {u["whats_texto"]}</a></li>'
             f'<li><a class="foot__maplink" href="{u["mapa"]}" rel="noopener">Traçar rota no mapa &rarr;</a></li></ul>'
         )
     colunas.append(
@@ -793,16 +843,16 @@ def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sent
         <li><a class="button button--shimmer" href="{wa()}"><span>Agendar pelo WhatsApp</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a></li>
         <li><a class="link" href="~/consulta/">Comparar as consultas &rarr;</a></li>
       </ul>
-      <p class="small">Copacabana e Cabo Frio, com hora marcada. WhatsApp {WHATS_TEXTO}.</p>
+      <p class="small">Copacabana e Cabo Frio, com hora marcada. WhatsApp {fones_unidades()}.</p>
     </div>
   </div>
 </section>"""
 
 
-def momentos(titulo="Como é a consulta", id_="h-consulta"):
+def momentos(titulo="O que acontece na sua consulta", id_="h-consulta"):
     colunas = "".join(
         f'<article class="moment" data-spotlight>'
-        f'<div class="moment__meta"><span class="moment__num">ATO {ROMANOS[idx]}</span><span class="moment__tag">{tag}</span></div>'
+        f'<div class="moment__meta"><span class="moment__num">{idx + 1:02d}</span><span class="moment__tag">{tag}</span></div>'
         f'{moldura(img, alt, "(max-width: 900px) 76vw, 340px")}'
         f'<div class="moment__body"><h3>{t}</h3><p>{d}</p></div>'
         f'</article>'
@@ -824,31 +874,207 @@ def momentos(titulo="Como é a consulta", id_="h-consulta"):
 </section>"""
 
 
-def resultados():
+def frame_resultado(nome, alt, i, sizes):
+    if nome in MEDIDAS_NOVAS:
+        grande, pequena = MEDIDAS_NOVAS[nome]
+        w, h = grande
+        interno = pic_pasta("resultados", nome, alt, grande, pequena, sizes)
+    else:
+        w, h = MANIFESTO[nome]["g"]
+        interno = pic(nome, alt, sizes)
+    return f'<div class="frame" data-open data-lightbox style="--i:{i};--r:{w}/{h}">{interno}</div>'
+
+
+def resultados(ids=None, id_="h-resultados", titulo="Veja a cobertura voltar, sem cirurgia"):
+    por_id = {item[0]: item for item in RESULTADOS}
+    itens = [por_id[i] for i in ids] if ids else list(RESULTADOS)
     fotos = []
-    for i, (img, nome, fato) in enumerate(RESULTADOS):
+    sizes = "(max-width: 900px) 88vw, 420px"
+    for i, (img, regiao, fato, alt) in enumerate(itens):
         cls = "shot shot--lifted" if i == 0 else "shot"
-        sizes = "(max-width: 900px) 88vw, 420px"
-        w, h = MANIFESTO[img]["g"]
+        numero = img.rsplit("-", 1)[-1].zfill(2)
         fotos.append(
             f'<figure class="{cls}" data-spotlight>'
-            f'<div class="shot__header"><span>CASO CLÍNICO 0{i + 1}</span><span>{fato.upper()}</span></div>'
-            f'{moldura(img, f"{nome}: fotos de antes e depois do tratamento", sizes, attrs=f"data-open data-lightbox style=\"--i:{i};--r:{w}/{h}\"")}'
-            f"<figcaption><span>{nome}</span><span class=\"shot__zoom\">Ampliar registro &#8599;</span></figcaption></figure>"
+            f'<div class="shot__header"><span>CASO CLÍNICO {numero}</span><span>{fato.upper()}</span></div>'
+            f'{frame_resultado(img, alt, i, sizes)}'
+            f"<figcaption><span>{regiao}</span><span class=\"shot__zoom\">Ampliar registro &#8599;</span></figcaption></figure>"
         )
     return f"""
-<section class="run wrap" aria-labelledby="h-resultados">
+<section class="run wrap" aria-labelledby="{id_}">
   <div class="grid">
     <div class="run__aside">
-      <span class="kicker" data-reveal><span class="kicker__dot"></span> PORTFÓLIO CLÍNICO</span>
-      <h2 id="h-resultados" data-reveal>Resultados documentados</h2>
-      <p class="run__lead" data-reveal>Registros padronizados sob o mesmo ângulo e iluminação, demonstrando a recuperação de cobertura e densidade sem intervenção cirúrgica.</p>
+      <span class="kicker" data-reveal><span class="kicker__dot"></span> ANTES E DEPOIS</span>
+      <h2 id="{id_}" data-reveal>{titulo}</h2>
+      <p class="run__lead" data-reveal>Fotos de pacientes atendidos pela equipe, no mesmo ângulo, antes e depois do tratamento clínico, sem cirurgia.</p>
       <a class="button button--shimmer" href="{wa()}"><span>Agendar uma avaliação</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>
-      <p class="run__note">Pacientes atendidos pela equipe, fotografados de cima, antes e depois do tratamento. Os resultados variam de pessoa para pessoa.</p>
+      <p class="run__note">Os resultados variam de pessoa para pessoa. As fotos não identificam quem foi atendido.</p>
     </div>
     <div class="run__track" tabindex="0" aria-label="Fotos de antes e depois, role para o lado">{''.join(fotos)}</div>
   </div>
 </section>"""
+
+
+def nota_pt(valor):
+    return f"{float(valor):.1f}".replace(".", ",")
+
+
+def data_relativa(iso, hoje=None):
+    """Data relativa congelada no HTML. O build usa o dia em que o site é gerado."""
+    hoje = hoje or date.today()
+    dia = datetime.fromisoformat(iso).date()
+    dias = max(0, (hoje - dia).days)
+    if dias == 0:
+        return "hoje"
+    if dias == 1:
+        return "ontem"
+    if dias < 7:
+        return f"há {dias} dias"
+    meses = (hoje.year - dia.year) * 12 + hoje.month - dia.month
+    if hoje.day < dia.day:
+        meses -= 1
+    if meses < 1:
+        semanas = max(1, dias // 7)
+        return "há 1 semana" if semanas == 1 else f"há {semanas} semanas"
+    if meses < 12:
+        return "há 1 mês" if meses == 1 else f"há {meses} meses"
+    anos = meses // 12
+    return "há 1 ano" if anos == 1 else f"há {anos} anos"
+
+
+def texto_avaliacao(texto):
+    return texto.replace("começanda", "começando")
+
+
+def estrelas(nota, rotulo=True):
+    cheias = int(round(float(nota)))
+    icones = []
+    for i in range(5):
+        opacidade = "1" if i < cheias else "0.28"
+        icones.append(
+            f'<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" fill-opacity="{opacidade}" '
+            'd="M10 1.6l2.1 4.6 5 .7-3.6 3.5.9 5L10 13.2 5.6 15.4l.9-5L2.9 6.9l5-.7z"/></svg>'
+        )
+    acesso = f'role="img" aria-label="{cheias} de 5"' if rotulo else 'aria-hidden="true"'
+    return f'<span class="estrelas" {acesso}>{"".join(icones)}</span>'
+
+
+def faixa_google():
+    place = AVALIACOES["place"]
+    nota = nota_pt(place["rating"])
+    total = place["review_count"]
+    frase = f"{nota} no Google · {total} avaliações"
+    return f"""
+<aside class="google-faixa wrap">
+  <a class="google-faixa__link" href="{e(place["url"])}" target="_blank" rel="noopener noreferrer">
+    {estrelas(place["rating"], rotulo=False)}
+    <span class="google-faixa__texto">{frase}</span>
+    <span class="google-faixa__ir" aria-hidden="true">&#8599;</span>
+  </a>
+</aside>"""
+
+
+def avatar_avaliacao(review):
+    nome = review["first_name"]
+    arquivo = review.get("avatar")
+    caminho = SAIDA / "assets" / "img" / "depoimentos" / arquivo if arquivo else None
+    if caminho and caminho.is_file():
+        return (
+            f'<img class="depoimento__foto" src="~/assets/img/depoimentos/{e(arquivo)}" width="96" height="96" '
+            f'alt="Foto de perfil de {e(nome)} no Google" loading="lazy" decoding="async">'
+        )
+    paleta = ("#3C342C", "#5A4632", "#2E3A40", "#6B5340", "#243028", "#4A3A32")
+    cor = paleta[sum(ord(c) for c in nome) % len(paleta)]
+    inicial = nome[:1].upper()
+    return f'<span class="depoimento__inicial" style="background:{cor}" aria-hidden="true">{e(inicial)}</span>'
+
+
+def card_avaliacao(review):
+    nome = review["first_name"]
+    nota = int(review["rating"])
+    quando = data_relativa(review["date"])
+    texto = "<br>".join(e(parte) for parte in texto_avaliacao(review["text"]).split("\n"))
+    return f"""
+<article class="depoimento" data-spotlight>
+  <div class="depoimento__quem">
+    {avatar_avaliacao(review)}
+    <div>
+      <p class="depoimento__nome">{e(nome)}</p>
+      {estrelas(nota)}
+    </div>
+  </div>
+  <p class="depoimento__quando"><time datetime="{e(review["date"][:10])}">{e(quando)}</time></p>
+  <blockquote class="depoimento__texto">{texto}</blockquote>
+  <p class="depoimento__selo">Avaliação no Google</p>
+</article>"""
+
+
+def secao_depoimentos(qtd=None, id_="h-depoimentos", titulo="Pacientes contam o que mudou no cabelo"):
+    reviews = AVALIACOES["reviews"][:qtd] if qtd else AVALIACOES["reviews"]
+    cards = "".join(card_avaliacao(r) for r in reviews)
+    return f"""
+<section class="depoimentos wrap" aria-labelledby="{id_}">
+  <div class="depoimentos__head">
+    <span class="kicker" data-reveal><span class="kicker__dot"></span> AVALIAÇÕES NO GOOGLE</span>
+    <h2 id="{id_}" data-reveal>{titulo}</h2>
+  </div>
+  <div class="depoimentos__lista">{cards}</div>
+</section>"""
+
+
+def passos():
+    itens = [
+        ("01", "Conte quando a queda começou", "Você diz o que mudou, há quanto tempo e o que espera do tratamento.", "larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"),
+        ("02", "Veja o couro cabeludo ampliado", "A tricoscopia mostra inflamação, afinamento e densidade, com ampliação de até 200 vezes.", "tricoscopio-retrato", "Tricoscópio digital apoiado no couro cabeludo"),
+        ("03", "Saia com um plano", "Em casa, no consultório ou nos dois. Os primeiros sinais costumam aparecer entre 60 e 120 dias.", "microinfusao", "Aplicação de ativos ao longo da risca do cabelo"),
+    ]
+    cards = "".join(
+        f'<article class="passo" data-spotlight><span class="passo__num">{n}</span>'
+        f'{moldura(img, alt, "(max-width: 900px) 84vw, 28vw")}'
+        f"<h3>{t}</h3><p>{d}</p></article>"
+        for n, t, d, img, alt in itens
+    )
+    return f"""
+<section class="passos wrap" id="como" aria-labelledby="h-como">
+  <div class="passos__head">
+    <span class="kicker" data-reveal><span class="kicker__dot"></span> COMO FUNCIONA</span>
+    <h2 id="h-como" class="head" data-reveal>Descubra a causa da sua queda em 1 consulta</h2>
+  </div>
+  <div class="passos__lista">{cards}</div>
+</section>"""
+
+
+def escolha_unidade(id_="h-unidades"):
+    cards = []
+    for u in UNIDADES:
+        cards.append(
+            f'<article class="unidade" data-spotlight data-unidade="{e(u["nome"])}">'
+            f'<span class="kicker"><span class="kicker__dot"></span> {u["coords"]}</span>'
+            f'<h3>{u["nome"]}</h3>'
+            f'<p>{u["rua"]}<br>{u["bairro"]}</p>'
+            f'<p class="unidade__fone">WhatsApp {u["whats_texto"]}</p>'
+            f'<a class="button button--gold" href="{wa(numero=u["whats"])}" data-unidade="{e(u["nome"])}">'
+            f'<span>Agendar em {u["nome"]}</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>'
+            f'<a class="link" href="{u["mapa"]}" rel="noopener">Como chegar &rarr;</a>'
+            f"</article>"
+        )
+    return f"""
+<section class="unidades wrap" id="unidades" aria-labelledby="{id_}">
+  <div class="unidades__head">
+    <span class="kicker" data-reveal><span class="kicker__dot"></span> DUAS UNIDADES ABERTAS</span>
+    <h2 id="{id_}" data-reveal>Escolha sua unidade</h2>
+    <p data-reveal>O atendimento é com hora marcada. Cada botão abre o agendamento com a unidade já escolhida.</p>
+  </div>
+  <div class="unidades__lista">{''.join(cards)}</div>
+</section>"""
+
+
+FAQ_HOME = [
+    ("A queda que eu vejo tem tratamento?", "Tem, quando o tratamento é dirigido à causa. A consulta começa pela investigação: história clínica, tricoscopia e, se necessário, exames."),
+    ("Em quanto tempo aparece resultado?", "Os primeiros sinais costumam aparecer entre 60 e 120 dias, conforme a causa e o protocolo. A evolução é acompanhada nas reavaliações."),
+    ("Vocês atendem em Copacabana e em Cabo Frio?", "Sim. As duas unidades estão abertas, com hora marcada. Copacabana fica na Av. Nossa Senhora de Copacabana, 807, sala 702. Cabo Frio fica na Av. Henrique Terra, 808, Novo Portinho."),
+    ("Quanto custa a consulta?", "Os valores são informados no agendamento, pelo WhatsApp. Há a Consulta Hairzenith, com a equipe, e a Consulta com Larissa Pessoa, de valor diferenciado."),
+    ("Atendem homens e mulheres?", "Sim. A Hairzenith trata queda e calvície em mulheres e homens, sem cirurgia."),
+]
 
 
 def nomes(titulo, grupos, id_="h-nomes"):
@@ -873,15 +1099,17 @@ def nomes(titulo, grupos, id_="h-nomes"):
 </section>"""
 
 
-def grupos_ciencia():
+def grupos_ciencia(com_tecnologias=True):
     arts = [f'<a href="{href_artigo(a)}" rel="noopener">{a["curto"]} &#8599;</a>' for a in ARTIGOS]
-    return [
+    grupos = [
         ["Equipe", '<a href="~/equipe/larissa-pessoa/">Larissa Pessoa, fundadora</a>', '<a href="~/equipe/#thaina">Thaina Candido de Souza</a>', '<a href="~/equipe/#julia">Júlia</a>'],
         ["Publicado em", "Brazilian Journal of Hair Health, 2025"] + arts,
         ["Coautoria", "Lara Junqueira, Faculdade de Farmácia da UFRJ"],
-        ["Tecnologias", "Tricoscopia digital", "Laser e LED capilar", "MMP", "Microinfusão de ativos", "Mesoject"],
-        ["Atendimento", "Mulheres e homens", "Copacabana, Rio de Janeiro", "Novo Portinho, Cabo Frio"],
     ]
+    if com_tecnologias:
+        grupos.append(["Tecnologias", "Tricoscopia digital", "Laser e LED capilar", "MMP", "Microinfusão de ativos", "Mesoject"])
+    grupos.append(["Atendimento", "Mulheres e homens", "Copacabana, Rio de Janeiro", "Novo Portinho, Cabo Frio"])
+    return grupos
 
 
 def reunidas(titulo, texto, link, fotos, id_="h-reunidas"):
@@ -1075,22 +1303,31 @@ def schema_org():
         "founder": {"@id": LARISSA_ID},
         "employee": [{"@id": LARISSA_ID}, {"@id": THAINA_ID}, {"@id": JULIA_ID}],
         "knowsAbout": ["Tricologia", "Queda de cabelo", "Calvície feminina", "Calvície masculina", "Alopecia androgenética", "Afinamento dos fios", "Perda de densidade capilar", "Tricoscopia"],
-        "sameAs": [INSTAGRAM, SITE_ANTIGO],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": telefone_internacional(),
-            "email": EMAIL,
-            "contactType": "customer service",
-            "availableLanguage": ["Portuguese"],
-            "areaServed": "BR",
-            "url": f"https://wa.me/{WHATS}",
+        "sameAs": [INSTAGRAM, SITE_ANTIGO, AVALIACOES["place"]["url"]],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": AVALIACOES["place"]["rating"],
+            "reviewCount": AVALIACOES["place"]["review_count"],
+            "bestRating": 5,
         },
+        "contactPoint": [
+            {
+                "@type": "ContactPoint",
+                "telephone": telefone_internacional(u["whats"]),
+                "email": EMAIL,
+                "contactType": "customer service",
+                "availableLanguage": ["Portuguese"],
+                "areaServed": "BR",
+                "url": f"https://wa.me/{u['whats']}",
+            }
+            for u in UNIDADES
+        ],
         "department": [{"@id": f"{SITE}/#{u['id']}"} for u in UNIDADES],
     }
 
 
 def schema_unidades():
-    """Uma ficha por endereço, com o mesmo telefone publicado no rodapé.
+    """Uma ficha por endereço, com o WhatsApp da própria unidade.
     Sem CRM, CEP ou horário: esses dados não estão no projeto."""
     nos = []
     for u in UNIDADES:
@@ -1101,7 +1338,7 @@ def schema_unidades():
             "parentOrganization": {"@id": ORG_ID},
             "url": f"{SITE}/#{u['id']}",
             "image": f"{SITE}/assets/img/og-hairzenith.jpg",
-            "telephone": telefone_internacional(),
+            "telephone": telefone_internacional(u["whats"]),
             "email": EMAIL,
             "address": endereco(u),
             "geo": {"@type": "GeoCoordinates", "latitude": u["lat"], "longitude": u["lon"]},
@@ -1320,7 +1557,7 @@ def formulario_lead():
   <div class="lead-modal__card" role="dialog" aria-modal="true" aria-labelledby="lead-titulo" aria-describedby="lead-confianca">
     <button type="button" class="lead-modal__fechar" data-lead-fechar>Fechar</button>
     <p class="kicker"><span class="kicker__dot"></span> Agendamento</p>
-    <h2 id="lead-titulo">Antes de abrir o WhatsApp</h2>
+    <h2 id="lead-titulo">Agende sua avaliação — respondemos rapidinho no WhatsApp</h2>
     <p id="lead-confianca" class="lead-modal__confianca">Seus dados são usados só para o agendamento.</p>
     <form id="lead-form" name="agendamento-whatsapp" method="post" action="#lead-form" novalidate>
       <div class="lead-modal__campo">
@@ -1332,10 +1569,6 @@ def formulario_lead():
       <div class="lead-modal__campo">
         <label for="lead-phone">Telefone</label>
         <input id="lead-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required aria-required="true" placeholder="(21) 90000-0000">
-      </div>
-      <div class="lead-modal__campo">
-        <label for="lead-email">E-mail <span class="lead-modal__opcional">opcional</span></label>
-        <input id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120">
       </div>
       <fieldset class="lead-modal__campo">
         <legend>Qual unidade?</legend>
@@ -1445,7 +1678,7 @@ def home():
         <span class="line"><span data-line style="--i:1"><em>queda e calvície</em></span></span>
       </h1>
       <p class="hero__lead" data-load style="--d:320ms">A Hairzenith é a clínica de tricologia fundada por Larissa Pessoa para tratar queda, calvície e perda de densidade capilar.</p>
-      <p class="hero__sub" data-load style="--d:400ms"><strong>Uma nova clínica está sendo construída.</strong> Enquanto isso, nossa equipe segue atendendo em Copacabana e Cabo Frio.</p>
+      <p class="hero__sub" data-load style="--d:400ms">Na primeira consulta, a tricoscopia mostra a causa. O plano pode ser em casa, no consultório ou nos dois.</p>
       <div class="actions" data-load style="--d:480ms">
         <a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>
         <a class="link" href="~/consulta/">As duas consultas &rarr;</a>
@@ -1473,11 +1706,11 @@ def home():
           {moldura("mesoject", "Caneta do Mesoject aplicada sobre o couro cabeludo de uma paciente", "(max-width: 900px) 100vw, 22vw", attrs="")}
           <figcaption>Mesoject: ativos no couro cabeludo, sem agulhas</figcaption>
         </figure>
-        <a class="hero__note" href="~/nova-clinica/" data-countdown="{INAUGURACAO}">
-          <span class="hero__note-kicker">NOVA SEDE • 2027</span>
-          <span class="hero__days" data-days>Março</span>
-          <span class="hero__unit" data-unit>de 2027</span>
-          <span class="link">A nova clínica &rarr;</span>
+        <a class="hero__note" href="#como">
+          <span class="hero__note-kicker">PRIMEIRA CONSULTA</span>
+          <span class="hero__days">1</span>
+          <span class="hero__unit">consulta para a causa</span>
+          <span class="link">Como funciona &rarr;</span>
         </a>
       </div>
     </div>
@@ -1488,8 +1721,8 @@ def home():
   <div class="wrap">
     <div class="pano__header grid">
       <div class="pano__title-col">
-        <span class="kicker kicker--gold" data-reveal><span class="kicker__dot"></span> O PONTO MAIS ALTO DO DIAGNÓSTICO</span>
-        <h2 id="h-zenite" class="display" data-reveal>Vista de cima, <em>fio a fio</em></h2>
+        <span class="kicker kicker--gold" data-reveal><span class="kicker__dot"></span> TRICOSCOPIA NA CONSULTA</span>
+        <h2 id="h-zenite" class="display" data-reveal>Veja a causa com ampliação de até <em>200 vezes</em></h2>
       </div>
       <div class="pano__captions">
         <p data-reveal style="--i:1">Hairzenith vem de zênite, o ponto mais alto. É de cima que a tricologia examina o couro cabeludo: a risca, a coroa e a densidade de uma só vez.</p>
@@ -1505,12 +1738,12 @@ def home():
 
 <section class="signs wrap" aria-labelledby="h-sinais">
   <div class="signs__header">
-    <span class="kicker" data-reveal><span class="kicker__dot"></span> ATLAS DE DIAGNÓSTICO INTERATIVO</span>
-    <h2 id="h-sinais" class="head" data-reveal><span class="indent">Comece pelo que você</span> <em>percebe no espelho</em></h2>
+    <span class="kicker" data-reveal><span class="kicker__dot"></span> SEIS SINAIS, SEIS PÁGINAS</span>
+    <h2 id="h-sinais" class="head" data-reveal><span class="indent">Encontre o tratamento</span> <em>pelo que você vê</em></h2>
   </div>
   <div class="signs__body grid">
     <div class="signs__map zmap" data-on="calvicie-masculina" data-reveal data-spotlight>
-      <div class="zmap__topbar"><span>VISTA DO ZÊNITE</span><span>SELECIONE UMA REGIÃO</span></div>
+      <div class="zmap__topbar"><span>VISTA DE CIMA</span><span>SELECIONE UMA REGIÃO</span></div>
       {mapa_zenite()}
       <p class="zmap__caption" aria-live="polite">Passe o cursor pela lista ou toque no desenho para ver onde cada sinal aparece.</p>
     </div>
@@ -1525,8 +1758,8 @@ def home():
 <section class="mosaic wrap" aria-labelledby="h-nasce">
   <div class="grid">
     <div class="mosaic__header">
-      <span class="kicker" data-reveal><span class="kicker__dot"></span> A TRAJETÓRIA DA MARCA</span>
-      <h2 id="h-nasce" class="head" data-reveal>Por que a Hairzenith nasce</h2>
+      <span class="kicker" data-reveal><span class="kicker__dot"></span> A CLÍNICA</span>
+      <h2 id="h-nasce" class="head" data-reveal>Uma clínica só para queda e calvície</h2>
       <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
     </div>
     <figure class="mosaic__photo">
@@ -1538,7 +1771,7 @@ def home():
     </figure>
     <div class="mosaic__side" data-reveal style="--i:2">
       <div class="mosaic__tile" data-spotlight>
-        <div class="mosaic__tile-bar"><span>CARTA COSTEIRA • RJ</span><span>02 UNIDADES ATIVAS</span></div>
+        <div class="mosaic__tile-bar"><span>COPACABANA • CABO FRIO</span><span>02 UNIDADES ATIVAS</span></div>
         {mapa_litoral()}
       </div>
       <dl class="mosaic__facts">{dl}</dl>
@@ -1546,13 +1779,9 @@ def home():
   </div>
 </section>
 
-{momentos()}
+{nomes("A equipe e o que já publicamos", grupos_ciencia(False), "h-ciencia")}
 
-{resultados()}
-
-{nomes("Ciência e método", grupos_ciencia(), "h-ciencia")}
-
-{reunidas("A nova Hairzenith chega em março de 2027", "Uma clínica construída para a saúde capilar. Enquanto a obra avança, seguimos atendendo em Copacabana e Cabo Frio.", '<a class="button button--gold" href="~/nova-clinica/"><span>Acompanhe a obra</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>', [
+{reunidas("A nova clínica chega em março de 2027", "Enquanto a obra avança, a equipe segue atendendo em Copacabana e Cabo Frio.", '<a class="button button--gold" href="~/nova-clinica/"><span>Acompanhe a obra</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>', [
         ("microinfusao", "Aplicação de ativos ao longo da risca do cabelo"),
         ("tela-tricoscopia-retrato", "Fios ampliados na tela da tricoscopia"),
         ("laser-led", "Capacete de laser e LED sobre a cabeça de uma paciente"),
@@ -1560,15 +1789,26 @@ def home():
         ("larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"),
         ("mesoject-retrato", "Caneta do Mesoject sobre o couro cabeludo"),
     ])}
-
-{fecho("Duas formas de consulta: com a equipe Hairzenith ou com Larissa Pessoa.")}
 """
+    corpo = (
+        corpo.split('<section class="pano"', 1)[0]
+        + faixa_google()
+        + resultados()
+        + secao_depoimentos()
+        + passos()
+        + escolha_unidade()
+        + perguntas("Dúvidas antes de agendar", FAQ_HOME)
+        + fecho("A equipe responde no WhatsApp com os horários.", "Agende sua avaliação em Copacabana ou Cabo Frio")
+        + '<section class="pano"'
+        + corpo.split('<section class="pano"', 1)[1]
+    )
     schema = [
         {"@type": "WebSite", "@id": SITE + "/#site", "url": SITE + "/", "name": "Hairzenith", "alternateName": "Larissa Pessoa Tricologia", "inLanguage": "pt-BR", "publisher": {"@id": ORG_ID}},
+        {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ_HOME]},
         schema_larissa(),
     ]
     pagina("/", "Tricologista em Copacabana e Cabo Frio | Hairzenith",
-           "Clínica de tricologia de Larissa Pessoa em Copacabana, no Rio de Janeiro, e em Cabo Frio. Queda, calvície e perda de densidade.",
+           "Clínica de tricologia de Larissa Pessoa em Copacabana, no Rio de Janeiro, e em Cabo Frio. Avaliação da queda, da calvície e da perda de densidade, com tricoscopia.",
            corpo, schema=schema)
 
 
@@ -1579,6 +1819,9 @@ def problema(p):
     acoes = f'<a class="button button--shimmer" href="{wa(MSG_PADRAO)}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="#h-faq">Perguntas frequentes</a>'
     corpo = (
         phero(p["nome"], p["lead"], None, p["alto"], p["quadrado"], acoes)
+        + faixa_google()
+        + secao_depoimentos(2, "h-depoimentos", "Quem já tratou conta no Google")
+        + resultados(p["casos"], "h-casos", "Antes e depois, sem cirurgia")
         + tabela_sinais(["Quando procurar", "uma avaliação"], p["sinais"], p["lateral"])
         + definicoes("Por que acontece", "A mesma aparência pode ter causas diferentes, e cada causa pede um tratamento. Estas são as mais comuns.", p["causas"], p["causas_pic"])
         + dividida("Como tratamos", p["trat_pic"], f"<p class=\"lead\">O plano parte do diagnóstico, nunca de um pacote pronto. Os tratamentos da Hairzenith são clínicos e sem cirurgia.</p><div class=\"treat-grid\">{trat}</div>", "h-trat")
@@ -1645,7 +1888,7 @@ def tratamentos():
         schema_larissa(),
     ]
     pagina("/tratamentos/", "Tratamentos de tricologia em Copacabana e Cabo Frio | Hairzenith",
-           "Tratamentos sem cirurgia para queda, calvície, couro cabeludo aparente e afinamento. Hairzenith em Copacabana e Cabo Frio.",
+           "Tratamentos sem cirurgia para queda, calvície, couro cabeludo aparente e afinamento. Hairzenith em Copacabana e Cabo Frio, com tricoscopia na consulta.",
            corpo, ativo="tratamentos", schema=schema)
 
 
@@ -1719,7 +1962,7 @@ def equipe():
         migalhas([("Hairzenith", "/"), ("Equipe", "/equipe/")]),
     ] + schema_artigos()
     pagina("/equipe/", "Equipe de tricologia em Copacabana e Cabo Frio | Hairzenith",
-           "Larissa Pessoa, Thaina Candido de Souza e Júlia, tricologistas da Hairzenith em Copacabana e Cabo Frio.",
+           "Larissa Pessoa, Thaina Candido de Souza e Júlia atendem queda e calvície na Hairzenith, em Copacabana e Cabo Frio, com o mesmo método de avaliação.",
            corpo, ativo="equipe", schema=schema)
 
 
@@ -1757,7 +2000,7 @@ def larissa():
     schema = [schema_larissa(), {"@type": "ProfilePage", "url": SITE + "/equipe/larissa-pessoa/", "mainEntity": {"@id": LARISSA_ID}},
               migalhas([("Hairzenith", "/"), ("Equipe", "/equipe/"), ("Larissa Pessoa", "/equipe/larissa-pessoa/")])] + schema_artigos()
     pagina("/equipe/larissa-pessoa/", "Larissa Pessoa, tricologista em Copacabana | Hairzenith",
-           "Fundadora e CEO da Hairzenith. Tricologista em queda de cabelo e calvície, com atendimento em Copacabana e Cabo Frio.",
+           "Larissa Pessoa é fundadora e CEO da Hairzenith. Tricologista em queda de cabelo e calvície, com atendimento em Copacabana e em Cabo Frio.",
            corpo, ativo="equipe", schema=schema, imagem="larissa-blazer", tipo="profile")
 
 
@@ -1796,7 +2039,11 @@ def consulta():
         )
 
     lugares = "".join(
-        f'<div class="place" data-spotlight><span class="kicker"><span class="kicker__dot"></span> {u["coords"]}</span><h3>{u["nome"]}</h3><p>{u["rua"]}<br>{u["bairro"]}</p><a class="link" href="{u["mapa"]}" rel="noopener">Como chegar &rarr;</a></div>'
+        f'<div class="place" data-spotlight data-unidade="{u["nome"]}"><span class="kicker"><span class="kicker__dot"></span> {u["coords"]}</span>'
+        f'<h3>{u["nome"]}</h3><p>{u["rua"]}<br>{u["bairro"]}</p>'
+        f'<p>WhatsApp {u["whats_texto"]}</p>'
+        f'<a class="link" href="{u["mapa"]}" rel="noopener">Como chegar &rarr;</a> '
+        f'<a class="link" href="{wa(numero=u["whats"])}" data-unidade="{u["nome"]}">Agendar nesta unidade &rarr;</a></div>'
         for u in UNIDADES
     )
     acoes = f'<a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="#h-modalidades">Comparar as modalidades &rarr;</a>'
@@ -1814,7 +2061,7 @@ def consulta():
   {fundadora}
 </section>
 """
-        + momentos("Como é a consulta", "h-etapas")
+        + momentos("O que acontece na sua consulta", "h-etapas")
         + f"""
 <section class="composer" aria-labelledby="h-mensagem">
   <div class="wrap grid">
@@ -1860,7 +2107,7 @@ def consulta():
         schema_larissa(),
     ]
     pagina("/consulta/", "Consulta com tricologista em Copacabana | Hairzenith",
-           "Consulta com a equipe Hairzenith ou com Larissa Pessoa. Tricoscopia em Copacabana e Cabo Frio. Horário e valor pelo WhatsApp.",
+           "Consulta com a equipe Hairzenith ou com Larissa Pessoa. Tricoscopia em Copacabana e Cabo Frio. Horários e o valor da avaliação são informados no WhatsApp.",
            corpo, ativo="consulta", schema=schema)
 
 
@@ -1895,7 +2142,7 @@ def sobre():
             None,
             "<div class=\"treat-grid\">"
             "<div class=\"treat-step\" data-spotlight><h3>Muda</h3><ul><li>O nome: Larissa Pessoa Tricologia Integrativa passa a se chamar Hairzenith.</li><li>A estrutura: uma nova clínica, em construção, com inauguração em março de 2027.</li><li>A equipe ganha nome e lugar: Thaina Candido de Souza e Júlia são tricologistas Hairzenith.</li></ul></div>"
-            f"<div class=\"treat-step\" data-spotlight><h3>Continua</h3><ul><li>Os atendimentos em Copacabana e Cabo Frio, até a inauguração.</li><li>O WhatsApp {WHATS_TEXTO} e o Instagram {INSTAGRAM_TEXTO}.</li><li>O método de avaliação e tratamento, sem cirurgia.</li><li>Larissa Pessoa, que dirige a clínica e segue atendendo.</li></ul></div>"
+            f"<div class=\"treat-step\" data-spotlight><h3>Continua</h3><ul><li>Os atendimentos em Copacabana e Cabo Frio, até a inauguração.</li><li>Os WhatsApp de Copacabana, {UNIDADES[0]['whats_texto']}, e de Cabo Frio, {UNIDADES[1]['whats_texto']}, e o Instagram {INSTAGRAM_TEXTO}.</li><li>O método de avaliação e tratamento, sem cirurgia.</li><li>Larissa Pessoa, que dirige a clínica e segue atendendo.</li></ul></div>"
             "</div>",
             "h-transicao",
         )
@@ -1914,7 +2161,7 @@ def sobre():
         schema_larissa(),
     ]
     pagina("/sobre/", "Sobre a Hairzenith: tricologia em Copacabana e Cabo Frio",
-           "A clínica de tricologia fundada por Larissa Pessoa. Atendimento em Copacabana, no Rio de Janeiro, e na unidade de Cabo Frio.",
+           "A clínica de tricologia fundada por Larissa Pessoa. Atendimento em Copacabana, no Rio de Janeiro, e em Cabo Frio, com o mesmo método e a mesma equipe.",
            corpo, ativo="sobre", schema=schema)
 
 
@@ -1971,7 +2218,7 @@ def nova_clinica():
         migalhas([("Hairzenith", "/"), ("Nova clínica", "/nova-clinica/")]),
     ]
     pagina("/nova-clinica/", "Nova clínica em 2027 | Hairzenith Copacabana e Cabo Frio",
-           "A nova sede da Hairzenith chega em março de 2027. Até a inauguração, a equipe atende em Copacabana e Cabo Frio.",
+           "A nova sede da Hairzenith chega em março de 2027. Até a inauguração, a equipe segue atendendo em Copacabana e em Cabo Frio, com hora marcada.",
            corpo, ativo="nova-clinica", schema=schema)
 
 
@@ -2042,7 +2289,7 @@ def conteudo():
         schema_larissa(),
     ]
     pagina("/conteudo/", "Conteúdo de tricologia em Copacabana | Hairzenith",
-           "Textos da equipe sobre queda, calvície e couro cabeludo. Clínica de tricologia Hairzenith em Copacabana e Cabo Frio.",
+           "Textos da equipe sobre queda, calvície e couro cabeludo. Clínica de tricologia Hairzenith em Copacabana e Cabo Frio, com linguagem direta e base clínica.",
            corpo, ativo="conteudo", schema=schema)
 
     texto = []
@@ -2074,7 +2321,7 @@ def conteudo():
     pagina(
         f"/conteudo/{a['slug']}/",
         "Queda de cabelo fora do normal | Copacabana e Cabo Frio",
-        "Queda acima de 100 fios por dia, falhas visíveis ou fios mais finos: quando procurar um tricologista em Copacabana ou Cabo Frio.",
+        "Queda acima de 100 fios por dia, falhas visíveis ou fios mais finos: quando procurar um tricologista em Copacabana ou Cabo Frio, na clínica Hairzenith.",
         corpo,
         ativo="conteudo",
         schema=schema,
@@ -2107,6 +2354,7 @@ REDIRECIONAMENTOS = [
     ("/especialista-em-tricologia-no-rio-de-janeiro-quando-a-queda-de-cabelo-nao-e-normal", "/conteudo/quando-a-queda-de-cabelo-nao-e-normal/"),
     ("/blog-de-saude-capilar", "/conteudo/"),
     ("/publicacoes", "/equipe/larissa-pessoa/"),
+    ("/index.html", "/"),
 ]
 
 
@@ -2129,14 +2377,25 @@ def apoio():
     )
     (SAIDA / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
     (SAIDA / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    # Netlify / Cloudflare Pages
-    (SAIDA / "_redirects").write_text("".join(f"{a} {b} 301\n{a}/ {b} 301\n" for a, b in REDIRECIONAMENTOS))
-    # Vercel (dentro de site/ e na raiz do repositório)
+    # Netlify / Cloudflare Pages. /index.html não ganha barra extra.
+    linhas_redirect = []
+    for origem, destino in REDIRECIONAMENTOS:
+        linhas_redirect.append(f"{origem} {destino} 301\n")
+        if not origem.endswith(".html"):
+            linhas_redirect.append(f"{origem}/ {destino} 301\n")
+    (SAIDA / "_redirects").write_text("".join(linhas_redirect))
+    # Vercel: trailingSlash redireciona /caminho para /caminho/ antes da regra,
+    # então a origem precisa existir com e sem barra.
+    regras = []
+    for origem, destino in REDIRECIONAMENTOS:
+        regras.append({"source": origem, "destination": destino, "permanent": True})
+        if not origem.endswith(".html"):
+            regras.append({"source": origem + "/", "destination": destino, "permanent": True})
     vercel_cfg = {
         "buildCommand": "npm run build",
         "outputDirectory": "site",
         "trailingSlash": True,
-        "redirects": [{"source": a, "destination": b, "permanent": True} for a, b in REDIRECIONAMENTOS],
+        "redirects": regras,
     }
     (SAIDA / "vercel.json").write_text(json.dumps({
         "trailingSlash": True,
