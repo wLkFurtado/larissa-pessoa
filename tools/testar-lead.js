@@ -84,6 +84,49 @@ function testarFuncoes() {
     agora + 5000
   );
   ok(!depois.novo && !depois.dados.gclid, 'primeira visita sem anúncio continua first-touch');
+
+  const soGclid = lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/?gclid=SOGCLID', search: '?gclid=SOGCLID' },
+    agora
+  );
+  ok(soGclid.dados.gclid === 'SOGCLID' && soGclid.dados.utm_source === 'google' && soGclid.dados.utm_medium === 'cpc', 'só gclid preenche utm_source=google e utm_medium=cpc');
+
+  const comMeta = lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/?gclid=AAA&utm_source=meta', search: '?gclid=AAA&utm_source=meta' },
+    agora
+  );
+  ok(comMeta.dados.utm_source === 'meta' && !comMeta.dados.utm_medium, 'gclid com utm_source=meta não troca a UTM nem inventa medium');
+
+  const semClique = lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/consulta/', search: '' },
+    agora
+  );
+  ok(!semClique.dados.gclid && !semClique.dados.utm_source && !semClique.dados.utm_medium, 'sem click id não preenche UTM');
+
+  const soGbraid = lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/?wbraid=WB', search: '?wbraid=WB' },
+    agora
+  );
+  ok(soGbraid.dados.utm_source === 'google' && soGbraid.dados.utm_medium === 'cpc', 'wbraid sem UTM também vira google/cpc');
+
+  const mediumPronto = lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/?gclid=AAA&utm_medium=display', search: '?gclid=AAA&utm_medium=display' },
+    agora
+  );
+  ok(mediumPronto.dados.utm_source === 'google' && mediumPronto.dados.utm_medium === 'display', 'utm_medium existente não é sobrescrito');
+
+  const antigo = { v: 1, ts: agora, landing: 'https://www.hairzenith.com/?gclid=ANTIGO', gclid: 'ANTIGO' };
+  const relido = lead.resolverAtribuicao(
+    { cookie: antigo, storage: { ...antigo } },
+    { href: 'https://www.hairzenith.com/consulta/', search: '' },
+    agora + 1000
+  );
+  ok(!relido.novo && relido.sincronizar && relido.dados.utm_source === 'google' && relido.dados.utm_medium === 'cpc' && relido.dados.ts === agora, 'registro antigo só com gclid é completado sem mudar a data');
 }
 
 function testarBuild() {

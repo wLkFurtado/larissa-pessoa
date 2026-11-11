@@ -70,13 +70,37 @@
     return !!(reg && typeof reg.ts === 'number' && reg.ts <= agora && agora - reg.ts < JANELA_MS);
   }
 
+  function utmVazio(valor) {
+    return valor == null || String(valor).trim() === '';
+  }
+
+  // O workflow do GHL não oferece gclid como condição. O registro salvo
+  // (e portanto o hidden) ganha utm_source/utm_medium só quando estão vazios.
+  function completarUtmGoogle(dados) {
+    if (!dados) return false;
+    if (utmVazio(dados.gclid) && utmVazio(dados.gbraid) && utmVazio(dados.wbraid)) return false;
+    let mudou = false;
+    if (utmVazio(dados.utm_source)) {
+      dados.utm_source = 'google';
+      mudou = true;
+    }
+    if (dados.utm_source === 'google' && utmVazio(dados.utm_medium)) {
+      dados.utm_medium = 'cpc';
+      mudou = true;
+    }
+    return mudou;
+  }
+
   function resolverAtribuicao(estado, visita, agora) {
     const cookie = registroValido(estado && estado.cookie, agora) ? estado.cookie : null;
     const storage = registroValido(estado && estado.storage, agora) ? estado.storage : null;
     let atual = null;
     if (cookie && storage) atual = cookie.ts <= storage.ts ? cookie : storage;
     else atual = cookie || storage;
-    if (atual) return { dados: atual, novo: false, sincronizar: !cookie || !storage };
+    if (atual) {
+      const mudou = completarUtmGoogle(atual);
+      return { dados: atual, novo: false, sincronizar: mudou || !cookie || !storage };
+    }
     const params = new URLSearchParams(visita.search || '');
     const dados = {
       v: 1,
@@ -89,6 +113,7 @@
     });
     const fbclid = (params.get('fbclid') || '').trim();
     if (fbclid) dados.fbclid = fbclid.slice(0, 200);
+    completarUtmGoogle(dados);
     return { dados: dados, novo: true, sincronizar: true };
   }
 

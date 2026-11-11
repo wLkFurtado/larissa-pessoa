@@ -80,7 +80,10 @@ python3 build.py
 
    O formulário manda `name`, `phone`, `email` (opcional), `unidade` (`Cabo Frio` ou
    `Copacabana`) e os ocultos `gclid`, `gbraid`, `wbraid`, `utm_source`, `utm_medium`,
-   `utm_campaign`, `utm_term`, `utm_content`, no first-touch de 90 dias. `pagina_origem`
+   `utm_campaign`, `utm_term`, `utm_content`, no first-touch de 90 dias. Se esse registro
+   tem `gclid`, `gbraid` ou `wbraid` e `utm_source` está vazio, ele é salvo como `google`.
+   Se `utm_source` fica `google` e `utm_medium` está vazio, ele é salvo como `cpc`. UTM que
+   já veio na URL não muda. Sem click id do Google, nenhuma UTM é inventada. `pagina_origem`
    e `landing_page` vão junto e o GHL pode ignorá-los. O `fbclid` fica só no cookie.
    Depois do submit válido o site envia `dataLayer.push({ event: 'generate_lead', unidade: 'cabo_frio' | 'copacabana' })`
    e abre o WhatsApp na mesma aba: Cabo Frio `5522999037788`, Copacabana `5521972780789`.
