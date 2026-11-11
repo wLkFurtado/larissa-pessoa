@@ -59,17 +59,13 @@ python3 build.py
 3. O padrão de `SITE_URL` é `https://www.hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD
    saem todos dessa origem. Para outro endereço:
    `SITE_URL=https://outro.exemplo python3 build.py`
-   Pixel da Meta, GA4 e Tag Manager só entram com ID real, pelas variáveis abaixo. Há dois caminhos,
-   e eles não se misturam:
+   O Tag Manager `GTM-59VNHFK6` entra em toda página mesmo sem variável na Vercel: o script fica no
+   `<head>` e o iframe `noscript` logo após o `<body>`. O GA4 `G-7K4L9ZHTSR` é tag desse container,
+   então o HTML não leva `gtag`. O clique no WhatsApp envia `dataLayer.push({ event: 'whatsapp_click' })`.
+   No GTM, o acionador é o evento personalizado `whatsapp_click`.
 
-   - **Recomendado:** só `GTM_ID`. Dentro do Tag Manager, crie a tag do GA4 e a do Pixel.
-     O clique no WhatsApp já envia `dataLayer.push({ event: 'whatsapp_click' })`.
-     No GTM, use um acionador de evento personalizado com o nome `whatsapp_click` e marque essa conversão no GA4.
-   - **Direto, sem Tag Manager:** `GA_MEASUREMENT_ID` (formato `G-…`) e/ou `META_PIXEL_ID` (só números).
-     O gerador coloca as tags no HTML.
-
-   Se `GTM_ID` estiver definido, `GA_MEASUREMENT_ID` e `META_PIXEL_ID` são ignorados, para não contar
-   a visita nem o pixel duas vezes. Nunca publique o GTM e, ao mesmo tempo, as tags diretas.
+   `GA_MEASUREMENT_ID` e `META_PIXEL_ID` só entram no HTML se não houver GTM. Com o padrão atual,
+   os dois são ignorados para não duplicar a visita nem o pixel.
 4. Google Search Console: cadastrar o domínio novo e enviar `sitemap.xml`.
 5. Quando o site novo estiver no ar, apontar `larissapessoa.com` para ele. As URLs antigas caem nas novas com
    redirecionamento 301 (mapa em `REDIRECIONAMENTOS`, no `build.py`), o que transfere a autoridade página a página.
@@ -90,7 +86,7 @@ python3 build.py
 - **Domínio:** o final é `https://www.hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD já usam esse endereço.
 - **CEP, horário e pin:** os dois endereços e o WhatsApp (21) 97278-0789 estão no código. CEP, horário de funcionamento e a coordenada medida no prédio não estão. O mapa usa grau e minuto aproximado.
 - **Endereço da nova clínica:** não está no projeto. A página só marca a inauguração em março de 2027.
-- **Pixel, Analytics e Tag Manager:** não há ID no repositório. Sem a variável, a tag não é publicada. Com `GTM_ID`, o GA4 e o Pixel ficam de fora do HTML de propósito.
+- **Tag Manager:** o HTML publica `GTM-59VNHFK6`. O GA4 `G-7K4L9ZHTSR` fica dentro desse container, sem `gtag` na página.
 - **E-mail e Instagram:** ainda são os da marca antiga (`lamptricologia@gmail.com`, `@larissapessoatricologia`).
 - **Fotos de antes e depois:** vieram do site antigo e trazem a marca d'água Larissa Pessoa. Confirmar a
   autorização das pacientes e as regras do conselho profissional para esse tipo de imagem.

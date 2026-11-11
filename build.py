@@ -39,10 +39,11 @@ MARCA = "Hairzenith"
 WHATS = "5521972780789"
 WHATS_TEXTO = "(21) 97278-0789"
 EMAIL = "lamptricologia@gmail.com"
-# IDs reais, quando o cliente passar. Vazio = a tag não entra no HTML.
+# GTM padrão do site. O GA4 (G-7K4L9ZHTSR) e o Pixel entram por esse container,
+# não como gtag ou fbq no HTML. A variável de ambiente ainda pode trocar o ID.
 META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "").strip()
 GA_MEASUREMENT_ID = os.environ.get("GA_MEASUREMENT_ID", "").strip()
-GTM_ID = os.environ.get("GTM_ID", "").strip()
+GTM_ID = os.environ.get("GTM_ID", "").strip() or "GTM-59VNHFK6"
 INSTAGRAM = "https://www.instagram.com/larissapessoatricologia"
 INSTAGRAM_TEXTO = "@larissapessoatricologia"
 SITE_ANTIGO = "https://www.larissapessoa.com/"
@@ -1209,6 +1210,16 @@ def rastreamento():
     return rastreamento.pronto
 
 
+def gtm_noscript():
+    """Iframe do GTM, logo após o <body>, para quem está sem JavaScript."""
+    if not re.fullmatch(r"GTM-[A-Z0-9]+", GTM_ID):
+        return ""
+    return (
+        f'<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}" '
+        f'height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>'
+    )
+
+
 def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="og-hairzenith", tipo="website", indexar=True):
     grafo = [schema_org(), *schema_unidades()] + (schema or [])
     ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False, separators=(",", ":"))
@@ -1260,6 +1271,7 @@ def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="o
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
+{gtm_noscript()}
 {cabecalho(ativo)}
 <main id="conteudo">
 {corpo}
@@ -2012,8 +2024,7 @@ def main():
     apoio()
     print(f"{len(PAGINAS)} páginas geradas em {SAIDA}")
     print(f"domínio: {SITE}")
-    if not (META_PIXEL_ID or GA_MEASUREMENT_ID or GTM_ID):
-        print("analytics: nenhum ID (defina META_PIXEL_ID, GA_MEASUREMENT_ID ou GTM_ID para incluir a tag)")
+    print(f"tag manager: {GTM_ID} (GA4 e Pixel ficam dentro do GTM, sem gtag no HTML)")
 
 
 if __name__ == "__main__":

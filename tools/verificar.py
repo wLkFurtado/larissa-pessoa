@@ -255,6 +255,12 @@ def main():
 
         if re.search(r"G-X{3,}|GTM-X{3,}|UA-0{3,}|fbq\('init','(?:0+|1234567890)'\)", html):
             erros.append(f"{rotulo}: ID de analytics placeholder")
+        if "GTM-59VNHFK6" not in html or "googletagmanager.com/gtm.js" not in html:
+            erros.append(f"{rotulo}: sem o script do GTM-59VNHFK6")
+        if "googletagmanager.com/ns.html?id=GTM-59VNHFK6" not in html:
+            erros.append(f"{rotulo}: sem o iframe noscript do GTM")
+        if "gtag(" in html or "googletagmanager.com/gtag" in html or "fbq(" in html:
+            erros.append(f"{rotulo}: GA4 ou Pixel direto no HTML com o GTM ativo")
 
     if numeros_wa != {"5521972780789"}:
         erros.append(f"WhatsApp divergente: {sorted(numeros_wa) or 'nenhum'}")
