@@ -1,5 +1,6 @@
 // Formulário de agendamento antes do WhatsApp.
-// O External Tracking do GHL lê este <form> no submit. O token da API não entra aqui.
+// O External Tracking do GHL lê este <form> no submit e também 50 ms depois do
+// clique no botão, mesmo se o submit for cancelado. O token da API não entra aqui.
 
 (function (root) {
   const CHAVES = ['gclid', 'gbraid', 'wbraid', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
@@ -327,6 +328,20 @@
     return erros;
   }
 
+  function normalizarCampos(form) {
+    const nome = form.querySelector('[name="full_name"]');
+    const email = form.querySelector('[name="email"]');
+    const phone = form.querySelector('[name="phone"]');
+    if (nome) nome.value = nome.value.replace(/\s+/g, ' ').trim();
+    const partes = partirNome(nome ? nome.value : '');
+    const primeiro = form.querySelector('[name="first_name"]');
+    const ultimo = form.querySelector('[name="last_name"]');
+    if (primeiro) primeiro.value = partes.first;
+    if (ultimo) ultimo.value = partes.last;
+    if (email) email.value = email.value.trim();
+    if (phone) phone.value = mascararTelefone(phone.value);
+  }
+
   function fecharMenu() {
     const menu = doc.getElementById('menu');
     if (!menu || !menu.hasAttribute('data-open')) return;
@@ -494,17 +509,7 @@
       return;
     }
     preencherCampos();
-    const nome = form.querySelector('[name="full_name"]');
-    const email = form.querySelector('[name="email"]');
-    const phone = form.querySelector('[name="phone"]');
-    if (nome) nome.value = nome.value.replace(/\s+/g, ' ').trim();
-    const partes = partirNome(nome ? nome.value : '');
-    const primeiro = form.querySelector('[name="first_name"]');
-    const ultimo = form.querySelector('[name="last_name"]');
-    if (primeiro) primeiro.value = partes.first;
-    if (ultimo) ultimo.value = partes.last;
-    if (email) email.value = email.value.trim();
-    if (phone) phone.value = mascararTelefone(phone.value);
+    normalizarCampos(form);
     const erros = errosDoForm(form);
     if (Object.keys(erros).length) {
       e.preventDefault();
@@ -519,10 +524,35 @@
     iniciarSaida(form);
   }
 
+  function aoClicarEnvio(e) {
+    const alvo = e.target;
+    if (!alvo || !alvo.closest) return;
+    const botao = alvo.closest('button[type="submit"], input[type="submit"], [data-submission-type="submit"]');
+    if (!botao) return;
+    const form = botao.form || botao.closest('form');
+    if (!form || form.id !== 'lead-form') return;
+    if (form.dataset.enviando === '1') {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      return;
+    }
+    normalizarCampos(form);
+    const erros = errosDoForm(form);
+    if (!Object.keys(erros).length) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    mostrarErros(form, erros);
+  }
+
   api.abrir = abrir;
   api.fechar = fechar;
   api.aoEnviar = aoEnviar;
   api.preencherCampos = preencherCampos;
+
+  // Capture na window corre antes do listener que o GHL registra no botão.
+  root.addEventListener('click', aoClicarEnvio, { capture: true });
 
   preencherCampos();
 
