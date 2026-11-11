@@ -86,7 +86,31 @@ python3 build.py
    `utm_campaign`, `utm_term`, `utm_content`, no first-touch de 90 dias. Se esse registro
    tem `gclid`, `gbraid` ou `wbraid` e `utm_source` está vazio, ele é salvo como `google`.
    Se `utm_source` fica `google` e `utm_medium` está vazio, ele é salvo como `cpc`. UTM que
-   já veio na URL não muda. Sem click id do Google, nenhuma UTM é inventada. `pagina_origem`
+   já veio na URL não muda. Sem click id do Google, nenhuma UTM é inventada. O mesmo
+   registro guarda `origem`, um slug fixo para o workflow do GHL aplicar tag. A primeira
+   regra que bater ganha, e a visita seguinte não troca esse valor.
+
+   | `origem` | Quando |
+   | --- | --- |
+   | `google_ads` | `gclid`, `gbraid` ou `wbraid`, ou `utm_source=google` com `utm_medium` `cpc`, `ppc`, `paid` ou `pmax` |
+   | `meta_ads` | `fbclid`, ou `utm_source` `facebook`, `fb`, `instagram`, `ig` ou `meta` com `utm_medium` `paid`, `cpc`, `ads` ou `paid_social` |
+   | `instagram_bio` | `utm_source=instagram` e `utm_medium=bio` |
+   | `instagram_organico` | referrer `instagram.com` ou `l.instagram.com` sem UTM paga, ou `utm_source=instagram` com outro medium, inclusive `stories` |
+   | `google_meu_negocio` | `utm_source=google` e `utm_medium` `gmb`, `gbp` ou `maps` |
+   | `whatsapp_status` | `utm_source=whatsapp` e `utm_medium=status` |
+   | `google_organico` | referrer de busca do Google, sem click id |
+   | `outro_site` | outro referrer externo |
+   | `utm_outro` | tem UTM que não entrou acima; `utm_source` e `utm_medium` originais ficam como vieram |
+   | `direto` | sem click id, sem UTM e sem referrer externo |
+
+   Links prontos para colar:
+
+   - Bio do Instagram: `https://www.hairzenith.com/?utm_source=instagram&utm_medium=bio` → `instagram_bio`
+   - Stories: `https://www.hairzenith.com/?utm_source=instagram&utm_medium=stories` → `instagram_organico`
+   - Google Meu Negócio: `https://www.hairzenith.com/?utm_source=google&utm_medium=gmb` → `google_meu_negocio`
+   - Status do WhatsApp: `https://www.hairzenith.com/?utm_source=whatsapp&utm_medium=status` → `whatsapp_status`
+
+   `pagina_origem`
    e `landing_page` vão junto e o GHL pode ignorá-los. O `fbclid` fica só no cookie.
    Depois do submit válido o site envia `dataLayer.push({ event: 'generate_lead', unidade: 'cabo_frio' | 'copacabana' })`
    e abre o WhatsApp na mesma aba: Cabo Frio `5522999037788`, Copacabana `5521972780789`.

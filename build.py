@@ -1312,7 +1312,7 @@ def formulario_lead():
         for nome in (
             "gclid", "gbraid", "wbraid",
             "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
-            "pagina_origem", "landing_page",
+            "origem", "pagina_origem", "landing_page",
         )
     )
     return f"""

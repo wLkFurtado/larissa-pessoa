@@ -108,6 +108,50 @@ function testarFuncoes() {
     agora
   );
   ok(!semClique.dados.gclid && !semClique.dados.utm_source && !semClique.dados.utm_medium, 'sem click id não preenche UTM');
+  ok(semClique.dados.origem === 'direto', 'sem click id e sem referrer é direto');
+
+  const classificar = (search, referrer) => lead.resolverAtribuicao(
+    { cookie: null, storage: null },
+    { href: 'https://www.hairzenith.com/' + (search || ''), search: search || '', referrer: referrer || '' },
+    agora
+  ).dados;
+  ok(classificar('?gclid=G').origem === 'google_ads', 'origem google_ads com gclid');
+  ok(classificar('?gbraid=B').origem === 'google_ads', 'origem google_ads com gbraid');
+  ok(classificar('?wbraid=W').origem === 'google_ads', 'origem google_ads com wbraid');
+  ok(classificar('?utm_source=google&utm_medium=cpc').origem === 'google_ads', 'origem google_ads com utm cpc');
+  ok(classificar('?utm_source=google&utm_medium=ppc').origem === 'google_ads', 'origem google_ads com ppc');
+  ok(classificar('?utm_source=google&utm_medium=paid').origem === 'google_ads', 'origem google_ads com paid');
+  ok(classificar('?utm_source=google&utm_medium=pmax').origem === 'google_ads', 'origem google_ads com pmax');
+  ok(classificar('?fbclid=FB').origem === 'meta_ads', 'origem meta_ads com fbclid');
+  ok(classificar('?utm_source=facebook&utm_medium=paid').origem === 'meta_ads', 'origem meta_ads facebook/paid');
+  ok(classificar('?utm_source=fb&utm_medium=cpc').origem === 'meta_ads', 'origem meta_ads fb/cpc');
+  ok(classificar('?utm_source=instagram&utm_medium=ads').origem === 'meta_ads', 'origem meta_ads instagram/ads');
+  ok(classificar('?utm_source=ig&utm_medium=paid_social').origem === 'meta_ads', 'origem meta_ads ig/paid_social');
+  ok(classificar('?utm_source=meta&utm_medium=paid').origem === 'meta_ads', 'origem meta_ads meta/paid');
+  ok(classificar('?utm_source=instagram&utm_medium=bio').origem === 'instagram_bio', 'origem instagram_bio');
+  ok(classificar('?utm_source=instagram&utm_medium=stories').origem === 'instagram_organico', 'stories vira instagram_organico');
+  ok(classificar('', 'https://l.instagram.com/').origem === 'instagram_organico', 'referrer l.instagram.com é instagram_organico');
+  ok(classificar('', 'https://www.instagram.com/hair').origem === 'instagram_organico', 'referrer instagram.com é instagram_organico');
+  ok(classificar('?utm_source=google&utm_medium=gmb').origem === 'google_meu_negocio', 'origem google_meu_negocio gmb');
+  ok(classificar('?utm_source=google&utm_medium=gbp').origem === 'google_meu_negocio', 'origem google_meu_negocio gbp');
+  ok(classificar('?utm_source=google&utm_medium=maps').origem === 'google_meu_negocio', 'origem google_meu_negocio maps');
+  ok(classificar('?utm_source=whatsapp&utm_medium=status').origem === 'whatsapp_status', 'status do WhatsApp vira whatsapp_status');
+  const zap = classificar('?utm_source=whatsapp&utm_medium=status');
+  ok(zap.utm_source === 'whatsapp' && zap.utm_medium === 'status', 'whatsapp_status não troca a UTM original');
+  ok(classificar('', 'https://www.google.com/search?q=tricologia').origem === 'google_organico', 'busca Google sem click id é google_organico');
+  ok(classificar('', 'https://www.google.com.br/').origem === 'google_organico', 'google.com.br sem click id é google_organico');
+  ok(classificar('', 'https://blog.exemplo.com/post').origem === 'outro_site', 'outro referrer é outro_site');
+  const outro = classificar('?utm_source=newsletter&utm_medium=email');
+  ok(outro.origem === 'utm_outro' && outro.utm_source === 'newsletter' && outro.utm_medium === 'email', 'UTM fora da tabela vira utm_outro e preserva os originais');
+  ok(classificar('?gclid=G&utm_source=meta').origem === 'google_ads', 'gclid ganha de utm_source=meta');
+  ok(classificar('?gclid=G&fbclid=F').origem === 'google_ads', 'click id do Google ganha do fbclid');
+  const gravado = classificar('?utm_source=instagram&utm_medium=bio');
+  const deNovo = lead.resolverAtribuicao(
+    { cookie: gravado, storage: gravado },
+    { href: 'https://www.hairzenith.com/?utm_source=google&utm_medium=cpc', search: '?utm_source=google&utm_medium=cpc', referrer: '' },
+    agora + 1000
+  );
+  ok(deNovo.dados.origem === 'instagram_bio', 'origem do first-touch não muda numa visita seguinte');
 
   const soGbraid = lead.resolverAtribuicao(
     { cookie: null, storage: null },
@@ -414,6 +458,7 @@ function servirFixture(script) {
   <input name="email" type="email" value="">
   <input name="unidade" type="text" value="Cabo Frio">
   <input name="utm_source" type="text" value="google" tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden">
+  <input name="origem" type="text" value="google_ads" tabindex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden">
   <input name="gclid" type="hidden" value="NAO-DEVE-SAIR">
   <button type="submit">Enviar</button>
 </form>
@@ -498,6 +543,7 @@ async function testarPayloadDoScript() {
       ok(dados.first_name === 'Ana' && dados.last_name === 'Maria Souza', 'payload traz first_name e last_name');
       ok(dados.phone === '11988701234' && dados.unidade === 'Cabo Frio', 'phone e unidade continuam no payload');
       ok(dados.utm_source === 'google', 'utm fora da tela, sem type=hidden, entra no payload');
+      ok(dados.origem === 'google_ads', 'origem entra no payload interceptado');
       ok(!('gclid' in dados) || dados.gclid == null, 'input type=hidden não entra no payload: ' + JSON.stringify(dados.gclid));
       ok(!('name' in dados), 'a chave name não é enviada');
       console.log('payload.formData', JSON.stringify(dados));

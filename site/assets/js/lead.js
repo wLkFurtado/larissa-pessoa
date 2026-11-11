@@ -98,6 +98,62 @@
     return mudou;
   }
 
+  function textoLc(valor) {
+    return String(valor || '').trim().toLowerCase();
+  }
+
+  function hostDe(url) {
+    try { return new URL(url).hostname.toLowerCase(); } catch (erro) { return ''; }
+  }
+
+  function ehBuscaGoogle(host) {
+    const h = String(host || '').replace(/^www\./, '');
+    return /^google\.(com|com\.br|[a-z]{2}|co\.[a-z]{2})$/.test(h);
+  }
+
+  function ehInstagram(host) {
+    const h = String(host || '').replace(/^www\./, '');
+    return h === 'instagram.com' || h === 'l.instagram.com' || h.endsWith('.instagram.com');
+  }
+
+  function ehReferrerExterno(host) {
+    if (!host) return false;
+    const h = host.replace(/^www\./, '');
+    return h !== 'hairzenith.com' && h !== 'localhost' && h !== '127.0.0.1';
+  }
+
+  function temUtm(dados) {
+    return ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].some((chave) => !utmVazio(dados[chave]));
+  }
+
+  // Slug do workflow. A ordem é a prioridade. UTM já preenchida não é reescrita aqui.
+  function classificarOrigem(dados) {
+    const fonte = textoLc(dados.utm_source);
+    const meio = textoLc(dados.utm_medium);
+    const host = hostDe(dados.referrer);
+    const pagosGoogle = { cpc: 1, ppc: 1, paid: 1, pmax: 1 };
+    const fontesMeta = { facebook: 1, fb: 1, instagram: 1, ig: 1, meta: 1 };
+    const pagosMeta = { paid: 1, cpc: 1, ads: 1, paid_social: 1 };
+    const meiosGmb = { gmb: 1, gbp: 1, maps: 1 };
+    const cliqueGoogle = !utmVazio(dados.gclid) || !utmVazio(dados.gbraid) || !utmVazio(dados.wbraid);
+    if (cliqueGoogle || (fonte === 'google' && pagosGoogle[meio])) return 'google_ads';
+    if (!utmVazio(dados.fbclid) || (fontesMeta[fonte] && pagosMeta[meio])) return 'meta_ads';
+    if (fonte === 'instagram' && meio === 'bio') return 'instagram_bio';
+    if (fonte === 'instagram' || (ehInstagram(host) && !(fontesMeta[fonte] && pagosMeta[meio]))) return 'instagram_organico';
+    if (fonte === 'google' && meiosGmb[meio]) return 'google_meu_negocio';
+    if (fonte === 'whatsapp' && meio === 'status') return 'whatsapp_status';
+    if (ehBuscaGoogle(host)) return 'google_organico';
+    if (ehReferrerExterno(host)) return 'outro_site';
+    if (temUtm(dados)) return 'utm_outro';
+    return 'direto';
+  }
+
+  function aplicarOrigem(dados) {
+    if (!dados || !utmVazio(dados.origem)) return false;
+    dados.origem = classificarOrigem(dados);
+    return true;
+  }
+
   function resolverAtribuicao(estado, visita, agora) {
     const cookie = registroValido(estado && estado.cookie, agora) ? estado.cookie : null;
     const storage = registroValido(estado && estado.storage, agora) ? estado.storage : null;
@@ -105,14 +161,16 @@
     if (cookie && storage) atual = cookie.ts <= storage.ts ? cookie : storage;
     else atual = cookie || storage;
     if (atual) {
-      const mudou = completarUtmGoogle(atual);
-      return { dados: atual, novo: false, sincronizar: mudou || !cookie || !storage };
+      const mudouUtm = completarUtmGoogle(atual);
+      const mudouOrigem = aplicarOrigem(atual);
+      return { dados: atual, novo: false, sincronizar: mudouUtm || mudouOrigem || !cookie || !storage };
     }
     const params = new URLSearchParams(visita.search || '');
     const dados = {
       v: 1,
       ts: agora,
       landing: String(visita.href || '').split('#')[0].slice(0, 500),
+      referrer: String((visita && visita.referrer) || '').slice(0, 500),
     };
     CHAVES.forEach((chave) => {
       const valor = (params.get(chave) || '').trim();
@@ -121,6 +179,7 @@
     const fbclid = (params.get('fbclid') || '').trim();
     if (fbclid) dados.fbclid = fbclid.slice(0, 200);
     completarUtmGoogle(dados);
+    aplicarOrigem(dados);
     return { dados: dados, novo: true, sincronizar: true };
   }
 
@@ -146,6 +205,7 @@
     validarEmail: validarEmail,
     partirNome: partirNome,
     mensagemWhatsapp: mensagemWhatsapp,
+    classificarOrigem: classificarOrigem,
     resolverAtribuicao: resolverAtribuicao,
   };
   root.HairzenithLead = api;
@@ -170,7 +230,7 @@
     try { storage = lerJson(root.localStorage.getItem('hz_ft')); } catch (erro) { storage = null; }
     const resultado = resolverAtribuicao(
       { cookie: lerJson(lerCookie()), storage: storage },
-      { href: root.location.href, search: root.location.search },
+      { href: root.location.href, search: root.location.search, referrer: root.document.referrer || '' },
       agora
     );
     if (resultado.novo || resultado.sincronizar) {
@@ -195,6 +255,8 @@
     if (pagina) pagina.value = root.location.href.split('#')[0].slice(0, 500);
     const landing = form.querySelector('input[name="landing_page"]');
     if (landing) landing.value = dados.landing || '';
+    const origem = form.querySelector('input[name="origem"]');
+    if (origem) origem.value = dados.origem || '';
     return dados;
   }
 
