@@ -51,10 +51,12 @@ python3 build.py
 
 ## Publicar
 
-1. O domínio final é `hairzenith.com` (sem www e sem .br). Aponte o DNS para a hospedagem.
+1. O domínio final é `www.hairzenith.com` (com www, sem .br). Na Vercel ele é o domínio primário.
+   Os redirects do `vercel.json` e do `_redirects` são só de caminho (`/sobre/`, etc.) e não trocam o host,
+   então não forçam o apex nem entram em loop com o www.
 2. Subir a pasta `site/` em Netlify, Vercel ou Cloudflare Pages. Os redirecionamentos já estão prontos:
    `_redirects` (Netlify/Cloudflare) e `vercel.json` (Vercel).
-3. O padrão de `SITE_URL` é `https://hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD
+3. O padrão de `SITE_URL` é `https://www.hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD
    saem todos dessa origem. Para outro endereço:
    `SITE_URL=https://outro.exemplo python3 build.py`
    Pixel da Meta, GA4 e Tag Manager só entram com ID real, pelas variáveis abaixo. Há dois caminhos,
@@ -85,7 +87,7 @@ python3 build.py
 - **Diário de obra:** as três entradas são as únicas datas conhecidas (lançamento da marca, obra em andamento,
   inauguração em março de 2027). Acrescente as etapas e as imagens do projeto arquitetônico em `nova_clinica()`.
 - **Registro profissional:** o site não publica CRM nem outro conselho, e o schema da Larissa é `Person`, não `Physician`. O nome antigo "Dra. Larissa Pessoa Tricologia" segue só como alternateName. Confirmar o número antes de usar "Dra." no ar.
-- **Domínio:** o final é `https://hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD já usam esse endereço.
+- **Domínio:** o final é `https://www.hairzenith.com`. Canonical, sitemap, Open Graph e JSON-LD já usam esse endereço.
 - **CEP, horário e pin:** os dois endereços e o WhatsApp (21) 97278-0789 estão no código. CEP, horário de funcionamento e a coordenada medida no prédio não estão. O mapa usa grau e minuto aproximado.
 - **Endereço da nova clínica:** não está no projeto. A página só marca a inauguração em março de 2027.
 - **Pixel, Analytics e Tag Manager:** não há ID no repositório. Sem a variável, a tag não é publicada. Com `GTM_ID`, o GA4 e o Pixel ficam de fora do HTML de propósito.

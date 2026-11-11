@@ -20,21 +20,21 @@ SAIDA = RAIZ / "site"
 
 # ---------------------------------------------------------------- dados da clínica
 def _site():
-    """Origem canônica. O domínio final é https://hairzenith.com.
+    """Origem canônica. O domínio final é https://www.hairzenith.com.
     SITE_URL troca canonical, sitemap, Open Graph e JSON-LD num lugar só."""
-    bruto = os.environ.get("SITE_URL", "").strip() or "https://hairzenith.com"
+    bruto = os.environ.get("SITE_URL", "").strip() or "https://www.hairzenith.com"
     bruto = bruto.rstrip("/")
     partes = urlparse(bruto)
     if partes.scheme != "https" or not partes.netloc or partes.path not in ("", "/") or partes.query or partes.fragment:
         raise SystemExit(
-            "SITE_URL precisa ser uma origem https, sem caminho. Ex.: https://hairzenith.com"
+            "SITE_URL precisa ser uma origem https, sem caminho. Ex.: https://www.hairzenith.com"
         )
     return f"https://{partes.netloc}"
 
 
 SITE = _site()
 ATUALIZADO = "2026-11-10"
-# Nome oficial: Hairzenith. Domínio final: https://hairzenith.com (sem www e sem .br).
+# Nome oficial: Hairzenith. Domínio final: https://www.hairzenith.com (com www, sem .br).
 MARCA = "Hairzenith"
 WHATS = "5521972780789"
 WHATS_TEXTO = "(21) 97278-0789"
@@ -1025,7 +1025,7 @@ def indice(titulo, atual=None, id_="h-indice"):
 
 
 # ---------------------------------------------------------------- dados estruturados
-ORG_ID = SITE + "/#hairzenit"
+ORG_ID = SITE + "/#hairzenith"
 LARISSA_ID = SITE + "/equipe/larissa-pessoa/#larissa"
 THAINA_ID = SITE + "/equipe/#thaina"
 JULIA_ID = SITE + "/equipe/#julia"
@@ -1059,7 +1059,7 @@ def schema_org():
         "description": "Clínica de tricologia especializada em queda de cabelo, calvície e perda de densidade capilar, fundada por Larissa Pessoa. Nova clínica em construção, com inauguração prevista para março de 2027.",
         "url": SITE + "/",
         "logo": SITE + "/icone-512.png",
-        "image": SITE + "/assets/img/og-hairzenit.jpg",
+        "image": SITE + "/assets/img/og-hairzenith.jpg",
         "telephone": telefone_internacional(),
         "email": EMAIL,
         "address": endereco(UNIDADES[0]),
@@ -1092,7 +1092,7 @@ def schema_unidades():
             "name": f"Hairzenith {u['nome']}",
             "parentOrganization": {"@id": ORG_ID},
             "url": f"{SITE}/#{u['id']}",
-            "image": f"{SITE}/assets/img/og-hairzenit.jpg",
+            "image": f"{SITE}/assets/img/og-hairzenith.jpg",
             "telephone": telefone_internacional(),
             "email": EMAIL,
             "address": endereco(u),
@@ -1158,8 +1158,8 @@ def imagem_social(nome):
     g = MANIFESTO.get(nome, {}).get("g")
     if g and 1.7 <= (g[0] / g[1]) <= 2.1:
         return nome, g[0], g[1]
-    g = MANIFESTO["og-hairzenit"]["g"]
-    return "og-hairzenit", g[0], g[1]
+    g = MANIFESTO["og-hairzenith"]["g"]
+    return "og-hairzenith", g[0], g[1]
 
 
 def rastreamento():
@@ -1209,7 +1209,7 @@ def rastreamento():
     return rastreamento.pronto
 
 
-def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="og-hairzenit", tipo="website", indexar=True):
+def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="og-hairzenith", tipo="website", indexar=True):
     grafo = [schema_org(), *schema_unidades()] + (schema or [])
     ld = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False, separators=(",", ":"))
     url = SITE + caminho

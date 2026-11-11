@@ -19,7 +19,7 @@ PLACEHOLDERS = re.compile(
     r"lorem ipsum|seu nome aqui|exemplo\.com|G-X{4,}|GTM-X{4,}|pixel id 123|FIXME",
     re.I,
 )
-# Marca oficial: Hairzenith. O arquivo og-hairzenit.jpg não é o nome da marca.
+# Marca oficial: Hairzenith. "hairzenit" sem o h final é a grafia antiga.
 GRAFIA_ERRADA = re.compile(r"Hairzenit(?!h)|Hair\s+Zenith", re.I)
 
 
@@ -120,8 +120,7 @@ def main():
     if "/404" in sitemap:
         erros.append("sitemap inclui a página 404")
     for nome, texto in (("robots.txt", robots), ("sitemap.xml", sitemap)):
-        if "hairzenit.com.br" in texto or "hairzenith.com.br" in texto:
-            erros.append(f"{nome}: ainda aponta para o domínio antigo")
+        erros.extend(f"{nome}: {msg}" for msg in dominios_proibidos(texto))
 
     for icone in ("favicon.svg", "favicon-32.png", "apple-touch-icon.png", "icone-512.png"):
         if not (SITE / icone).is_file():
@@ -137,7 +136,7 @@ def main():
 
         if PLACEHOLDERS.search(html):
             erros.append(f"{rotulo}: texto de placeholder")
-        if GRAFIA_ERRADA.search(texto_sem_dominio(html)):
+        if GRAFIA_ERRADA.search(html):
             erros.append(f"{rotulo}: a marca no texto precisa ser Hairzenith, sem espaço")
 
         if not parser.title:
@@ -185,8 +184,7 @@ def main():
                 erros.append(f"{rotulo}: imagem sem alt ({src})")
 
         canonical = next((l.get("href", "") for l in parser.links if l.get("rel") == "canonical"), "")
-        if "hairzenit.com.br" in html or "hairzenith.com.br" in html:
-            erros.append(f"{rotulo}: ainda usa o domínio antigo")
+        erros.extend(f"{rotulo}: {msg}" for msg in dominios_proibidos(html))
         if noindex:
             if canonical:
                 erros.append(f"{rotulo}: 404 não deve ter canonical")
@@ -195,8 +193,8 @@ def main():
         else:
             if not canonical.startswith("https://"):
                 erros.append(f"{rotulo}: canonical ausente ou relativo")
-            elif urlparse(canonical).netloc != "hairzenith.com":
-                erros.append(f"{rotulo}: canonical fora de https://hairzenith.com")
+            elif urlparse(canonical).netloc != "www.hairzenith.com":
+                erros.append(f"{rotulo}: canonical fora de https://www.hairzenith.com")
             elif urlparse(canonical).path != rota:
                 erros.append(f"{rotulo}: canonical {canonical} não bate com {rota}")
 
@@ -272,11 +270,16 @@ def main():
     return 0
 
 
-def texto_sem_dominio(html):
-    """O arquivo og-hairzenit.jpg não entra na checagem da grafia da marca."""
-    sem = re.sub(r"https?://[^\"'\s>]+", " ", html)
-    sem = re.sub(r"og-hairzenit", " ", sem, flags=re.I)
-    return sem
+def dominios_proibidos(texto):
+    """Padrões que o site publicado não pode ter. Estas strings existem só aqui, no lint."""
+    achados = []
+    if "hairzenit.com.br" in texto or "hairzenith.com.br" in texto:
+        achados.append("ainda usa domínio .com.br")
+    if re.search(r"https://(?!www\.)hairzenith\.com", texto):
+        achados.append("URL de hairzenith.com sem www")
+    if re.search(r"hairzenit(?!h)", texto, re.I):
+        achados.append("ainda usa hairzenit sem o h")
+    return achados
 
 
 def html_tem_mensagem_diferente():

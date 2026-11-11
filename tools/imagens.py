@@ -27,7 +27,7 @@ IMAGENS = {
     "larissa-blazer": ("ANA_4259---Editado.png", 3 / 4, 0.5, 0.2, (1400, 760)),
     "larissa-rosa": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 16 / 10, 0.62, 0.4, (1600, 900)),
     "larissa-rosa-retrato": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-75adc9ca-07862fa0.png", 4 / 5, 0.5, 0.15, (1200, 640)),
-    "og-hairzenit": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
+    "og-hairzenith": ("3f6c22a0-2d25-4d48-9b64-f95c2ea1b64f-5fc403d7-2880w.png", 1200 / 630, 0.6, 0.4, (1200, 600)),
     # Clínica e procedimentos
     "tricoscopio": ("0A7A6778--281-29-2880w.png", 1, 0.5, 0.42, (1200, 640)),
     "tricoscopio-retrato": ("0A7A6778--281-29-2880w.png", 4 / 5, 0.5, 0.4, (1400, 760)),
