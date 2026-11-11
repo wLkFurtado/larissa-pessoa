@@ -821,14 +821,11 @@ def rodape():
       <p>{CREDITOS}</p>
     </div>
   </div>
-</footer>
-<a class="concierge-float" href="{wa()}" aria-label="Agendar consulta pelo WhatsApp">
-  <span class="concierge-float__dot" aria-hidden="true"></span>
-  <span class="concierge-float__label">WhatsApp</span>
-</a>"""
+</footer>"""
 
 
-def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sentada", "Larissa Pessoa sorri sentada em uma poltrona clara")):
+def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sentada", "Larissa Pessoa sorri sentada em uma poltrona clara"), comparar=True):
+    extra = '<li><a class="link" href="~/consulta/">Comparar as consultas &rarr;</a></li>' if comparar else ""
     return f"""
 <section class="close wrap" aria-labelledby="h-agendar">
   <div class="close__card grid" data-spotlight>
@@ -841,7 +838,7 @@ def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sent
       <h2 id="h-agendar">{pergunta}</h2>
       <ul class="close__list">
         <li><a class="button button--shimmer" href="{wa()}"><span>Agendar pelo WhatsApp</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a></li>
-        <li><a class="link" href="~/consulta/">Comparar as consultas &rarr;</a></li>
+        {extra}
       </ul>
       <p class="small">Copacabana e Cabo Frio, com hora marcada. WhatsApp {fones_unidades()}.</p>
     </div>
@@ -1072,7 +1069,7 @@ FAQ_HOME = [
     ("A queda que eu vejo tem tratamento?", "Tem, quando o tratamento é dirigido à causa. A consulta começa pela investigação: história clínica, tricoscopia e, se necessário, exames."),
     ("Em quanto tempo aparece resultado?", "Os primeiros sinais costumam aparecer entre 60 e 120 dias, conforme a causa e o protocolo. A evolução é acompanhada nas reavaliações."),
     ("Vocês atendem em Copacabana e em Cabo Frio?", "Sim. As duas unidades estão abertas, com hora marcada. Copacabana fica na Av. Nossa Senhora de Copacabana, 807, sala 702. Cabo Frio fica na Av. Henrique Terra, 808, Novo Portinho."),
-    ("Quanto custa a consulta?", "Os valores são informados no agendamento, pelo WhatsApp. Há a Consulta Hairzenith, com a equipe, e a Consulta com Larissa Pessoa, de valor diferenciado."),
+    ("Quanto custa a consulta?", "O valor é informado no agendamento, pelo WhatsApp."),
     ("Atendem homens e mulheres?", "Sim. A Hairzenith trata queda e calvície em mulheres e homens, sem cirurgia."),
 ]
 
@@ -1099,13 +1096,14 @@ def nomes(titulo, grupos, id_="h-nomes"):
 </section>"""
 
 
-def grupos_ciencia(com_tecnologias=True):
+def grupos_ciencia(com_tecnologias=True, com_publicacoes=True):
     arts = [f'<a href="{href_artigo(a)}" rel="noopener">{a["curto"]} &#8599;</a>' for a in ARTIGOS]
     grupos = [
         ["Equipe", '<a href="~/equipe/larissa-pessoa/">Larissa Pessoa, fundadora</a>', '<a href="~/equipe/#thaina">Thaina Candido de Souza</a>', '<a href="~/equipe/#julia">Júlia</a>'],
-        ["Publicado em", "Brazilian Journal of Hair Health, 2025"] + arts,
-        ["Coautoria", "Lara Junqueira, Faculdade de Farmácia da UFRJ"],
     ]
+    if com_publicacoes:
+        grupos.append(["Publicado em", "Brazilian Journal of Hair Health, 2025"] + arts)
+        grupos.append(["Coautoria", "Lara Junqueira, Faculdade de Farmácia da UFRJ"])
     if com_tecnologias:
         grupos.append(["Tecnologias", "Tricoscopia digital", "Laser e LED capilar", "MMP", "Microinfusão de ativos", "Mesoject"])
     grupos.append(["Atendimento", "Mulheres e homens", "Copacabana, Rio de Janeiro", "Novo Portinho, Cabo Frio"])
@@ -1678,14 +1676,12 @@ def home():
         <span class="line"><span data-line style="--i:1"><em>queda e calvície</em></span></span>
       </h1>
       <p class="hero__lead" data-load style="--d:320ms">A Hairzenith é a clínica de tricologia fundada por Larissa Pessoa para tratar queda, calvície e perda de densidade capilar.</p>
-      <p class="hero__sub" data-load style="--d:400ms">Na primeira consulta, a tricoscopia mostra a causa. O plano pode ser em casa, no consultório ou nos dois.</p>
+      <p class="hero__sub" data-load style="--d:400ms">Na consulta, a tricoscopia mostra a causa. O plano pode ser em casa, no consultório ou nos dois.</p>
       <div class="actions" data-load style="--d:480ms">
         <a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>
-        <a class="link" href="~/consulta/">As duas consultas &rarr;</a>
       </div>
       <dl class="hero__metrics" data-load style="--d:560ms">
         <div><dt>Diagnóstico</dt><dd>Tricoscopia 200&times;</dd></div>
-        <div><dt>Pesquisa</dt><dd>Publicações BJHH '25</dd></div>
         <div><dt>Unidades</dt><dd>Copacabana &amp; Cabo Frio</dd></div>
       </dl>
     </div>
@@ -1779,7 +1775,7 @@ def home():
   </div>
 </section>
 
-{nomes("A equipe e o que já publicamos", grupos_ciencia(False), "h-ciencia")}
+{nomes("Quem atende", grupos_ciencia(False, False), "h-ciencia")}
 
 {reunidas("A nova clínica chega em março de 2027", "Enquanto a obra avança, a equipe segue atendendo em Copacabana e Cabo Frio.", '<a class="button button--gold" href="~/nova-clinica/"><span>Acompanhe a obra</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>', [
         ("microinfusao", "Aplicação de ativos ao longo da risca do cabelo"),
@@ -1798,7 +1794,7 @@ def home():
         + passos()
         + escolha_unidade()
         + perguntas("Dúvidas antes de agendar", FAQ_HOME)
-        + fecho("A equipe responde no WhatsApp com os horários.", "Agende sua avaliação em Copacabana ou Cabo Frio")
+        + fecho("A equipe responde no WhatsApp com os horários.", "Agende sua avaliação em Copacabana ou Cabo Frio", comparar=False)
         + '<section class="pano"'
         + corpo.split('<section class="pano"', 1)[1]
     )

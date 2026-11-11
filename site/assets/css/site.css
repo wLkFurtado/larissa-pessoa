@@ -512,7 +512,7 @@ figcaption {
   padding-top: 1.75rem;
   border-top: 1px solid var(--border-strong);
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
 }
 .hero__metrics dt {
@@ -1304,44 +1304,6 @@ main { position: relative; z-index: 1; }
   .foot__col { grid-column: 1 / -1; }
 }
 
-/* Botão Flutuante Concierge WhatsApp */
-.concierge-float {
-  position: fixed;
-  right: 1.5rem;
-  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
-  z-index: 45;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.75rem 1.25rem;
-  background: rgba(17, 14, 12, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: var(--on-dark);
-  border: 1px solid var(--border-gold);
-  border-radius: 999px;
-  text-decoration: none;
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  box-shadow: var(--shadow-luxe);
-  transition: transform var(--t-ui) var(--ease-out), border-color var(--t-hover) ease;
-}
-.concierge-float__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #34D399;
-  box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.2);
-}
-@media (hover: hover) and (pointer: fine) {
-  .concierge-float:hover {
-    transform: translateY(-3px);
-    border-color: var(--gold-light);
-  }
-}
-
 /* ---------- Páginas Internas: Page Hero (phero) ---------- */
 .phero {
   padding-top: clamp(2rem, 5vh, 4rem);
@@ -2066,7 +2028,7 @@ main { position: relative; z-index: 1; }
   .hero__metrics {
     margin-top: 1.5rem;
     padding-top: 1.1rem;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
   }
   .hero__metrics > div + div {
@@ -2198,7 +2160,7 @@ main { position: relative; z-index: 1; }
   .close__list .button { width: 100%; }
   .close__list .link { justify-content: center; }
 
-  .foot { padding-top: 2.75rem; padding-bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)); }
+  .foot { padding-top: 2.75rem; padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px)); }
   .foot__ribbon { padding-bottom: 1.75rem; margin-bottom: 1.75rem; gap: 1.15rem; }
   .foot__ribbon .button { width: 100%; }
   .foot__cols { row-gap: 1.75rem; }
@@ -2213,16 +2175,6 @@ main { position: relative; z-index: 1; }
   .faq__ans { padding: 0 1.15rem 1.15rem; padding-top: 0.85rem; }
   .defs__card, .treat-step, .trow, .place, .member { padding: 1.15rem 1.25rem; }
   .defs__pic { display: none; }
-
-  /* 13. Pílula Flutuante de Concierge discreta */
-  .concierge-float {
-    right: 0.85rem;
-    bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
-    min-height: 2.75rem;
-    padding: 0.6rem 0.95rem;
-    font-size: 0.66rem;
-    letter-spacing: 0.1em;
-  }
 }
 
 /* ---------- Modal de agendamento (antes do WhatsApp) ---------- */
