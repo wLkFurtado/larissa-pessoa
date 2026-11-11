@@ -228,21 +228,25 @@ function esperar(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function comChrome(porta, fn) {
+async function comChrome(porta, fn, opcoes) {
+  const extra = (opcoes && opcoes.args) || [];
+  const aoPausar = opcoes && opcoes.aoPausar;
+  const debugPort = (opcoes && opcoes.debugPort) || 9333;
   const userDir = fs.mkdtempSync('/tmp/hz-chrome-');
   const proc = spawn('google-chrome', [
     '--headless=new',
     '--no-sandbox',
     '--disable-gpu',
     '--disable-dev-shm-usage',
-    '--remote-debugging-port=9333',
+    `--remote-debugging-port=${debugPort}`,
     `--user-data-dir=${userDir}`,
+    ...extra,
     'about:blank',
   ], { stdio: 'ignore' });
   let versao = null;
   for (let i = 0; i < 40; i += 1) {
     try {
-      versao = await fetch('http://127.0.0.1:9333/json/version').then((r) => r.json());
+      versao = await fetch(`http://127.0.0.1:${debugPort}/json/version`).then((r) => r.json());
       break;
     } catch (erro) {
       await esperar(150);
@@ -276,6 +280,18 @@ async function comChrome(porta, fn) {
       return;
     }
     if (msg.method === 'Fetch.requestPaused') {
+      if (aoPausar) {
+        Promise.resolve(aoPausar(msg, enviarDepois, bloqueio)).catch((erro) => {
+          console.error('interceptação', erro);
+          try {
+            enviarDepois('Fetch.failRequest', {
+              requestId: msg.params.requestId,
+              errorReason: 'Aborted',
+            }, msg.sessionId);
+          } catch (falha) { /* a pausa já foi respondida */ }
+        });
+        return;
+      }
       const pedido = msg.params.request || {};
       const url = pedido.url || '';
       const sess = msg.sessionId;
@@ -552,6 +568,346 @@ async function testarPayloadDoScript() {
   }
 }
 
+function tipoDoArquivo(arquivo) {
+  if (arquivo.endsWith('.js')) return 'text/javascript; charset=utf-8';
+  if (arquivo.endsWith('.css')) return 'text/css; charset=utf-8';
+  if (arquivo.endsWith('.html')) return 'text/html; charset=utf-8';
+  if (arquivo.endsWith('.svg')) return 'image/svg+xml';
+  if (arquivo.endsWith('.png')) return 'image/png';
+  if (arquivo.endsWith('.jpg') || arquivo.endsWith('.jpeg')) return 'image/jpeg';
+  if (arquivo.endsWith('.webp')) return 'image/webp';
+  if (arquivo.endsWith('.avif')) return 'image/avif';
+  if (arquivo.endsWith('.json')) return 'application/json; charset=utf-8';
+  if (arquivo.endsWith('.webmanifest')) return 'application/manifest+json';
+  if (arquivo.endsWith('.xml')) return 'application/xml';
+  if (arquivo.endsWith('.txt')) return 'text/plain; charset=utf-8';
+  if (arquivo.endsWith('.ico')) return 'image/x-icon';
+  return 'application/octet-stream';
+}
+
+function arquivoDoSite(url) {
+  let caminho = '';
+  try { caminho = decodeURIComponent(new URL(url).pathname); } catch (erro) { return null; }
+  if (caminho.endsWith('/')) caminho += 'index.html';
+  const arquivo = path.resolve(SITE, '.' + caminho);
+  const raiz = SITE.endsWith(path.sep) ? SITE : SITE + path.sep;
+  if (arquivo !== SITE && !arquivo.startsWith(raiz)) return null;
+  return arquivo;
+}
+
+function origemDoPedido(pedido) {
+  const headers = pedido.headers || {};
+  if (Array.isArray(headers)) {
+    const achado = headers.find((h) => String(h.name || '').toLowerCase() === 'origin');
+    return (achado && achado.value) || 'https://www.hairzenith.com';
+  }
+  return headers.Origin || headers.origin || 'https://www.hairzenith.com';
+}
+
+function enviosDeFormulario(capturas) {
+  return capturas.filter((c) => c.method === 'POST' && String(c.body || '').includes('external_form_submission'));
+}
+
+// A home é servida como https://www.hairzenith.com/ com os arquivos locais.
+// O script do GHL baixa de verdade. O POST ao leadconnectorhq é pausado no
+// estágio Request e abortado (Fetch.failRequest Aborted): o Chrome não envia
+// o corpo ao CRM. O preflight OPTIONS é respondido localmente só para o
+// navegador chegar a emitir o POST, que então é abortado.
+async function aoPausarHome(msg, enviar, bloqueio) {
+  const pedido = msg.params.request || {};
+  const url = pedido.url || '';
+  const metodo = String(pedido.method || 'GET').toUpperCase();
+  const sess = msg.sessionId;
+  const id = msg.params.requestId;
+  const falhar = () => enviar('Fetch.failRequest', { requestId: id, errorReason: 'Aborted' }, sess);
+  let host = '';
+  let pathname = '';
+  try {
+    const parsed = new URL(url);
+    host = parsed.hostname;
+    pathname = parsed.pathname;
+  } catch (erro) {
+    falhar();
+    return;
+  }
+  if (host === 'backend.leadconnectorhq.com' || host === 'staging.backend.leadconnectorhq.com') {
+    let body = pedido.postData || '';
+    if (!body && pedido.hasPostData) {
+      const extra = await enviar('Fetch.getRequestPostData', { requestId: id }, sess);
+      body = (extra.result && extra.result.postData) || '';
+    }
+    bloqueio.capturas.push({ url, method: metodo, body, abortado: true, em: Date.now() });
+    if (metodo === 'OPTIONS') {
+      const origem = origemDoPedido(pedido);
+      enviar('Fetch.fulfillRequest', {
+        requestId: id,
+        responseCode: 204,
+        responseHeaders: [
+          { name: 'access-control-allow-origin', value: origem },
+          { name: 'access-control-allow-methods', value: 'POST, OPTIONS' },
+          { name: 'access-control-allow-headers', value: 'content-type' },
+          { name: 'access-control-max-age', value: '600' },
+        ],
+      }, sess);
+      return;
+    }
+    falhar();
+    return;
+  }
+  if (host === 'link.growave.com.br' && pathname === '/js/external-tracking.js') {
+    enviar('Fetch.continueRequest', { requestId: id }, sess);
+    return;
+  }
+  if (host === 'wa.me' || host === 'api.whatsapp.com') {
+    bloqueio.navegacoes.push(url);
+    falhar();
+    return;
+  }
+  if (host === 'www.hairzenith.com' || host === 'hairzenith.com') {
+    const arquivo = arquivoDoSite(url);
+    if (!arquivo || !fs.existsSync(arquivo) || !fs.statSync(arquivo).isFile()) {
+      enviar('Fetch.fulfillRequest', {
+        requestId: id,
+        responseCode: 404,
+        responseHeaders: [{ name: 'content-type', value: 'text/plain' }],
+        body: Buffer.from('nao').toString('base64'),
+      }, sess);
+      return;
+    }
+    const dados = fs.readFileSync(arquivo);
+    enviar('Fetch.fulfillRequest', {
+      requestId: id,
+      responseCode: 200,
+      responseHeaders: [
+        { name: 'content-type', value: tipoDoArquivo(arquivo) },
+        { name: 'cache-control', value: 'no-store' },
+      ],
+      body: dados.toString('base64'),
+    }, sess);
+    return;
+  }
+  falhar();
+}
+
+async function testarGuardaDoClique() {
+  await comChrome(0, async ({ enviar, bloqueio }) => {
+    bloqueio.navegacoes = [];
+    const criado = await enviar('Target.createTarget', { url: 'about:blank' });
+    const anexo = await enviar('Target.attachToTarget', { targetId: criado.result.targetId, flatten: true });
+    const sessao = anexo.result.sessionId;
+    const cmd = (method, params) => enviar(method, params, sessao);
+    await cmd('Page.enable');
+    await cmd('Runtime.enable');
+    await cmd('Fetch.enable', { patterns: [{ urlPattern: '*', requestStage: 'Request' }] });
+    await cmd('Emulation.setDeviceMetricsOverride', {
+      width: 1280, height: 900, deviceScaleFactor: 1, mobile: false,
+    });
+    const avaliar = async (expr) => {
+      const res = await cmd('Runtime.evaluate', { expression: expr, awaitPromise: true, returnByValue: true });
+      if (res.result.exceptionDetails) {
+        const detalhe = res.result.exceptionDetails;
+        throw new Error(detalhe.exception ? detalhe.exception.description : detalhe.text);
+      }
+      return res.result.result.value;
+    };
+    await cmd('Page.navigate', { url: 'https://www.hairzenith.com/' });
+    let pronto = null;
+    for (let i = 0; i < 80; i += 1) {
+      pronto = await avaliar(`(() => {
+        const tag = document.querySelector('script[data-tracking-id]');
+        return {
+          host: location.hostname,
+          form: !!document.getElementById('lead-form'),
+          lead: !!(window.HairzenithLead && window.HairzenithLead.aoEnviar),
+          ghl: tag ? (tag.dataset.hzEstado || '') : '',
+          tracker: !!(window._lcTracking && window._lcTracking.tracker)
+        };
+      })()`);
+      if (pronto && pronto.form && pronto.lead && pronto.ghl === 'ok' && pronto.tracker && pronto.host === 'www.hairzenith.com') break;
+      if (pronto && pronto.ghl === 'erro') break;
+      await esperar(150);
+    }
+    ok(pronto && pronto.host === 'www.hairzenith.com', 'home servida em www.hairzenith.com');
+    ok(pronto && pronto.ghl === 'ok' && pronto.tracker, 'script do GHL carregou de verdade: ' + JSON.stringify(pronto));
+    if (!pronto || pronto.ghl !== 'ok') {
+      console.error('pedidos vistos', bloqueio.capturas.map((c) => c.method + ' ' + c.url).slice(0, 30));
+      return;
+    }
+
+    const abriu = await avaliar(`(() => {
+      const links = Array.from(document.querySelectorAll('a[href*="wa.me/"]'));
+      const visivel = links.find((a) => {
+        const r = a.getBoundingClientRect();
+        const estilo = getComputedStyle(a);
+        return r.width > 0 && r.height > 0 && estilo.display !== 'none' && estilo.visibility !== 'hidden';
+      });
+      if (!visivel) return '';
+      visivel.scrollIntoView({ block: 'center' });
+      visivel.click();
+      return (visivel.textContent || '').replace(/\\s+/g, ' ').trim();
+    })()`);
+    ok(!!abriu, 'clique num link visível de wa.me abre o modal: ' + abriu);
+    const modal = await avaliar(`document.getElementById('lead-modal').hidden === false && document.activeElement && document.activeElement.id`);
+    ok(modal === 'lead-nome', 'modal aberto com foco no nome');
+
+    const contar = () => enviosDeFormulario(bloqueio.capturas).length;
+    const esperarEnvios = async (ms) => {
+      const fim = Date.now() + ms;
+      let ultimo = contar();
+      while (Date.now() < fim) {
+        await esperar(50);
+        const agora = contar();
+        if (agora !== ultimo) ultimo = agora;
+      }
+      return ultimo;
+    };
+
+    const vazio = await avaliar(`(() => {
+      const botao = document.querySelector('#lead-form button[type="submit"]');
+      let chegou = 0;
+      const spy = () => { chegou += 1; };
+      botao.addEventListener('click', spy, { capture: true });
+      botao.querySelector('span').click();
+      botao.removeEventListener('click', spy, { capture: true });
+      const alerta = document.getElementById('lead-alerta');
+      return { chegou, hidden: alerta.hidden, texto: alerta.textContent, host: location.hostname };
+    })()`);
+    const depoisVazio = await esperarEnvios(700);
+    ok(vazio.chegou === 0, 'clique vazio não chega no listener do botão');
+    ok(vazio.hidden === false && String(vazio.texto).includes('Informe seu nome'), 'clique vazio mostra o erro');
+    ok(depoisVazio === 0 && vazio.host === 'www.hairzenith.com', 'clique vazio não envia external_form_submission');
+
+    const parcial = await avaliar(`(() => {
+      document.getElementById('lead-nome').value = 'a';
+      document.getElementById('lead-phone').value = '123';
+      document.querySelectorAll('#lead-form input[name="unidade"]').forEach((r) => { r.checked = false; });
+      document.querySelector('#lead-form button[type="submit"] span').click();
+      const alerta = document.getElementById('lead-alerta');
+      return { hidden: alerta.hidden, texto: alerta.textContent };
+    })()`);
+    const depoisParcial = await esperarEnvios(700);
+    ok(parcial.hidden === false && String(parcial.texto).includes('Informe seu nome') && String(parcial.texto).includes('Informe um celular'), 'parcial inválido mostra o erro');
+    ok(depoisParcial === 0, 'nome "a" e telefone "123" não enviam external_form_submission');
+
+    const caixa = await avaliar(`(() => {
+      document.getElementById('lead-nome').value = '';
+      document.getElementById('lead-phone').value = '';
+      document.querySelectorAll('#lead-form input[name="unidade"]').forEach((r) => { r.checked = false; });
+      const alerta = document.getElementById('lead-alerta');
+      alerta.hidden = true;
+      alerta.textContent = '';
+      const nome = document.getElementById('lead-nome');
+      nome.scrollIntoView({ block: 'center' });
+      const r = nome.getBoundingClientRect();
+      return { x: r.x + r.width / 2, y: r.y + r.height / 2, w: r.width, h: r.height };
+    })()`);
+    ok(caixa && caixa.w > 0 && caixa.h > 0, 'campo do nome está visível para o Enter');
+    await cmd('Input.dispatchMouseEvent', {
+      type: 'mousePressed', x: caixa.x, y: caixa.y, button: 'left', clickCount: 1,
+    });
+    await cmd('Input.dispatchMouseEvent', {
+      type: 'mouseReleased', x: caixa.x, y: caixa.y, button: 'left', clickCount: 1,
+    });
+    await cmd('Input.dispatchKeyEvent', {
+      type: 'keyDown',
+      key: 'Enter',
+      code: 'Enter',
+      windowsVirtualKeyCode: 13,
+      nativeVirtualKeyCode: 13,
+      text: '\r',
+      unmodifiedText: '\r',
+    });
+    await cmd('Input.dispatchKeyEvent', {
+      type: 'keyUp',
+      key: 'Enter',
+      code: 'Enter',
+      windowsVirtualKeyCode: 13,
+      nativeVirtualKeyCode: 13,
+    });
+    const enter = await avaliar(`(() => {
+      const alerta = document.getElementById('lead-alerta');
+      return {
+        hidden: alerta.hidden,
+        texto: alerta.textContent,
+        host: location.hostname,
+        foco: document.activeElement && document.activeElement.id
+      };
+    })()`);
+    const depoisEnter = await esperarEnvios(700);
+    ok(enter.hidden === false && String(enter.texto).includes('Informe seu nome'), 'Enter com campos vazios mostra o erro: ' + JSON.stringify(enter));
+    ok(depoisEnter === 0 && enter.host === 'www.hairzenith.com', 'Enter com campos vazios não envia external_form_submission');
+
+    const bloqueado = await avaliar(`(() => {
+      const form = document.getElementById('lead-form');
+      const botao = form.querySelector('button[type="submit"]');
+      form.dataset.enviando = '1';
+      let chegou = 0;
+      const spy = () => { chegou += 1; };
+      botao.addEventListener('click', spy, { capture: true });
+      botao.querySelector('span').click();
+      botao.removeEventListener('click', spy, { capture: true });
+      delete form.dataset.enviando;
+      return chegou;
+    })()`);
+    const depoisBloqueio = await esperarEnvios(400);
+    ok(bloqueado === 0 && depoisBloqueio === 0, 'clique com enviando=1 não chega no botão nem no GHL');
+
+    const antesValido = contar();
+    const cliqueEm = Date.now();
+    const eventosDl = await avaliar(`(() => {
+      document.getElementById('lead-nome').value = 'Teste Silva';
+      document.getElementById('lead-phone').value = '(22) 99999-1234';
+      const unidade = document.querySelector('#lead-form input[name="unidade"][value="Cabo Frio"]');
+      unidade.checked = true;
+      document.querySelector('#lead-form button[type="submit"] span').click();
+      return (window.dataLayer || []).filter((e) => e && e.event === 'generate_lead').map((e) => e.event + ':' + e.unidade);
+    })()`);
+    let corpo = null;
+    for (let i = 0; i < 20; i += 1) {
+      const vistos = enviosDeFormulario(bloqueio.capturas);
+      if (vistos.length > antesValido) {
+        corpo = vistos[vistos.length - 1];
+        break;
+      }
+      await esperar(40);
+    }
+    await esperar(250);
+    const achados = enviosDeFormulario(bloqueio.capturas).filter((c) => c.em >= cliqueEm && c.em - cliqueEm < 800);
+    ok(achados.length === 1, 'dado válido gera um único external_form_submission (' + achados.length + ')');
+    corpo = achados[0] || corpo;
+    let dados = {};
+    try { dados = JSON.parse((corpo && corpo.body) || '{}').formData || {}; } catch (erro) { dados = {}; }
+    ok(dados.full_name === 'Teste Silva', 'payload traz full_name: ' + JSON.stringify(dados.full_name));
+    ok(dados.phone === '(22) 99999-1234', 'payload traz phone: ' + JSON.stringify(dados.phone));
+    ok(dados.first_name === 'Teste' && dados.last_name === 'Silva', 'payload traz o nome partido');
+    ok(!!corpo && /leadconnectorhq\.com/.test(corpo.url) && corpo.abortado === true, 'POST ao CRM foi abortado: ' + (corpo && corpo.url));
+    ok(Array.isArray(eventosDl) && eventosDl.includes('generate_lead:cabo_frio'), 'generate_lead com a unidade: ' + JSON.stringify(eventosDl));
+    let destino = '';
+    for (let i = 0; i < 40; i += 1) {
+      destino = (bloqueio.navegacoes || []).find((u) => /wa\.me\/5522999037788/.test(u)) || '';
+      if (destino) break;
+      await esperar(50);
+    }
+    ok(/wa\.me\/5522999037788/.test(destino), 'navegação para o WhatsApp de Cabo Frio foi abortada: ' + destino);
+    const ainda = await avaliar(`location.hostname`);
+    ok(ainda === 'www.hairzenith.com', 'a página continua em www.hairzenith.com depois de abortar o wa.me');
+    await esperar(1200);
+    const repetidos = enviosDeFormulario(bloqueio.capturas).filter((c) => c.em >= cliqueEm);
+    const nomes = repetidos.map((c) => {
+      try { return JSON.parse(c.body).formData || {}; } catch (erro) { return {}; }
+    });
+    ok(repetidos.every((c) => c.abortado), 'todo external_form_submission foi abortado');
+    ok(nomes.every((d) => d.full_name === 'Teste Silva' && d.phone === '(22) 99999-1234'), 'nenhum reenvio saiu vazio: ' + JSON.stringify(nomes.map((d) => d.full_name)));
+    ok(repetidos.length >= 1 && repetidos.slice(1).every((c) => c.body === repetidos[0].body), 'o aborto faz o script repetir o mesmo payload (' + repetidos.length + ' POST abortado(s); 1 do clique)');
+  }, {
+    debugPort: 9344,
+    args: [
+      '--host-resolver-rules=MAP backend.leadconnectorhq.com 127.0.0.1, MAP staging.backend.leadconnectorhq.com 127.0.0.1',
+    ],
+    aoPausar: aoPausarHome,
+  });
+}
+
 async function main() {
   testarFuncoes();
   testarBuild();
@@ -566,6 +922,8 @@ async function main() {
   }
   await esperar(400);
   await testarPayloadDoScript();
+  await esperar(400);
+  await testarGuardaDoClique();
   if (falhas) {
     console.error(falhas + ' falha(s)');
     process.exit(1);
