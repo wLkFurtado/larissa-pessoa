@@ -197,12 +197,10 @@ document.querySelectorAll('[data-countdown]').forEach((el) => {
     const data = new FormData(form);
     const tipo = data.get('tipo');
     const unidade = data.get('unidade');
-    const periodo = data.get('periodo');
     const queixa = data.get('queixa');
     let msg = `Olá! Vim pelo site da Hairzenith e gostaria de agendar a ${tipo}`;
     msg += unidade === 'Tanto faz' ? '.' : `, em ${unidade}.`;
     if (queixa && queixa !== 'Prefiro contar na consulta') msg += ` Meu principal incômodo é: ${queixa.toLowerCase()}.`;
-    if (periodo && periodo !== 'Qualquer horário') msg += ` Tenho preferência pelo período da ${periodo.toLowerCase()}.`;
     out.textContent = msg;
     go.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   };

@@ -2071,7 +2071,6 @@ def consulta():
       <fieldset><legend>01 • Modalidade de Consulta</legend><div class="choices">{escolha("tipo", ["Consulta Expert", "Consulta Signature"], "Consulta Expert")}</div></fieldset>
       <fieldset><legend>02 • Unidade de Preferência</legend><div class="choices">{escolha("unidade", ["Copacabana", "Cabo Frio", "Tanto faz"], "Copacabana")}</div></fieldset>
       <fieldset><legend>03 • O que você está percebendo</legend><div class="choices">{escolha("queixa", ["Queda de cabelo", "Calvície", "Couro cabeludo aparente", "Fios mais finos", "Perda de volume", "Prefiro contar na consulta"], "Prefiro contar na consulta")}</div></fieldset>
-      <fieldset><legend>04 • Período Preferencial</legend><div class="choices">{escolha("periodo", ["Manhã", "Tarde", "Qualquer horário"], "Qualquer horário")}</div></fieldset>
       <div class="composer__preview" aria-live="polite">
         <span class="composer__preview-label">MENSAGEM PRONTA PARA ENVIO</span>
         <p data-message>{MSG_EQUIPE}</p>
