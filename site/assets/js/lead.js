@@ -64,8 +64,8 @@
   function mensagemWhatsapp(nome, unidade, texto) {
     const original = String(texto || '');
     let pedido = 'gostaria de agendar uma consulta';
-    if (/Larissa Pessoa/i.test(original)) pedido = 'gostaria de agendar a Consulta com Larissa Pessoa';
-    else if (/Consulta Hairzenith/i.test(original)) pedido = 'gostaria de agendar a Consulta Hairzenith';
+    if (/Consulta Signature|Larissa Pessoa/i.test(original)) pedido = 'gostaria de agendar a Consulta Signature, com a Dra. Larissa Pessoa';
+    else if (/Consulta Expert|Consulta Hairzenith/i.test(original)) pedido = 'gostaria de agendar a Consulta Expert';
     let msg = 'Olá! Sou ' + nome + ' e ' + pedido + ' na unidade ' + unidade + '.';
     const incomodo = original.match(/Meu principal incômodo é:\s*([^.]+)\./i);
     if (incomodo) msg += ' Incômodo: ' + incomodo[1].trim() + '.';

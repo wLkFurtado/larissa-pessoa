@@ -54,8 +54,10 @@ function testarFuncoes() {
   const partes = lead.partirNome('Ana Maria Souza');
   ok(partes.full === 'Ana Maria Souza' && partes.first === 'Ana' && partes.last === 'Maria Souza', 'nome completo vira first e last');
   ok(lead.partirNome('Ana').last === '', 'nome único não inventa sobrenome');
-  const msg = lead.mensagemWhatsapp('Ana Souza', 'Cabo Frio', 'Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta com Larissa Pessoa.');
-  ok(msg.includes('Ana Souza') && msg.includes('Cabo Frio') && msg.includes('Larissa Pessoa'), 'mensagem curta com nome e unidade');
+  const msg = lead.mensagemWhatsapp('Ana Souza', 'Cabo Frio', 'Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta Signature, com a Dra. Larissa Pessoa.');
+  ok(msg.includes('Ana Souza') && msg.includes('Cabo Frio') && msg.includes('Consulta Signature, com a Dra. Larissa Pessoa'), 'mensagem curta com nome e unidade');
+  const expert = lead.mensagemWhatsapp('Ana Souza', 'Copacabana', 'Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta Expert.');
+  ok(expert.includes('agendar a Consulta Expert na unidade Copacabana'), 'mensagem da Consulta Expert');
 
   const agora = 1_700_000_000_000;
   const primeira = lead.resolverAtribuicao(

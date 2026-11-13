@@ -118,8 +118,8 @@ MANIFESTO = json.loads((SAIDA / "assets" / "img" / "imagens.json").read_text())
 AVALIACOES = json.loads((SAIDA / "assets" / "data" / "reviews.json").read_text(encoding="utf-8"))
 
 MSG_PADRAO = "Olá! Vim pelo site da Hairzenith e gostaria de agendar uma consulta."
-MSG_LARISSA = "Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta com Larissa Pessoa."
-MSG_EQUIPE = "Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta Hairzenith."
+MSG_LARISSA = "Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta Signature, com a Dra. Larissa Pessoa."
+MSG_EQUIPE = "Olá! Vim pelo site da Hairzenith e gostaria de agendar a Consulta Expert."
 
 ROMANOS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 
@@ -684,7 +684,7 @@ MEDIDAS_NOVAS = {
 }
 
 MOMENTOS = [
-    ("Primeiro, a sua história", "Você conta quando a queda começou, o que mudou na rotina e o que espera do tratamento.", "larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara", "Anamnese Clínica"),
+    ("Primeiro, a sua história", "Você conta quando a queda começou, o que mudou na rotina e o que espera do tratamento.", "larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara", "Anamnese Clínica"),
     ("Depois, a tricoscopia", "O couro cabeludo é examinado com ampliação de até 200 vezes: inflamação, descamação, afinamento, unidades foliculares vazias.", "tricoscopio-retrato", "Tricoscópio digital apoiado no couro cabeludo", "Exame Óptico 200×"),
     ("Na tela, com você", "As imagens ampliadas aparecem na tela, e cada achado é explicado durante a consulta.", "tela-tricoscopia-retrato", "Imagem ampliada dos fios na tela durante a tricoscopia", "Mapeamento Visual"),
     ("Exames, se precisar", "Quando a causa pede investigação, são solicitados exames: ferro, vitaminas, tireoide, hormônios.", "analise-imagens", "Paciente revisa no notebook as imagens dos próprios fios", "Investigação Sistêmica"),
@@ -753,7 +753,7 @@ def cabecalho(ativo):
         {EMBLEMA_SVG}
         <span class="wordmark__text">
           <span class="wordmark__name">Hairzenith</span>
-          <span class="wordmark__sub">Tricologia • Larissa Pessoa</span>
+          <span class="wordmark__sub">Tricologia • Dra. Larissa Pessoa</span>
         </span>
       </a>
       <div class="nav__links">{nav}</div>
@@ -765,7 +765,7 @@ def cabecalho(ativo):
   </div>
   <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
     <div class="menu__top">
-      <span class="wordmark">{EMBLEMA_SVG}<span class="wordmark__text"><span class="wordmark__name">Hairzenith</span><span class="wordmark__sub">Tricologia • Larissa Pessoa</span></span></span>
+      <span class="wordmark">{EMBLEMA_SVG}<span class="wordmark__text"><span class="wordmark__name">Hairzenith</span><span class="wordmark__sub">Tricologia • Dra. Larissa Pessoa</span></span></span>
       <button class="menu__close" type="button">Fechar &times;</button>
     </div>
     <ul>{menu}</ul>
@@ -790,7 +790,7 @@ def rodape():
     colunas.append(
         '<ul class="foot__col"><li><span class="foot__kicker">03 • CLÍNICA</span>Hairzenith</li>'
         '<li><a href="~/tratamentos/">Tratamentos</a></li><li><a href="~/equipe/">Equipe</a></li>'
-        '<li><a href="~/equipe/larissa-pessoa/">Larissa Pessoa</a></li>'
+        '<li><a href="~/equipe/larissa-pessoa/">Dra. Larissa Pessoa</a></li>'
         '<li><a href="~/consulta/">Consulta</a></li><li><a href="~/sobre/">Sobre</a></li>'
         '<li><a href="~/nova-clinica/">Nova clínica</a></li><li><a href="~/conteudo/">Conteúdo</a></li></ul>'
     )
@@ -824,7 +824,7 @@ def rodape():
 </footer>"""
 
 
-def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sentada", "Larissa Pessoa sorri sentada em uma poltrona clara"), comparar=True):
+def fecho(frase, pergunta="Qual consulta é para você?", retrato=("larissa-sentada", "Dra. Larissa Pessoa sorri sentada em uma poltrona clara"), comparar=True):
     extra = '<li><a class="link" href="~/consulta/">Comparar as consultas &rarr;</a></li>' if comparar else ""
     return f"""
 <section class="close wrap" aria-labelledby="h-agendar">
@@ -1020,7 +1020,7 @@ def secao_depoimentos(qtd=None, id_="h-depoimentos", titulo="Pacientes contam o 
 
 def passos():
     itens = [
-        ("01", "Conte quando a queda começou", "Você diz o que mudou, há quanto tempo e o que espera do tratamento.", "larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"),
+        ("01", "Conte quando a queda começou", "Você diz o que mudou, há quanto tempo e o que espera do tratamento.", "larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara"),
         ("02", "Veja o couro cabeludo ampliado", "A tricoscopia mostra inflamação, afinamento e densidade, com ampliação de até 200 vezes.", "tricoscopio-retrato", "Tricoscópio digital apoiado no couro cabeludo"),
         ("03", "Saia com um plano", "Em casa, no consultório ou nos dois. Os primeiros sinais costumam aparecer entre 60 e 120 dias.", "microinfusao", "Aplicação de ativos ao longo da risca do cabelo"),
     ]
@@ -1099,7 +1099,7 @@ def nomes(titulo, grupos, id_="h-nomes"):
 def grupos_ciencia(com_tecnologias=True, com_publicacoes=True):
     arts = [f'<a href="{href_artigo(a)}" rel="noopener">{a["curto"]} &#8599;</a>' for a in ARTIGOS]
     grupos = [
-        ["Equipe", '<a href="~/equipe/larissa-pessoa/">Larissa Pessoa, fundadora</a>', '<a href="~/equipe/#thaina">Thaina Candido de Souza</a>', '<a href="~/equipe/#julia">Júlia</a>'],
+        ["Equipe", '<a href="~/equipe/larissa-pessoa/">Dra. Larissa Pessoa, fundadora</a>', '<a href="~/equipe/#thaina">Thaina Candido de Souza</a>', '<a href="~/equipe/#julia">Júlia</a>'],
     ]
     if com_publicacoes:
         grupos.append(["Publicado em", "Brazilian Journal of Hair Health, 2025"] + arts)
@@ -1290,7 +1290,7 @@ def schema_org():
         "@id": ORG_ID,
         "name": "Hairzenith",
         "alternateName": ["Larissa Pessoa Tricologia Integrativa", "Dra. Larissa Pessoa Tricologia", "Clínica Larissa Pessoa"],
-        "description": "Clínica de tricologia especializada em queda de cabelo, calvície e perda de densidade capilar, fundada por Larissa Pessoa. Nova clínica em construção, com inauguração prevista para março de 2027.",
+        "description": "Clínica de tricologia especializada em queda de cabelo, calvície e perda de densidade capilar, fundada pela Dra. Larissa Pessoa. Nova clínica em construção, com inauguração prevista para março de 2027.",
         "url": SITE + "/",
         "logo": SITE + "/icone-512.png",
         "image": SITE + "/assets/img/og-hairzenith.jpg",
@@ -1350,7 +1350,8 @@ def schema_larissa():
         "@type": "Person",
         "@id": LARISSA_ID,
         "name": "Larissa Pessoa",
-        "alternateName": ["Larissa Mota Barros Pessoa"],
+        "honorificPrefix": "Dra.",
+        "alternateName": ["Dra. Larissa Pessoa", "Larissa Mota Barros Pessoa"],
         "jobTitle": "Fundadora, CEO e tricologista",
         "description": "Tricologista especializada em queda de cabelo e calvície, fundadora e CEO da Hairzenith.",
         "worksFor": {"@id": ORG_ID},
@@ -1589,7 +1590,7 @@ def pagina(caminho, titulo, descricao, corpo, ativo=None, schema=None, imagem="o
     url = SITE + caminho
     social, largura, altura = imagem_social(imagem)
     social_url = f"{SITE}/assets/img/{social}.jpg"
-    social_alt = "Larissa Pessoa, fundadora da Hairzenith, clínica de tricologia em Copacabana e Cabo Frio"
+    social_alt = "Dra. Larissa Pessoa, fundadora da Hairzenith, clínica de tricologia em Copacabana e Cabo Frio"
     opcionais = []
     if indexar:
         opcionais.append(f'<link rel="canonical" href="{url}">')
@@ -1664,7 +1665,7 @@ def home():
         f'<span class="row__go">Explorar <span class="arrow" aria-hidden="true">&rarr;</span></span></a>'
         for idx, p in enumerate(PROBLEMAS)
     )
-    fatos = [("Fundadora", "Larissa Pessoa"), ("Especialidade", "Queda e calvície"), ("Atendimento", "Copacabana e Cabo Frio"), ("Nova clínica", "Março de 2027")]
+    fatos = [("Fundadora", "Dra. Larissa Pessoa"), ("Especialidade", "Queda e calvície"), ("Atendimento", "Copacabana e Cabo Frio"), ("Nova clínica", "Março de 2027")]
     dl = "".join(f"<div class=\"mosaic__fact-card\" data-spotlight><dt>{a}</dt><dd>{b}</dd></div>" for a, b in fatos)
     corpo = f"""
 <section class="hero wrap" aria-labelledby="titulo">
@@ -1675,7 +1676,7 @@ def home():
         <span class="line"><span data-line style="--i:0">Especialistas em</span></span>
         <span class="line"><span data-line style="--i:1"><em>queda e calvície</em></span></span>
       </h1>
-      <p class="hero__lead" data-load style="--d:320ms">A Hairzenith é a clínica de tricologia fundada por Larissa Pessoa para tratar queda, calvície e perda de densidade capilar.</p>
+      <p class="hero__lead" data-load style="--d:320ms">A Hairzenith é a clínica de tricologia fundada pela Dra. Larissa Pessoa para tratar queda, calvície e perda de densidade capilar.</p>
       <p class="hero__sub" data-load style="--d:400ms">Na consulta, a tricoscopia mostra a causa. O plano pode ser em casa, no consultório ou nos dois.</p>
       <div class="actions" data-load style="--d:480ms">
         <a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>
@@ -1687,8 +1688,8 @@ def home():
     </div>
     <div class="hero__stage">
       <figure class="hero__tall">
-        {moldura("larissa-poltrona", "Larissa Pessoa, de terno claro, sentada em uma poltrona", "(max-width: 900px) 84vw, 34vw", attrs="data-shutter", prioridade=True)}
-        <figcaption>Larissa Pessoa, fundadora e CEO da Hairzenith</figcaption>
+        {moldura("larissa-poltrona", "Dra. Larissa Pessoa, de terno claro, sentada em uma poltrona", "(max-width: 900px) 84vw, 34vw", attrs="data-shutter", prioridade=True)}
+        <figcaption>Dra. Larissa Pessoa, fundadora e CEO da Hairzenith</figcaption>
       </figure>
       <figure class="hero__square" data-load style="--d:260ms">
         {moldura("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo de uma paciente", "(max-width: 900px) 45vw, 14vw", attrs="")}
@@ -1756,13 +1757,13 @@ def home():
     <div class="mosaic__header">
       <span class="kicker" data-reveal><span class="kicker__dot"></span> A CLÍNICA</span>
       <h2 id="h-nasce" class="head" data-reveal>Uma clínica só para queda e calvície</h2>
-      <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
+      <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, a Dra. Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
     </div>
     <figure class="mosaic__photo">
-      {moldura("larissa-rosa", "Larissa Pessoa de vestido rosé em uma sala clara", "(max-width: 900px) 100vw, 58vw")}
+      {moldura("larissa-rosa", "Dra. Larissa Pessoa de vestido rosé em uma sala clara", "(max-width: 900px) 100vw, 58vw")}
       <div class="mosaic__paper" data-spotlight>
         <span class="kicker"><span class="kicker__dot"></span> EMPATIA CLÍNICA</span>
-        <p>Larissa já passou pela queda de cabelo e conhece o impacto dela na autoestima. Essa experiência orienta o jeito como cada paciente é recebido. <a class="link" href="~/sobre/">A história da marca &rarr;</a></p>
+        <p>A Dra. Larissa Pessoa já passou pela queda de cabelo e conhece o impacto dela na autoestima. Essa experiência orienta o jeito como cada paciente é recebido. <a class="link" href="~/sobre/">A história da marca &rarr;</a></p>
       </div>
     </figure>
     <div class="mosaic__side" data-reveal style="--i:2">
@@ -1782,7 +1783,7 @@ def home():
         ("tela-tricoscopia-retrato", "Fios ampliados na tela da tricoscopia"),
         ("laser-led", "Capacete de laser e LED sobre a cabeça de uma paciente"),
         ("tricoscopio-retrato", "Tricoscópio apoiado no couro cabeludo"),
-        ("larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"),
+        ("larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara"),
         ("mesoject-retrato", "Caneta do Mesoject sobre o couro cabeludo"),
     ])}
 """
@@ -1804,7 +1805,7 @@ def home():
         schema_larissa(),
     ]
     pagina("/", "Tricologista em Copacabana e Cabo Frio | Hairzenith",
-           "Clínica de tricologia de Larissa Pessoa em Copacabana, no Rio de Janeiro, e em Cabo Frio. Avaliação da queda, da calvície e da perda de densidade, com tricoscopia.",
+           "Clínica de tricologia da Dra. Larissa Pessoa em Copacabana, no Rio de Janeiro, e em Cabo Frio. Avaliação da queda, da calvície e da perda de densidade, com tricoscopia.",
            corpo, schema=schema)
 
 
@@ -1824,7 +1825,7 @@ def problema(p):
         + faixa(
             "Tudo começa pela tricoscopia",
             "<p>Na consulta, o couro cabeludo é examinado com ampliação de até 200 vezes. Com a história clínica e, se necessário, exames, a tricologista define a causa e monta o plano: em casa, no consultório ou nos dois.</p>"
-            "<p>O atendimento pode ser com a equipe Hairzenith ou com Larissa Pessoa, fundadora da clínica.</p>",
+            "<p>O atendimento pode ser com a equipe Hairzenith ou com a Dra. Larissa Pessoa, fundadora da clínica.</p>",
             ("tela-tricoscopia-retrato", "Imagem ampliada dos fios na tela durante a tricoscopia"),
             f'<a class="button button--gold" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/consulta/">Como é a consulta &rarr;</a>',
         )
@@ -1913,17 +1914,17 @@ def equipe():
     acoes = f'<a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/consulta/">As duas consultas &rarr;</a>'
     corpo = (
         phero("Equipe Hairzenith", "Três tricologistas, um mesmo método. A Hairzenith nasce como clínica, com equipe própria e uma fundadora presente.", None,
-              ("larissa-blazer", "Larissa Pessoa de blazer branco, com a mão no rosto"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"), acoes)
+              ("larissa-blazer", "Dra. Larissa Pessoa de blazer branco, com a mão no rosto"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"), acoes)
         + f"""
 <section class="founder wrap grid" aria-labelledby="h-larissa" id="larissa">
-  <figure class="founder__pic">{moldura("larissa-poltrona", "Larissa Pessoa sentada em uma poltrona clara", "(max-width: 900px) 100vw, 40vw")}</figure>
+  <figure class="founder__pic">{moldura("larissa-poltrona", "Dra. Larissa Pessoa sentada em uma poltrona clara", "(max-width: 900px) 100vw, 40vw")}</figure>
   <div class="founder__text" data-reveal>
     <span class="kicker"><span class="kicker__dot"></span> DIREÇÃO CLÍNICA &amp; FUNDAÇÃO</span>
-    <h2 id="h-larissa">Larissa Pessoa</h2>
+    <h2 id="h-larissa">Dra. Larissa Pessoa</h2>
     <p class="founder__role">Fundadora e CEO da Hairzenith. Tricologista.</p>
-    <p>Larissa construiu sua trajetória no tratamento da queda de cabelo e da calvície, primeiro com a clínica que levava o seu nome, Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio. Hoje dirige a Hairzenith e segue atendendo pacientes.</p>
+    <p>A Dra. Larissa Pessoa construiu sua trajetória no tratamento da queda de cabelo e da calvície, primeiro com a clínica que levava o seu nome, Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio. Hoje dirige a Hairzenith e segue atendendo pacientes.</p>
     <p>É autora, com a equipe, de dois estudos de caso sobre alopecia androgenética publicados no Brazilian Journal of Hair Health.</p>
-    <div class="actions"><a class="button button--shimmer" href="{wa(MSG_LARISSA)}"><span>Consulta com Larissa</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/equipe/larissa-pessoa/">A trajetória de Larissa &rarr;</a></div>
+    <div class="actions"><a class="button button--shimmer" href="{wa(MSG_LARISSA)}"><span>Agendar Consulta Signature</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/equipe/larissa-pessoa/">A trajetória da Dra. Larissa Pessoa &rarr;</a></div>
   </div>
 </section>
 
@@ -1932,8 +1933,8 @@ def equipe():
     <span class="kicker" data-reveal><span class="kicker__dot"></span> ESPECIALISTAS</span>
     <h2 id="h-tricologistas" data-reveal>Tricologistas Hairzenith</h2>
   </div>
-  {membro("thaina", "Thaina Candido de Souza", "Coautora, com Larissa Pessoa, dos dois estudos de caso sobre alopecia androgenética publicados pela clínica em 2025. Conduz a Consulta Hairzenith para pacientes com queda, calvície e perda de densidade.", ["Consulta Hairzenith", "Estudos publicados no Brazilian Journal of Hair Health"], 0)}
-  {membro("julia", "Júlia", "Conduz a Consulta Hairzenith com o protocolo completo da clínica: história clínica, tricoscopia, exames quando necessários e um plano de tratamento acompanhado de perto.", ["Consulta Hairzenith", "Queda, calvície e perda de densidade"], 1)}
+  {membro("thaina", "Thaina Candido de Souza", "Coautora, com a Dra. Larissa Pessoa, dos dois estudos de caso sobre alopecia androgenética publicados pela clínica em 2025. Conduz a Consulta Expert para pacientes com queda, calvície e perda de densidade.", ["Consulta Expert", "Estudos publicados no Brazilian Journal of Hair Health"], 0)}
+  {membro("julia", "Júlia Macedo", "Conduz a Consulta Expert com o protocolo completo da clínica: história clínica, tricoscopia, exames quando necessários e um plano de tratamento acompanhado de perto.", ["Consulta Expert", "Queda, calvície e perda de densidade"], 1)}
 </section>
 """
         + dividida(
@@ -1942,14 +1943,14 @@ def equipe():
             "<p class=\"lead\">Na Hairzenith, a consulta não depende de quem está na agenda. O método é o mesmo para todas as tricologistas.</p>"
             "<div class=\"treat-grid\">"
             "<div class=\"treat-step\" data-spotlight><h3>A mesma avaliação</h3><p>História clínica, tricoscopia com ampliação de até 200 vezes e exames complementares quando a causa pede investigação.</p></div>"
-            "<div class=\"treat-step\" data-spotlight><h3>Os mesmos protocolos</h3><p>Planos de tratamento construídos a partir da experiência clínica de Larissa Pessoa e revisados em equipe nos casos mais complexos.</p></div>"
+            "<div class=\"treat-step\" data-spotlight><h3>Os mesmos protocolos</h3><p>Planos de tratamento construídos a partir da experiência clínica da Dra. Larissa Pessoa e revisados em equipe nos casos mais complexos.</p></div>"
             "<div class=\"treat-step\" data-spotlight><h3>O mesmo acompanhamento</h3><p>Reavaliações com fotos padronizadas, para comparar a evolução e ajustar o plano a cada etapa.</p></div>"
             "</div>",
             "h-metodo",
         )
         + nomes("Publicações", [["Brazilian Journal of Hair Health, 2025"] + [f'<a href="{href_artigo(a)}" rel="noopener">{a["curto"]} &#8599;</a>' for a in ARTIGOS],
                                  ["Autoras", "Larissa Mota Barros Pessoa", "Thaina Candido de Souza", "Lara Junqueira, UFRJ"]], "h-publicacoes")
-        + fecho("Consulta Hairzenith ou Consulta com Larissa Pessoa: o método é o mesmo.", "Com quem você quer ser atendido?")
+        + fecho("Consulta Expert ou Consulta Signature: o método é o mesmo.", "Com quem você quer ser atendido?")
     )
     schema = [
         schema_larissa(),
@@ -1958,50 +1959,50 @@ def equipe():
         migalhas([("Hairzenith", "/"), ("Equipe", "/equipe/")]),
     ] + schema_artigos()
     pagina("/equipe/", "Equipe de tricologia em Copacabana e Cabo Frio | Hairzenith",
-           "Larissa Pessoa, Thaina Candido de Souza e Júlia atendem queda e calvície na Hairzenith, em Copacabana e Cabo Frio, com o mesmo método de avaliação.",
+           "Dra. Larissa Pessoa, Dra. Thaina Candido de Souza e Dra. Júlia Macedo atendem queda e calvície na Hairzenith, em Copacabana e Cabo Frio, com o mesmo método de avaliação.",
            corpo, ativo="equipe", schema=schema)
 
 
 def larissa():
-    acoes = f'<a class="button button--shimmer" href="{wa(MSG_LARISSA)}"><span>Agendar com Larissa</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/consulta/">As duas consultas &rarr;</a>'
+    acoes = f'<a class="button button--shimmer" href="{wa(MSG_LARISSA)}"><span>Agendar Consulta Signature</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/consulta/">As duas consultas &rarr;</a>'
     arts = "".join(
         f'<div class="treat-step" data-spotlight><h3>{a["titulo"]}</h3><p>{", ".join(a["autores"])}. Brazilian Journal of Hair Health, v. 2, n. 1, 2025. '
         f'<a class="link" href="{href_artigo(a)}" rel="noopener">Ler na revista &#8599;</a> (DOI {a["doi"]})</p></div>'
         for a in ARTIGOS
     )
     corpo = (
-        phero("Larissa Pessoa", "Fundadora e CEO da Hairzenith. Tricologista especializada em queda de cabelo e calvície.", None,
-              ("larissa-blazer", "Larissa Pessoa de blazer branco, com a mão no rosto"), ("larissa-rosa-retrato", "Retrato de Larissa Pessoa de vestido rosé"), acoes)
+        phero("Dra. Larissa Pessoa", "Fundadora e CEO da Hairzenith. Tricologista especializada em queda de cabelo e calvície.", None,
+              ("larissa-blazer", "Dra. Larissa Pessoa de blazer branco, com a mão no rosto"), ("larissa-rosa-retrato", "Retrato da Dra. Larissa Pessoa de vestido rosé"), acoes)
         + dividida(
             "Da clínica com o seu nome à Hairzenith",
-            ("larissa-sentada", "Larissa Pessoa sorri sentada em uma poltrona clara"),
+            ("larissa-sentada", "Dra. Larissa Pessoa sorri sentada em uma poltrona clara"),
             "<p class=\"lead\">Por anos, a clínica levou o nome dela: Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio.</p>"
-            "<p>O consultório cresceu, a equipe também, e o método que Larissa desenvolveu passou a ser conduzido por outras tricologistas. A Hairzenith é a forma desse crescimento: uma clínica com estrutura, equipe e nome próprios, fundada e dirigida por ela.</p>"
-            "<p>Quem procura por Larissa Pessoa continua encontrando Larissa Pessoa. Ela segue atendendo, agora dentro da Hairzenith, na Consulta com Larissa Pessoa.</p>",
+            "<p>O consultório cresceu, a equipe também, e o método que a Dra. Larissa Pessoa desenvolveu passou a ser conduzido por outras tricologistas. A Hairzenith é a forma desse crescimento: uma clínica com estrutura, equipe e nome próprios, fundada e dirigida por ela.</p>"
+            "<p>Quem procura pela Dra. Larissa Pessoa continua encontrando a Dra. Larissa Pessoa. Ela segue atendendo, agora dentro da Hairzenith, na Consulta Signature.</p>",
             "h-trajetoria",
         )
         + faixa(
             "Uma história com a queda",
-            "<p>Larissa já passou pela queda de cabelo. Conhece de perto o efeito dela na autoestima, e é isso que orienta o jeito como cada consulta é conduzida: tempo para ouvir, explicação clara de cada achado e acompanhamento próximo.</p>"
+            "<p>A Dra. Larissa Pessoa já passou pela queda de cabelo. Conhece de perto o efeito dela na autoestima, e é isso que orienta o jeito como cada consulta é conduzida: tempo para ouvir, explicação clara de cada achado e acompanhamento próximo.</p>"
             "<p>É também o que explica a escolha de trabalhar só com um assunto. Queda e calvície, em mulheres e homens, sem cirurgia.</p>",
-            ("larissa-rosa", "Larissa Pessoa de vestido rosé em uma sala clara"),
-            f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Agendar com Larissa</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>',
+            ("larissa-rosa", "Dra. Larissa Pessoa de vestido rosé em uma sala clara"),
+            f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Agendar Consulta Signature</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>',
             "h-historia",
         )
         + dividida("Publicações", ("cowper-1698", "Gravura de 1698 com cortes de pele e folículos capilares ampliados"),
                    "<p class=\"lead\">Dois estudos de caso sobre alopecia androgenética, escritos com a equipe da clínica e a Faculdade de Farmácia da UFRJ.</p><div class=\"treat-grid\">" + arts + "</div>",
                    "h-publicacoes", inverte=True)
-        + fecho("A Consulta com Larissa Pessoa tem agenda própria e valor diferenciado.", "Quer ser atendido por Larissa?", ("larissa-rosa-retrato", "Retrato de Larissa Pessoa de vestido rosé"))
+        + fecho("A Consulta Signature tem agenda própria e valor diferenciado.", "Quer ser atendido pela Dra. Larissa Pessoa?", ("larissa-rosa-retrato", "Retrato da Dra. Larissa Pessoa de vestido rosé"))
     )
     schema = [schema_larissa(), {"@type": "ProfilePage", "url": SITE + "/equipe/larissa-pessoa/", "mainEntity": {"@id": LARISSA_ID}},
-              migalhas([("Hairzenith", "/"), ("Equipe", "/equipe/"), ("Larissa Pessoa", "/equipe/larissa-pessoa/")])] + schema_artigos()
-    pagina("/equipe/larissa-pessoa/", "Larissa Pessoa, tricologista em Copacabana | Hairzenith",
-           "Larissa Pessoa é fundadora e CEO da Hairzenith. Tricologista em queda de cabelo e calvície, com atendimento em Copacabana e em Cabo Frio.",
+              migalhas([("Hairzenith", "/"), ("Equipe", "/equipe/"), ("Dra. Larissa Pessoa", "/equipe/larissa-pessoa/")])] + schema_artigos()
+    pagina("/equipe/larissa-pessoa/", "Dra. Larissa Pessoa, tricologista em Copacabana | Hairzenith",
+           "A Dra. Larissa Pessoa é fundadora e CEO da Hairzenith. Tricologista em queda de cabelo e calvície, com atendimento em Copacabana e em Cabo Frio.",
            corpo, ativo="equipe", schema=schema, imagem="larissa-blazer", tipo="profile")
 
 
 FAQ_CONSULTA = [
-    ("Qual a diferença entre as duas consultas?", "O método é o mesmo: história clínica, tricoscopia, exames quando necessários e plano de tratamento. Na Consulta com Larissa Pessoa, quem conduz é a fundadora, com agenda própria e valor diferenciado."),
+    ("Qual a diferença entre as duas consultas?", "O método é o mesmo: história clínica, tricoscopia, exames quando necessários e plano de tratamento. Na Consulta Signature, quem conduz é a Dra. Larissa Pessoa, fundadora e CEO, com agenda própria e valor diferenciado."),
     ("Quanto custa a consulta?", "Os valores das duas modalidades são informados no agendamento, pelo WhatsApp."),
     ("O tratamento começa na mesma consulta?", "A consulta é de avaliação e planejamento. O tratamento começa depois, em casa, no consultório ou nos dois, conforme o plano definido."),
     ("O que levar?", "Exames de sangue recentes, se você tiver, e a lista dos medicamentos e suplementos que usa."),
@@ -2020,14 +2021,14 @@ def consulta():
         )
 
     comum = [("Avaliação", "História clínica e tricoscopia de até 200x"), ("Exames", "Solicitados quando a causa pede investigação"), ("Plano", "Em casa, no consultório ou nos dois")]
-    equipe_ = caminho("way--team", "CORPO CLÍNICO HAIRZENITH", "Consulta Hairzenith", "Conduzida por uma tricologista da equipe, com o protocolo completo da clínica.",
+    equipe_ = caminho("way--team", "COM AS TRICOLOGISTAS DA HAIRZENITH", "Consulta Expert", "Uma avaliação individualizada, conduzida por profissionais da nossa equipe, para compreender suas necessidades capilares e orientar os próximos passos.",
                       ("tricoscopio-retrato", "Tricoscópio digital apoiado no couro cabeludo durante a avaliação"),
-                      [("Quem conduz", "Thaina Candido de Souza ou Júlia, tricologistas Hairzenith")] + comum + [("Valor", "Informado no agendamento")],
-                      f'<a class="button button--shimmer" href="{wa(MSG_EQUIPE)}"><span>Agendar Consulta Hairzenith</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>')
-    fundadora = caminho("way--founder", "COM A FUNDADORA", "Consulta com Larissa Pessoa", "Conduzida pela fundadora da Hairzenith, para quem deseja ser acompanhado por ela.",
-                        ("larissa-blazer", "Larissa Pessoa de blazer branco"),
-                        [("Quem conduz", "Larissa Pessoa, fundadora e tricologista")] + comum + [("Valor", "Diferenciado, informado no agendamento")],
-                        f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Agendar com Larissa</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>')
+                      [("Quem conduz", "Dra. Thaina Cândido – Copacabana<br>Dra. Júlia Macedo – Cabo Frio")] + comum + [("Valor", "Informado no agendamento")],
+                      f'<a class="button button--shimmer" href="{wa(MSG_EQUIPE)}"><span>Agendar Consulta Expert</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>')
+    fundadora = caminho("way--founder", "DIRETAMENTE COM A CEO", "Consulta Signature", "Uma experiência personalizada para quem deseja ser atendida diretamente pela fundadora da Hairzenith, com sua experiência e olhar profissional.",
+                        ("larissa-blazer", "Dra. Larissa Pessoa de blazer branco"),
+                        [("Quem conduz", "Dra. Larissa Pessoa, fundadora e CEO da Hairzenith")] + comum + [("Valor", "Diferenciado, informado no agendamento")],
+                        f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Agendar Consulta Signature</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>')
 
     def escolha(nome, opcoes, marcada):
         return "".join(
@@ -2045,13 +2046,13 @@ def consulta():
     acoes = f'<a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="#h-modalidades">Comparar as modalidades &rarr;</a>'
     corpo = (
         phero("Consulta de tricologia", "Duas modalidades, um mesmo método. O que muda é quem conduz a sua consulta.", None,
-              ("tela-tricoscopia-retrato", "Imagem ampliada dos fios na tela durante a tricoscopia"), ("larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"), acoes)
+              ("tela-tricoscopia-retrato", "Imagem ampliada dos fios na tela durante a tricoscopia"), ("larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara"), acoes)
         + f"""
 <section class="ways wrap grid" aria-labelledby="h-modalidades">
   <div class="ways__head">
     <span class="kicker" data-reveal><span class="kicker__dot"></span> MODALIDADES DE ATENDIMENTO</span>
-    <h2 id="h-modalidades" data-reveal>Escolha como ser atendido</h2>
-    <p class="ways__intro" data-reveal style="--i:1">As duas consultas seguem o mesmo protocolo de avaliação e o mesmo cuidado. A diferença está em quem conduz e na agenda.</p>
+    <h2 id="h-modalidades" data-reveal>A mesma filosofia de cuidado.</h2>
+    <p class="ways__intro" data-reveal style="--i:1">Duas formas de viver a experiência Hairzenith.</p>
   </div>
   {equipe_}
   {fundadora}
@@ -2067,7 +2068,7 @@ def consulta():
       <p class="composer__intro" data-reveal style="--i:1">Escolha a consulta, a unidade e o que você está sentindo. A mensagem fica pronta para enviar pelo WhatsApp, e a equipe responde com os horários e o valor.</p>
     </div>
     <form class="composer__form" data-composer="{WHATS}" data-spotlight>
-      <fieldset><legend>01 • Modalidade de Consulta</legend><div class="choices">{escolha("tipo", ["Consulta Hairzenith", "Consulta com Larissa Pessoa"], "Consulta Hairzenith")}</div></fieldset>
+      <fieldset><legend>01 • Modalidade de Consulta</legend><div class="choices">{escolha("tipo", ["Consulta Expert", "Consulta Signature"], "Consulta Expert")}</div></fieldset>
       <fieldset><legend>02 • Unidade de Preferência</legend><div class="choices">{escolha("unidade", ["Copacabana", "Cabo Frio", "Tanto faz"], "Copacabana")}</div></fieldset>
       <fieldset><legend>03 • O que você está percebendo</legend><div class="choices">{escolha("queixa", ["Queda de cabelo", "Calvície", "Couro cabeludo aparente", "Fios mais finos", "Perda de volume", "Prefiro contar na consulta"], "Prefiro contar na consulta")}</div></fieldset>
       <fieldset><legend>04 • Período Preferencial</legend><div class="choices">{escolha("periodo", ["Manhã", "Tarde", "Qualquer horário"], "Qualquer horário")}</div></fieldset>
@@ -2095,27 +2096,27 @@ def consulta():
     schema = [
         {"@type": "WebPage", "url": SITE + "/consulta/", "name": "Consulta de tricologia", "inLanguage": "pt-BR",
          "mainEntity": [
-             {"@type": "Service", "name": "Consulta Hairzenith", "serviceType": "Consulta de tricologia", "provider": {"@id": ORG_ID}, "description": "Consulta conduzida por uma tricologista da equipe Hairzenith, com tricoscopia de até 200x e plano de tratamento."},
-             {"@type": "Service", "name": "Consulta com Larissa Pessoa", "serviceType": "Consulta de tricologia", "provider": {"@id": LARISSA_ID}, "description": "Consulta conduzida pela fundadora da Hairzenith, com agenda própria e valor diferenciado."},
+             {"@type": "Service", "name": "Consulta Expert", "serviceType": "Consulta de tricologia", "provider": {"@id": ORG_ID}, "description": "Consulta conduzida por uma tricologista da equipe Hairzenith, com tricoscopia de até 200x e plano de tratamento."},
+             {"@type": "Service", "name": "Consulta Signature", "serviceType": "Consulta de tricologia", "provider": {"@id": LARISSA_ID}, "description": "Consulta conduzida pela fundadora da Hairzenith, com agenda própria e valor diferenciado."},
          ]},
         migalhas([("Hairzenith", "/"), ("Consulta", "/consulta/")]),
         {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in FAQ_CONSULTA]},
         schema_larissa(),
     ]
     pagina("/consulta/", "Consulta com tricologista em Copacabana | Hairzenith",
-           "Consulta com a equipe Hairzenith ou com Larissa Pessoa. Tricoscopia em Copacabana e Cabo Frio. Horários e o valor da avaliação são informados no WhatsApp.",
+           "Consulta com a equipe Hairzenith ou com a Dra. Larissa Pessoa. Tricoscopia em Copacabana e Cabo Frio. Horários e o valor da avaliação são informados no WhatsApp.",
            corpo, ativo="consulta", schema=schema)
 
 
 def sobre():
     acoes = f'<a class="button button--shimmer" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/nova-clinica/">A nova clínica &rarr;</a>'
     corpo = (
-        phero("Sobre a Hairzenith", "Depois de anos atendendo pacientes com queda e calvície, Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada.", None,
-              ("larissa-rosa-retrato", "Retrato de Larissa Pessoa de vestido rosé"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"), acoes)
+        phero("Sobre a Hairzenith", "Depois de anos atendendo pacientes com queda e calvície, a Dra. Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada.", None,
+              ("larissa-rosa-retrato", "Retrato da Dra. Larissa Pessoa de vestido rosé"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"), acoes)
         + dividida(
             "Por que a marca nasce",
-            ("larissa-poltrona", "Larissa Pessoa sentada em uma poltrona clara"),
-            "<p class=\"lead\">Durante anos, o consultório levou o nome de Larissa. E a pergunta que chegava a ele era quase sempre a mesma: vou ficar careca?</p>"
+            ("larissa-poltrona", "Dra. Larissa Pessoa sentada em uma poltrona clara"),
+            "<p class=\"lead\">Durante anos, o consultório levou o nome da Dra. Larissa Pessoa. E a pergunta que chegava a ele era quase sempre a mesma: vou ficar careca?</p>"
             "<p>Responder exigia tempo. Exigia examinar o couro cabeludo de perto, investigar a causa, montar um plano e acompanhar cada etapa, por meses. Exigia, cada vez mais, uma equipe.</p>"
             "<p>A Hairzenith é a resposta a essa demanda: uma clínica dedicada a um único assunto, a queda e a calvície, com equipe, método e estrutura para atender mais pessoas com o mesmo cuidado. Um método que não depende de uma pessoa só para existir, e uma fundadora que continua presente.</p>",
             "h-por-que",
@@ -2138,15 +2139,15 @@ def sobre():
             None,
             "<div class=\"treat-grid\">"
             "<div class=\"treat-step\" data-spotlight><h3>Muda</h3><ul><li>O nome: Larissa Pessoa Tricologia Integrativa passa a se chamar Hairzenith.</li><li>A estrutura: uma nova clínica, em construção, com inauguração em março de 2027.</li><li>A equipe ganha nome e lugar: Thaina Candido de Souza e Júlia são tricologistas Hairzenith.</li></ul></div>"
-            f"<div class=\"treat-step\" data-spotlight><h3>Continua</h3><ul><li>Os atendimentos em Copacabana e Cabo Frio, até a inauguração.</li><li>Os WhatsApp de Copacabana, {UNIDADES[0]['whats_texto']}, e de Cabo Frio, {UNIDADES[1]['whats_texto']}, e o Instagram {INSTAGRAM_TEXTO}.</li><li>O método de avaliação e tratamento, sem cirurgia.</li><li>Larissa Pessoa, que dirige a clínica e segue atendendo.</li></ul></div>"
+            f"<div class=\"treat-step\" data-spotlight><h3>Continua</h3><ul><li>Os atendimentos em Copacabana e Cabo Frio, até a inauguração.</li><li>Os WhatsApp de Copacabana, {UNIDADES[0]['whats_texto']}, e de Cabo Frio, {UNIDADES[1]['whats_texto']}, e o Instagram {INSTAGRAM_TEXTO}.</li><li>O método de avaliação e tratamento, sem cirurgia.</li><li>A Dra. Larissa Pessoa, que dirige a clínica e segue atendendo.</li></ul></div>"
             "</div>",
             "h-transicao",
         )
         + faixa(
-            "Larissa Pessoa e a Hairzenith",
-            "<p>Larissa Pessoa é fundadora e CEO da Hairzenith e segue como tricologista da clínica. Quem procurava por ela continua encontrando, agora dentro de uma estrutura maior.</p>",
-            ("larissa-blazer", "Larissa Pessoa de blazer branco"),
-            f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Consulta com Larissa</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/equipe/larissa-pessoa/">A trajetória de Larissa &rarr;</a>',
+            "Dra. Larissa Pessoa e a Hairzenith",
+            "<p>A Dra. Larissa Pessoa é fundadora e CEO da Hairzenith e segue como tricologista da clínica. Quem procurava por ela continua encontrando, agora dentro de uma estrutura maior.</p>",
+            ("larissa-blazer", "Dra. Larissa Pessoa de blazer branco"),
+            f'<a class="button button--gold" href="{wa(MSG_LARISSA)}"><span>Agendar Consulta Signature</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/equipe/larissa-pessoa/">A trajetória da Dra. Larissa Pessoa &rarr;</a>',
             "h-fundadora",
         )
         + fecho("Mesma equipe, mesmos endereços, novo nome. Agende pelo WhatsApp.", "Vamos conversar?")
@@ -2157,7 +2158,7 @@ def sobre():
         schema_larissa(),
     ]
     pagina("/sobre/", "Sobre a Hairzenith: tricologia em Copacabana e Cabo Frio",
-           "A clínica de tricologia fundada por Larissa Pessoa. Atendimento em Copacabana, no Rio de Janeiro, e em Cabo Frio, com o mesmo método e a mesma equipe.",
+           "A clínica de tricologia fundada pela Dra. Larissa Pessoa. Atendimento em Copacabana, no Rio de Janeiro, e em Cabo Frio, com o mesmo método e a mesma equipe.",
            corpo, ativo="sobre", schema=schema)
 
 
@@ -2174,7 +2175,7 @@ def nova_clinica():
     )
     corpo = (
         phero("Nova clínica Hairzenith", "A nova Hairzenith chega em março de 2027.", "Uma clínica construída do zero para a saúde capilar. Enquanto a obra avança, nossa equipe segue atendendo em Copacabana e Cabo Frio.",
-              ("larissa-rosa-retrato", "Retrato de Larissa Pessoa de vestido rosé"), ("mesoject", "Caneta do Mesoject sobre o couro cabeludo"), acoes)
+              ("larissa-rosa-retrato", "Retrato da Dra. Larissa Pessoa de vestido rosé"), ("mesoject", "Caneta do Mesoject sobre o couro cabeludo"), acoes)
         + f"""
 <section class="count" aria-labelledby="h-marco" data-countdown="{INAUGURACAO}">
   <div class="wrap grid">
@@ -2199,7 +2200,7 @@ def nova_clinica():
         + reunidas("Enquanto isso, seguimos atendendo", "Em Copacabana e em Cabo Frio, com a mesma equipe e o mesmo método.", f'<a class="button button--gold" href="{wa()}"><span>Agendar consulta</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a>', [
             ("tricoscopio-retrato", "Tricoscópio apoiado no couro cabeludo"),
             ("microinfusao", "Aplicação de ativos ao longo da risca"),
-            ("larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara"),
+            ("larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara"),
             ("laser-led", "Capacete de laser e LED sobre a cabeça de uma paciente"),
             ("tela-tricoscopia-retrato", "Fios ampliados na tela da tricoscopia"),
             ("analise-imagens", "Paciente revisa as imagens dos próprios fios"),
@@ -2266,7 +2267,7 @@ def conteudo():
       <span class="kicker"><span class="kicker__dot"></span> ARTIGO EM DESTAQUE</span>
       <h2>{a['titulo']}</h2>
       <p>{a['resumo']}</p>
-      <p class="small">Por Larissa Pessoa • {a['data_texto']} • <span class="link">Ler artigo completo &rarr;</span></p>
+      <p class="small">Por Dra. Larissa Pessoa • {a['data_texto']} • <span class="link">Ler artigo completo &rarr;</span></p>
     </div>
   </a>
 </section>
@@ -2296,14 +2297,14 @@ def conteudo():
   <div class="article__header">
     <span class="kicker" data-load style="--d:100ms"><span class="kicker__dot"></span> CONTEÚDO • HAIRZENITH</span>
     <h1 id="titulo" class="lines"><span class="line"><span data-line>{a['titulo']}</span></span></h1>
-    <p class="article__meta" data-load style="--d:300ms">Por <a href="~/equipe/larissa-pessoa/">Larissa Pessoa</a>, fundadora da Hairzenith • Publicado em {a['data_texto']}.</p>
+    <p class="article__meta" data-load style="--d:300ms">Por <a href="~/equipe/larissa-pessoa/">Dra. Larissa Pessoa</a>, fundadora da Hairzenith • Publicado em {a['data_texto']}.</p>
   </div>
   <figure class="article__pic">{moldura("escova-fios", "Fios presos nas cerdas de uma escova", "100vw", attrs="data-shutter", prioridade=True)}</figure>
   <div class="article__body"><p class="lead">{a['resumo']}</p>{''.join(texto)}</div>
   <aside class="article__aside" aria-label="Sobre a autora" data-reveal data-spotlight>
     <span class="kicker"><span class="kicker__dot"></span> AUTORA</span>
-    {moldura("larissa-sentada", "Larissa Pessoa sentada em uma poltrona clara", "(max-width: 900px) 60vw, 22vw")}
-    <p>Larissa Pessoa é tricologista, fundadora e CEO da Hairzenith. <a class="link" href="~/equipe/larissa-pessoa/">Conheça a trajetória &rarr;</a></p>
+    {moldura("larissa-sentada", "Dra. Larissa Pessoa sentada em uma poltrona clara", "(max-width: 900px) 60vw, 22vw")}
+    <p>A Dra. Larissa Pessoa é tricologista, fundadora e CEO da Hairzenith. <a class="link" href="~/equipe/larissa-pessoa/">Conheça a trajetória &rarr;</a></p>
   </aside>
 </article>
 """ + indice("Guias por sinal", None, "h-guias") + fecho("Se a sua queda passou do normal, a avaliação mostra a causa.", "Quer uma avaliação?")
@@ -2329,7 +2330,7 @@ def conteudo():
 def nao_encontrada():
     corpo = (
         phero("Página não encontrada", "O endereço mudou ou não existe. As páginas da antiga Larissa Pessoa Tricologia agora fazem parte da Hairzenith.", None,
-              ("larissa-poltrona", "Larissa Pessoa sentada em uma poltrona clara"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"),
+              ("larissa-poltrona", "Dra. Larissa Pessoa sentada em uma poltrona clara"), ("tricoscopio", "Tricoscópio digital apoiado no couro cabeludo"),
               f'<a class="button button--shimmer" href="~/"><span>Ir para o início</span><span class="button__arrow" aria-hidden="true">&rarr;</span></a><a class="link" href="~/tratamentos/">Tratamentos &rarr;</a>')
         + indice("Talvez você procure", None, "h-talvez")
     )
