@@ -14,7 +14,7 @@ import { migalhas, schemaLarissa, schemaArtigos, schemaEquipe } from '../../lib/
 
 const metodo = [
   { nome: 'A mesma avaliação', texto: 'História clínica, tricoscopia com ampliação de até 200 vezes e exames complementares quando a causa pede investigação.' },
-  { nome: 'Os mesmos protocolos', texto: 'Planos de tratamento construídos a partir da experiência clínica de Larissa Pessoa e revisados em equipe nos casos mais complexos.' },
+  { nome: 'Os mesmos protocolos', texto: 'Planos de tratamento construídos a partir da experiência clínica da Dra. Larissa Pessoa e revisados em equipe nos casos mais complexos.' },
   { nome: 'O mesmo acompanhamento', texto: 'Reavaliações com fotos padronizadas, para comparar a evolução e ajustar o plano a cada etapa.' },
 ];
 const publicacoes = [
@@ -29,29 +29,29 @@ const schema = [
 ];
 ---
 <Base
-  titulo="Equipe Hair Zenith: Larissa Pessoa, Dra. Thaina Candido de Souza e Dra. Júlia Macedo"
-  descricao="Conheça a equipe da Hair Zenith: Larissa Pessoa, fundadora, CEO e tricologista, a Dra. Thaina Candido de Souza, em Copacabana, e a Dra. Júlia Macedo, em Cabo Frio."
+  titulo="Equipe Hair Zenith: Dra. Larissa Pessoa, Dra. Thaina Candido de Souza e Dra. Júlia Macedo"
+  descricao="Conheça a equipe da Hair Zenith: Dra. Larissa Pessoa, fundadora, CEO e tricologista, a Dra. Thaina Candido de Souza, em Copacabana, e a Dra. Júlia Macedo, em Cabo Frio."
   ativo="equipe"
   schema={schema}
 >
   <Phero
     h1="Equipe Hair Zenith"
     lead="Três tricologistas, um mesmo método. A Hair Zenith nasce como clínica, com equipe própria e uma fundadora presente."
-    alto={{ img: 'larissa-blazer', alt: 'Larissa Pessoa de blazer branco, com a mão no rosto' }}
+    alto={{ img: 'larissa-blazer', alt: 'Dra. Larissa Pessoa de blazer branco, com a mão no rosto' }}
     quadrado={{ img: 'tricoscopio', alt: 'Tricoscópio digital apoiado no couro cabeludo' }}
   >
     <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="/consulta/">As duas consultas &rarr;</a>
   </Phero>
 
   <section class="founder wrap grid" aria-labelledby="h-larissa" id="larissa">
-    <figure class="founder__pic"><Moldura nome="larissa-poltrona" alt="Larissa Pessoa sentada em uma poltrona clara" sizes="(max-width: 900px) 100vw, 40vw" /></figure>
+    <figure class="founder__pic"><Moldura nome="larissa-poltrona" alt="Dra. Larissa Pessoa sentada em uma poltrona clara" sizes="(max-width: 900px) 100vw, 40vw" /></figure>
     <div class="founder__text" data-reveal>
       <Kicker>DIREÇÃO CLÍNICA &amp; FUNDAÇÃO</Kicker>
-      <h2 id="h-larissa">Larissa Pessoa</h2>
+      <h2 id="h-larissa">Dra. Larissa Pessoa</h2>
       <p class="founder__role">Fundadora e CEO da Hair Zenith. Tricologista.</p>
-      <p>Larissa construiu sua trajetória no tratamento da queda de cabelo e da calvície, primeiro com a clínica que levava o seu nome, Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio. Hoje dirige a Hair Zenith e segue atendendo pacientes.</p>
+      <p>A Dra. Larissa construiu sua trajetória no tratamento da queda de cabelo e da calvície, primeiro com a clínica que levava o seu nome, Larissa Pessoa Tricologia Integrativa, em Copacabana e Cabo Frio. Hoje dirige a Hair Zenith e segue atendendo pacientes.</p>
       <p>É autora, com a equipe, de dois estudos de caso sobre alopecia androgenética publicados no Brazilian Journal of Hair Health.</p>
-      <div class="actions"><Botao href={wa(site.msgLarissa)}>Consulta com Larissa</Botao><a class="link" href="/equipe/larissa-pessoa/">A trajetória de Larissa &rarr;</a></div>
+      <div class="actions"><Botao href={wa(site.msgLarissa)}>Consulta Signature</Botao><a class="link" href="/equipe/larissa-pessoa/">A trajetória da Dra. Larissa &rarr;</a></div>
     </div>
   </section>
 
@@ -68,5 +68,5 @@ const schema = [
     <Passos itens={metodo} />
   </Dividida>
   <Nomes titulo="Publicações" grupos={publicacoes} id="h-publicacoes" />
-  <Fecho frase="Consulta Hair Zenith ou Consulta com Larissa Pessoa: o método é o mesmo." pergunta="Com quem você quer ser atendido?" />
+  <Fecho frase="Consulta Expert ou Consulta Signature: a mesma filosofia de cuidado." pergunta="Com quem você quer ser atendido?" />
 </Base>

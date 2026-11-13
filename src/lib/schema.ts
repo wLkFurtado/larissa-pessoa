@@ -1,4 +1,4 @@
-// Dados estruturados (schema.org) que ligam Larissa Pessoa à Hair Zenith.
+// Dados estruturados (schema.org) que ligam Dra. Larissa Pessoa à Hair Zenith.
 import { site, equipe, registroValido } from './site';
 
 const SITE = site.url;
@@ -20,7 +20,7 @@ export function schemaOrg() {
     name: 'Hair Zenith',
     alternateName: ['Larissa Pessoa Tricologia Integrativa', 'Dra. Larissa Pessoa Tricologia', 'Clínica Larissa Pessoa'],
     description:
-      'Clínica de tricologia especializada em queda de cabelo, calvície e perda de densidade capilar, fundada por Larissa Pessoa. Nova clínica em construção, com inauguração prevista para março de 2027.',
+      'Clínica de tricologia especializada em queda de cabelo, calvície e perda de densidade capilar, fundada pela Dra. Larissa Pessoa. Nova clínica em construção, com inauguração prevista para março de 2027.',
     url: SITE + '/',
     logo: SITE + '/icone-512.png',
     image: SITE + '/assets/img/og-hairzenith.jpg',

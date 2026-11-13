@@ -10,7 +10,7 @@ const conteudo = defineCollection({
     resumo: z.string(),
     data: z.coerce.date(),
     atualizado: z.coerce.date().optional(),
-    autoria: z.string().default('Larissa Pessoa'),
+    autoria: z.string().default('Dra. Larissa Pessoa'),
     imagem: z.string(),
     imagemAlt: z.string(),
     // foto do cartão na listagem; sem ela, usa a imagem do artigo

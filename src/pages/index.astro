@@ -23,9 +23,9 @@ const processo = [
 ];
 const thaina = profissional('thaina');
 const julia = profissional('julia');
-const fatos = [['Fundadora', 'Larissa Pessoa'], ['Especialidade', 'Queda e calvície'], ['Atendimento', 'Copacabana e Cabo Frio'], ['Nova clínica', 'Março de 2027']];
+const fatos = [['Fundadora', 'Dra. Larissa Pessoa'], ['Especialidade', 'Queda e calvície'], ['Atendimento', 'Copacabana e Cabo Frio'], ['Nova clínica', 'Março de 2027']];
 const grupos = [
-  ['Equipe', '<a href="/equipe/larissa-pessoa/">Larissa Pessoa, fundadora</a>', `<a href="/equipe/#thaina">${thaina.tratamento} ${thaina.nome}</a>`, `<a href="/equipe/#julia">${julia.tratamento} ${julia.nome}</a>`],
+  ['Equipe', '<a href="/equipe/larissa-pessoa/">Dra. Larissa Pessoa, fundadora</a>', `<a href="/equipe/#thaina">${thaina.tratamento} ${thaina.nome}</a>`, `<a href="/equipe/#julia">${julia.tratamento} ${julia.nome}</a>`],
   ['Publicado em', 'Brazilian Journal of Hair Health, 2025', ...site.artigos.map((a) => `<a href="${doi(a.doi)}" rel="noopener">${a.curto} &#8599;</a>`)],
   ['Coautoria', 'Lara Junqueira, Faculdade de Farmácia da UFRJ'],
   ['Tecnologias', 'Tricoscopia digital', 'Laser e LED capilar', 'MMP', 'Microinfusão de ativos', 'Mesoject'],
@@ -38,7 +38,7 @@ const schema = [
 ---
 <Base
   titulo="Hair Zenith | Especialistas em queda, calvície e perda de densidade capilar"
-  descricao="Hair Zenith é a clínica de tricologia fundada por Larissa Pessoa, especializada em queda de cabelo, calvície e perda de densidade capilar. Atendimento em Copacabana e Cabo Frio."
+  descricao="Hair Zenith é a clínica de tricologia fundada pela Dra. Larissa Pessoa, especializada em queda de cabelo, calvície e perda de densidade capilar. Atendimento em Copacabana e Cabo Frio."
   schema={schema}
 >
   <section class="hero wrap" aria-labelledby="titulo">
@@ -55,7 +55,7 @@ const schema = [
           <Botao href={wa()}>Agendar consulta</Botao>
           <a class="link" href="/sobre/">Conheça a Hair Zenith &rarr;</a>
         </div>
-        <p class="hero__founder" data-load style="--d:520ms">Fundada por Larissa Pessoa. Atendimento em Copacabana e Cabo Frio.</p>
+        <p class="hero__founder" data-load style="--d:520ms">Fundada pela Dra. Larissa Pessoa. Atendimento em Copacabana e Cabo Frio.</p>
         <dl class="hero__metrics" data-load style="--d:560ms">
           <div><dt>Diagnóstico</dt><dd>Tricoscopia 200&times;</dd></div>
           <div><dt>Pesquisa</dt><dd>Publicações BJHH '25</dd></div>
@@ -64,8 +64,8 @@ const schema = [
       </div>
       <div class="hero__stage">
         <figure class="hero__tall">
-          <Moldura nome="larissa-poltrona" alt="Larissa Pessoa, de terno claro, sentada em uma poltrona" sizes="(max-width: 900px) 84vw, 34vw" attrs={{ 'data-shutter': '' }} prioridade />
-          <figcaption>Larissa Pessoa, fundadora e CEO da Hair Zenith</figcaption>
+          <Moldura nome="larissa-poltrona" alt="Dra. Larissa Pessoa, de terno claro, sentada em uma poltrona" sizes="(max-width: 900px) 84vw, 34vw" attrs={{ 'data-shutter': '' }} prioridade />
+          <figcaption>Dra. Larissa Pessoa, fundadora e CEO da Hair Zenith</figcaption>
         </figure>
         <figure class="hero__square" data-load style="--d:260ms">
           <Moldura nome="tricoscopio" alt="Tricoscópio digital apoiado no couro cabeludo de uma paciente" sizes="(max-width: 900px) 45vw, 14vw" attrs={{}} />
@@ -153,13 +153,13 @@ const schema = [
       <div class="mosaic__header">
         <Kicker data-reveal>A TRAJETÓRIA DA MARCA</Kicker>
         <h2 id="h-nasce" class="head" data-reveal>Por que a Hair Zenith nasce</h2>
-        <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
+        <p class="mosaic__lead lead" data-reveal>Depois de anos atendendo pacientes com queda e calvície, a Dra. Larissa Pessoa decidiu transformar sua experiência em uma clínica especializada, com equipe, método e estrutura dedicados à saúde capilar.</p>
       </div>
       <figure class="mosaic__photo">
-        <Moldura nome="larissa-rosa" alt="Larissa Pessoa de vestido rosé em uma sala clara" sizes="(max-width: 900px) 100vw, 58vw" />
+        <Moldura nome="larissa-rosa" alt="Dra. Larissa Pessoa de vestido rosé em uma sala clara" sizes="(max-width: 900px) 100vw, 58vw" />
         <div class="mosaic__paper" data-spotlight>
           <Kicker>EMPATIA CLÍNICA</Kicker>
-          <p>Larissa já passou pela queda de cabelo e conhece o impacto dela na autoestima. Essa experiência orienta o jeito como cada paciente é recebido. <a class="link" href="/sobre/">A história da marca &rarr;</a></p>
+          <p>A Dra. Larissa já passou pela queda de cabelo e conhece o impacto dela na autoestima. Essa experiência orienta o jeito como cada paciente é recebido. <a class="link" href="/sobre/">A história da marca &rarr;</a></p>
         </div>
       </figure>
       <div class="mosaic__side" data-reveal style="--i:2">
@@ -187,7 +187,7 @@ const schema = [
       { img: 'obra-novembro-2026', alt: 'Obra da nova clínica com a estrutura das paredes internas em montagem' },
       { img: 'laser-led', alt: 'Capacete de laser e LED sobre a cabeça de uma paciente' },
       { img: 'tricoscopio-retrato', alt: 'Tricoscópio apoiado no couro cabeludo' },
-      { img: 'larissa-sentada', alt: 'Larissa Pessoa sentada em uma poltrona clara' },
+      { img: 'larissa-sentada', alt: 'Dra. Larissa Pessoa sentada em uma poltrona clara' },
       { img: 'mesoject-retrato', alt: 'Caneta do Mesoject sobre o couro cabeludo' },
     ]}
   >

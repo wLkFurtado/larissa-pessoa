@@ -3,7 +3,7 @@ titulo: "Quando a queda de cabelo não é normal?"
 resumo: "A queda de cabelo não é normal quando ultrapassa o limite fisiológico diário, causa falhas visíveis ou vem acompanhada de afinamento dos fios."
 data: 2025-12-05
 atualizado: 2026-10-28
-autoria: Larissa Pessoa
+autoria: Dra. Larissa Pessoa
 imagem: escova-fios
 imagemAlt: Fios presos nas cerdas de uma escova
 capa: fio-na-mao

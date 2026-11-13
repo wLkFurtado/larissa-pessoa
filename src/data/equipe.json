@@ -9,9 +9,10 @@
   "registro": "000",
   "texto": "Atendimento em tricologia. Consulta com avaliação individualizada de queda capilar, calvície e alterações do couro cabeludo.",
   "itens": [
-   "Consulta Hair Zenith em Copacabana",
+   "Consulta Expert em Copacabana",
    "Coautora dos estudos publicados no Brazilian Journal of Hair Health"
-  ]
+  ],
+  "nomeCurto": "Thaina Cândido"
  },
  {
   "id": "julia",
@@ -23,8 +24,9 @@
   "registro": "0000",
   "texto": "Consulta capilar em Cabo Frio e acompanhamento de tratamentos nas unidades de Copacabana e Cabo Frio.",
   "itens": [
-   "Consulta Hair Zenith em Cabo Frio",
+   "Consulta Expert em Cabo Frio",
    "Responsável técnica pelas aplicações"
-  ]
+  ],
+  "nomeCurto": "Júlia Macedo"
  }
 ]

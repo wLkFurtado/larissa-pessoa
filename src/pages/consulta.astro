@@ -15,28 +15,28 @@ const julia = profissional('julia');
 const comum = [['Avaliação', 'Histórico e avaliação capilar, com tricoscopia de até 200x quando indicada'], ['Exames', 'Solicitados quando a causa pede investigação'], ['Plano', 'Em casa, no consultório ou nos dois']];
 const modalidades = [
   {
-    classe: 'way--team', selo: 'CORPO CLÍNICO HAIR ZENITH', titulo: 'Consulta Hair Zenith',
-    texto: 'Conduzida por uma tricologista da equipe, com o protocolo completo da clínica.',
+    classe: 'way--team', selo: 'COM AS TRICOLOGISTAS DA HAIR ZENITH', titulo: 'Consulta Expert',
+    texto: 'Uma avaliação individualizada, conduzida por profissionais da nossa equipe, para compreender suas necessidades capilares e orientar os próximos passos.',
     foto: { img: 'tricoscopio-retrato', alt: 'Tricoscópio digital apoiado no couro cabeludo durante a avaliação' },
-    linhas: [['Quem conduz', `${thaina.tratamento} ${thaina.nome} em Copacabana ou ${julia.tratamento} ${julia.nome} em Cabo Frio`], ...comum, ['Valor', 'Informado no agendamento']],
-    botao: { href: wa(site.msgEquipe), variante: 'shimmer' as const, texto: 'Agendar Consulta Hair Zenith' },
+    linhas: [['Quem conduz', [`${thaina.tratamento} ${thaina.nomeCurto} – Copacabana`, `${julia.tratamento} ${julia.nomeCurto} – Cabo Frio`]], ...comum, ['Valor', 'Informado no agendamento']],
+    botao: { href: wa(site.msgEquipe), variante: 'shimmer' as const, texto: 'Agendar Consulta Expert' },
   },
   {
-    classe: 'way--founder', selo: 'SIGNATURE • COM A FUNDADORA', titulo: 'Consulta com Larissa Pessoa',
-    texto: 'Conduzida pela fundadora da Hair Zenith, para quem deseja ser acompanhado por ela.',
-    foto: { img: 'larissa-blazer', alt: 'Larissa Pessoa de blazer branco' },
-    linhas: [['Quem conduz', 'Larissa Pessoa, fundadora e tricologista'], ...comum, ['Valor', 'Diferenciado, informado no agendamento']],
-    botao: { href: wa(site.msgLarissa), variante: 'gold' as const, texto: 'Agendar com Larissa' },
+    classe: 'way--founder', selo: 'DIRETAMENTE COM A CEO', titulo: 'Consulta Signature',
+    texto: 'Uma experiência personalizada para quem deseja ser atendida diretamente pela fundadora da Hair Zenith, com sua experiência e olhar profissional.',
+    foto: { img: 'larissa-blazer', alt: 'Dra. Larissa Pessoa de blazer branco' },
+    linhas: [['Quem conduz', 'Dra. Larissa Pessoa, fundadora e CEO da Hair Zenith'], ...comum, ['Valor', 'Diferenciado, informado no agendamento']],
+    botao: { href: wa(site.msgLarissa), variante: 'gold' as const, texto: 'Agendar Consulta Signature' },
   },
 ];
 const escolhas = [
-  { nome: 'tipo', legenda: '01 • Modalidade de Consulta', opcoes: ['Consulta Hair Zenith', 'Consulta com Larissa Pessoa'], marcada: 'Consulta Hair Zenith' },
+  { nome: 'tipo', legenda: '01 • Modalidade de Consulta', opcoes: ['Consulta Expert', 'Consulta Signature'], marcada: 'Consulta Expert' },
   { nome: 'unidade', legenda: '02 • Unidade de Preferência', opcoes: ['Copacabana', 'Cabo Frio', 'Tanto faz'], marcada: 'Copacabana' },
   { nome: 'queixa', legenda: '03 • O que você está percebendo', opcoes: ['Queda de cabelo', 'Calvície', 'Couro cabeludo aparente', 'Fios mais finos', 'Perda de volume', 'Prefiro contar na consulta'], marcada: 'Prefiro contar na consulta' },
   { nome: 'periodo', legenda: '04 • Período Preferencial', opcoes: ['Manhã', 'Tarde', 'Qualquer horário'], marcada: 'Qualquer horário' },
 ];
 const faq = [
-  { q: 'Qual a diferença entre as duas consultas?', a: 'O método é o mesmo: história clínica, tricoscopia, exames quando necessários e plano de tratamento. Na Consulta com Larissa Pessoa, quem conduz é a fundadora, com agenda própria e valor diferenciado.' },
+  { q: 'Qual a diferença entre a Consulta Expert e a Consulta Signature?', a: 'A filosofia de cuidado é a mesma: histórico, avaliação capilar, exames quando necessários e plano de cuidado. Na Consulta Expert, quem conduz são as tricologistas da Hair Zenith. Na Consulta Signature, quem conduz é a própria Dra. Larissa Pessoa, fundadora e CEO, com agenda própria e valor diferenciado.' },
   { q: 'Quanto custa a consulta?', a: 'Os valores das duas modalidades são informados no agendamento, pelo WhatsApp.' },
   { q: 'O tratamento começa na mesma consulta?', a: 'A consulta é de avaliação e planejamento. O tratamento começa depois, em casa, no consultório ou nos dois, conforme o plano definido.' },
   { q: 'O que levar?', a: 'Exames de sangue recentes, se você tiver, e a lista dos medicamentos e suplementos que usa.' },
@@ -46,8 +46,8 @@ const schema = [
   {
     '@type': 'WebPage', url: site.url + '/consulta/', name: 'Consulta de tricologia', inLanguage: 'pt-BR',
     mainEntity: [
-      { '@type': 'Service', name: 'Consulta Hair Zenith', serviceType: 'Consulta de tricologia', provider: { '@id': ORG_ID }, description: 'Consulta conduzida por uma tricologista da equipe Hair Zenith, com tricoscopia de até 200x e plano de tratamento.' },
-      { '@type': 'Service', name: 'Consulta com Larissa Pessoa', serviceType: 'Consulta de tricologia', provider: { '@id': LARISSA_ID }, description: 'Consulta conduzida pela fundadora da Hair Zenith, com agenda própria e valor diferenciado.' },
+      { '@type': 'Service', name: 'Consulta Expert', serviceType: 'Consulta de tricologia', provider: { '@id': ORG_ID }, description: 'Uma avaliação individualizada, conduzida pelas tricologistas da Hair Zenith, para compreender as necessidades capilares e orientar os próximos passos.' },
+      { '@type': 'Service', name: 'Consulta Signature', serviceType: 'Consulta de tricologia', provider: { '@id': LARISSA_ID }, description: 'Uma experiência personalizada, diretamente com a Dra. Larissa Pessoa, fundadora e CEO da Hair Zenith.' },
     ],
   },
   migalhas([['Hair Zenith', '/'], ['Consulta', '/consulta/']]),
@@ -55,8 +55,8 @@ const schema = [
 ];
 ---
 <Base
-  titulo="Consulta de tricologia no Rio de Janeiro: Hair Zenith ou Larissa Pessoa"
-  descricao="Duas modalidades: Consulta Hair Zenith, com a equipe, e Consulta com Larissa Pessoa, com valor diferenciado. Tricoscopia de até 200x, em Copacabana e Cabo Frio."
+  titulo="Consulta de tricologia no Rio de Janeiro: Consulta Expert e Consulta Signature | Hair Zenith"
+  descricao="A mesma filosofia de cuidado em duas consultas: a Consulta Expert, com as tricologistas da Hair Zenith, e a Consulta Signature, diretamente com a Dra. Larissa Pessoa. Copacabana e Cabo Frio."
   ativo="consulta"
   schema={schema}
 >
@@ -64,7 +64,7 @@ const schema = [
     h1="Consulta de tricologia"
     lead="Duas modalidades, um mesmo método. O que muda é quem conduz a sua consulta."
     alto={{ img: 'tela-tricoscopia-retrato', alt: 'Imagem ampliada dos fios na tela durante a tricoscopia' }}
-    quadrado={{ img: 'larissa-sentada', alt: 'Larissa Pessoa sentada em uma poltrona clara' }}
+    quadrado={{ img: 'larissa-sentada', alt: 'Dra. Larissa Pessoa sentada em uma poltrona clara' }}
   >
     <Botao href={wa()}>Agendar consulta</Botao><a class="link" href="#h-modalidades">Comparar as modalidades &rarr;</a>
   </Phero>
@@ -72,8 +72,8 @@ const schema = [
   <section class="ways wrap grid" aria-labelledby="h-modalidades">
     <div class="ways__head">
       <Kicker data-reveal>MODALIDADES DE ATENDIMENTO</Kicker>
-      <h2 id="h-modalidades" data-reveal>Escolha como ser atendido</h2>
-      <p class="ways__intro" data-reveal style="--i:1">As duas consultas seguem o mesmo protocolo de avaliação e o mesmo cuidado. A diferença está em quem conduz e na agenda.</p>
+      <h2 id="h-modalidades" data-reveal>A mesma filosofia de cuidado.</h2>
+      <p class="ways__intro" data-reveal style="--i:1">Duas formas de viver a experiência Hair Zenith.</p>
     </div>
     {modalidades.map((m) => (
       <article class={`way ${m.classe}`} data-spotlight data-reveal>
@@ -82,7 +82,7 @@ const schema = [
         <div class="way__body">
           <h3>{m.titulo}</h3>
           <p>{m.texto}</p>
-          <dl>{m.linhas.map(([a, b]) => <div><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+          <dl>{m.linhas.map(([a, b]) => <div><dt>{a}</dt><dd>{Array.isArray(b) ? b.map((linha, i) => <>{i > 0 && <br />}{linha}</>) : b}</dd></div>)}</dl>
           <div class="actions"><Botao href={m.botao.href} variante={m.botao.variante}>{m.botao.texto}</Botao></div>
         </div>
       </article>
